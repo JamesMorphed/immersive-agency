@@ -7,7 +7,6 @@ import Projects from "@/components/Projects";
 import Technology from "@/components/Technology";
 import Footer from "@/components/Footer";
 import TeamSection from "@/components/TeamSection";
-import ServicesHighlights from "@/components/ServicesHighlights";
 
 const Index = () => {
   return (
@@ -19,7 +18,6 @@ const Index = () => {
       <Projects />
       <Technology />
       <TeamSection />
-      <ServicesHighlights />
       <Footer />
     </div>
   );
