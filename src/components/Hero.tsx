@@ -1,7 +1,70 @@
 
 import { Button } from '@/components/ui/button';
 import { ArrowRight } from 'lucide-react';
+import { useEffect, useState } from 'react';
+
 const Hero = () => {
+  const titles = ["INNOVATING CONTENT", "EMPOWERING HEALTH", "TRANSFORMING ENGAGEMENT"];
+  const [currentTitleIndex, setCurrentTitleIndex] = useState(0);
+  const [displayText, setDisplayText] = useState("");
+  const [isUnscrambling, setIsUnscrambling] = useState(true);
+  
+  useEffect(() => {
+    const targetText = titles[currentTitleIndex];
+    
+    if (isUnscrambling) {
+      // Unscramble effect - gradually replace random characters with correct ones
+      let scrambledText = Array.from({ length: targetText.length }, () => 
+        "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789".charAt(
+          Math.floor(Math.random() * "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789".length)
+        )
+      ).join('');
+      
+      setDisplayText(scrambledText);
+      
+      const intervalId = setInterval(() => {
+        setDisplayText(current => {
+          // Replace a random character with the correct one
+          const currentArray = current.split('');
+          const targetArray = targetText.split('');
+          
+          // Find which characters are still scrambled
+          const scrambledIndices = currentArray.reduce((acc, char, index) => {
+            if (char !== targetArray[index]) acc.push(index);
+            return acc;
+          }, [] as number[]);
+          
+          // If all characters are correct, stop the unscrambling
+          if (scrambledIndices.length === 0) {
+            clearInterval(intervalId);
+            
+            // Schedule the next title change after a delay
+            setTimeout(() => {
+              setIsUnscrambling(false);
+              
+              // Schedule a scrambling effect after showing the full title for a while
+              setTimeout(() => {
+                setIsUnscrambling(true);
+                setCurrentTitleIndex((currentTitleIndex + 1) % titles.length);
+              }, 2000); // Show the full title for 2 seconds
+              
+            }, 500); // Small delay after unscrambling completes
+            
+            return current;
+          }
+          
+          // Pick a random scrambled index to fix
+          const randomIndex = scrambledIndices[Math.floor(Math.random() * scrambledIndices.length)];
+          currentArray[randomIndex] = targetArray[randomIndex];
+          
+          return currentArray.join('');
+        });
+      }, 50); // Try to replace a character every 50ms
+      
+      return () => clearInterval(intervalId);
+    }
+  }, [currentTitleIndex, isUnscrambling]);
+  
   return <section id="home" className="relative min-h-screen flex flex-col justify-center items-center grid-lines-bg">
       {/* Black gradient overlay at the bottom */}
       <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-black to-transparent z-10"></div>
@@ -9,9 +72,8 @@ const Hero = () => {
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 text-center">
         <div className="animate-fade-in-up">
           <h2 className="text-xl md:text-2xl font-medium mb-4 text-slate-50">IMMERSIVE EXPERIENCES</h2>
-          <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold mb-6 tracking-tight">
-            INNOVATING CONTENT<br />
-            
+          <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold mb-6 tracking-tight min-h-[1.2em]">
+            <span className="inline-block transition-all duration-100">{displayText}</span><br />
           </h1>
           <p className="text-lg md:text-xl max-w-3xl mx-auto text-gray-300 mb-8">
             Supporting pharmaceutical innovations with cutting-edge AI technology 
