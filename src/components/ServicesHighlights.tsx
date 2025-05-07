@@ -1,5 +1,6 @@
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { HoverCard, HoverCardTrigger, HoverCardContent } from '@/components/ui/hover-card';
 
 const ServicesHighlights = () => {
   const services = [{
@@ -22,7 +23,7 @@ const ServicesHighlights = () => {
           {services.map((service, index) => (
             <Card 
               key={index} 
-              className="relative overflow-hidden border-gray-700"
+              className="relative overflow-hidden border-gray-700 group"
               style={{
                 background: 'transparent'
               }}
@@ -35,7 +36,7 @@ const ServicesHighlights = () => {
                   backgroundPosition: 'center',
                 }}
               />
-              <div className="relative z-10 bg-black/30">
+              <div className="relative z-10 bg-black/30 group-hover:bg-transparent transition-colors duration-300">
                 <CardHeader>
                   <CardTitle className="text-white">
                     {service.title}
