@@ -54,8 +54,8 @@ export default {
 					foreground: 'hsl(var(--card-foreground))'
 				},
 				cyberpunk: {
-					magenta: "#D946EF",
-					cyan: "#0EA5E9",
+					magenta: "#FF37BB", // Updated from #D946EF to #FF37BB
+					cyan: "#0038FF", // Updated from #0EA5E9 to #0038FF
 					black: "#000000",
 					"dark-blue": "#051622",
 					"light-magenta": "#F472B6",
