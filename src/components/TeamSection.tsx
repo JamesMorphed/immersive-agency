@@ -1,5 +1,5 @@
 
-import { Avatar } from '@/components/ui/avatar';
+import { Avatar, AvatarImage } from '@/components/ui/avatar';
 import { Mail, Phone, User } from "lucide-react";
 
 const TeamSection = () => {
@@ -9,6 +9,7 @@ const TeamSection = () => {
       name: "Jane Smith",
       title: "Creative Director",
       bio: "Responsible for spearheading our creativity and innovation across our immersive experiences.",
+      image: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&q=80&w=600&h=600",
       socials: {
         twitter: "#",
         linkedin: "#",
@@ -19,6 +20,7 @@ const TeamSection = () => {
       name: "John Davis",
       title: "Lead Designer",
       bio: "Drives our creative vision from concept to execution, focusing on immersive user experiences.",
+      image: "https://images.unsplash.com/photo-1581092795360-fd1ca04f0952?auto=format&fit=crop&q=80&w=600&h=600",
       socials: {
         twitter: "#",
         linkedin: "#",
@@ -29,6 +31,7 @@ const TeamSection = () => {
       name: "Emily Johnson",
       title: "Product Manager",
       bio: "Ensures seamless delivery of products by managing the development process from concept to delivery.",
+      image: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&q=80&w=600&h=600",
       socials: {
         twitter: "#",
         linkedin: "#",
@@ -39,6 +42,7 @@ const TeamSection = () => {
       name: "Michael Brown",
       title: "Technical Lead",
       bio: "Leads our engineering team to build robust and scalable foundations for our immersive projects.",
+      image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=600&h=600",
       socials: {
         twitter: "#",
         linkedin: "#",
@@ -49,6 +53,7 @@ const TeamSection = () => {
       name: "Sarah Lee",
       title: "UX/UI Designer",
       bio: "Crafts user-centered designs that deliver exceptional digital experiences across all platforms.",
+      image: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=600&h=600",
       socials: {
         twitter: "#",
         linkedin: "#",
@@ -70,6 +75,7 @@ const TeamSection = () => {
             <div key={index} className="p-6 rounded-lg border border-gray-800 bg-gray-900/50 flex flex-col items-start text-left">
               <div className="mb-4">
                 <Avatar className="h-20 w-20 border-2 border-cyberpunk-magenta">
+                  <AvatarImage src={member.image} alt={member.name} />
                   <User className="h-12 w-12 text-gray-400" />
                 </Avatar>
               </div>
