@@ -9,8 +9,8 @@ const Hero = () => {
         <div className="animate-fade-in-up">
           <h2 className="text-cyberpunk-cyan text-xl md:text-2xl font-medium mb-4">IMMERSIVE EXPERIENCES</h2>
           <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold mb-6 tracking-tight">
-            <span className="neon-text-magenta">NEXT GEN</span> <br />
-            <span className="neon-text-cyan">PHARMA SOLUTIONS</span>
+            <span className="gradient-text">NEXT GEN</span> <br />
+            <span className="gradient-text">PHARMA SOLUTIONS</span>
           </h1>
           <p className="text-lg md:text-xl max-w-3xl mx-auto text-gray-300 mb-8">
             Supporting pharmaceutical innovations with cutting-edge AI technology 

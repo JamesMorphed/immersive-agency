@@ -11,7 +11,7 @@ const ContactSection = () => {
         <div className="text-center mb-16">
           <h2 className="text-cyberpunk-cyan text-xl font-medium mb-3">GET IN TOUCH</h2>
           <h3 className="text-4xl md:text-5xl font-bold mb-4">
-            <span className="neon-text-magenta">Start Your</span> 
+            <span className="gradient-text">Start Your</span> 
             <span className="text-white"> Transformation</span>
           </h3>
           <p className="text-gray-400 max-w-2xl mx-auto">

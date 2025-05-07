@@ -52,24 +52,21 @@
 }
 
 @layer utilities {
-  .neon-text-magenta {
-    @apply text-cyberpunk-magenta;
-    text-shadow: 0 0 5px #FF37BB, 0 0 10px #FF37BB, 0 0 15px #FF37BB; /* Updated from #D946EF to #FF37BB */
-  }
-  
-  .neon-text-cyan {
-    @apply text-cyberpunk-cyan;
-    text-shadow: 0 0 5px #0038FF, 0 0 10px #0038FF, 0 0 15px #0038FF; /* Updated from #0EA5E9 to #0038FF */
+  .gradient-text {
+    background: linear-gradient(135deg, #0038FF 0%, #FF37BB 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
   }
   
   .neon-border-magenta {
     @apply border-cyberpunk-magenta;
-    box-shadow: 0 0 5px #FF37BB, 0 0 10px #FF37BB; /* Updated from #D946EF to #FF37BB */
+    box-shadow: 0 0 5px #FF37BB, 0 0 10px #FF37BB;
   }
   
   .neon-border-cyan {
     @apply border-cyberpunk-cyan;
-    box-shadow: 0 0 5px #0038FF, 0 0 10px #0038FF; /* Updated from #0EA5E9 to #0038FF */
+    box-shadow: 0 0 5px #0038FF, 0 0 10px #0038FF;
   }
 
   .grid-lines-bg {
@@ -103,12 +100,12 @@
   }
 
   .text-outline-magenta {
-    -webkit-text-stroke: 1px #FF37BB; /* Updated from #D946EF to #FF37BB */
+    -webkit-text-stroke: 1px #FF37BB;
     color: transparent;
   }
 
   .text-outline-cyan {
-    -webkit-text-stroke: 1px #0038FF; /* Updated from #0EA5E9 to #0038FF */
+    -webkit-text-stroke: 1px #0038FF;
     color: transparent;
   }
 
@@ -120,11 +117,11 @@
     width: 64px;
     height: 64px;
     object-fit: contain;
-    filter: drop-shadow(0 0 8px rgba(255, 55, 187, 0.5)); /* Updated from rgba(208, 70, 239, 0.5) to match #FF37BB */
+    filter: drop-shadow(0 0 8px rgba(255, 55, 187, 0.5));
     transition: filter 0.3s ease;
   }
 
   .custom-icon:hover {
-    filter: drop-shadow(0 0 12px rgba(255, 55, 187, 0.8)); /* Updated from rgba(208, 70, 239, 0.8) to match #FF37BB */
+    filter: drop-shadow(0 0 12px rgba(255, 55, 187, 0.8));
   }
 }

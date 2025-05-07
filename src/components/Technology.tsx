@@ -33,7 +33,7 @@ const Technology = () => {
             <h2 className="text-cyberpunk-magenta text-xl font-medium mb-3">OUR TECH</h2>
             <h3 className="text-4xl md:text-5xl font-bold mb-6">
               <span className="text-white">Cutting-Edge</span> <br />
-              <span className="neon-text-cyan">Technology</span>
+              <span className="gradient-text">Technology</span>
             </h3>
             <p className="text-gray-400 mb-6">
               We leverage the latest advancements in immersive technology and artificial intelligence to 

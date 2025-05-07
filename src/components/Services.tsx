@@ -31,8 +31,7 @@ const Services = () => {
         <div className="text-center mb-16">
           <h2 className="text-cyberpunk-cyan text-xl font-medium mb-3">OUR SERVICES</h2>
           <h3 className="text-4xl md:text-5xl font-bold">
-            <span className="neon-text-magenta">Transformative</span> 
-            <span className="text-white"> Solutions</span>
+            <span className="gradient-text">Transformative Solutions</span>
           </h3>
         </div>
 
