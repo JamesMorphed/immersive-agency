@@ -1,15 +1,12 @@
-
 import { Facebook, Twitter, Instagram, Linkedin } from 'lucide-react';
-
 const Footer = () => {
-  return (
-    <footer className="bg-black border-t border-gray-800">
+  return <footer className="bg-black border-t border-gray-800">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-12">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div className="col-span-1 md:col-span-2">
             <div className="flex items-center">
-              <h1 className="text-2xl font-bold neon-text-magenta">NEXUS</h1>
-              <span className="ml-1 text-xs font-light text-cyberpunk-cyan mt-3">IMMERSIVE</span>
+              <h1 className="text-2xl font-bold neon-text-magenta">IMMERSIVE</h1>
+              <span className="ml-1 mt-3 text-white font-light text-lg my-0">AGENCY</span>
             </div>
             <p className="mt-4 text-gray-400 max-w-md">
               Pushing the boundaries of pharmaceutical education and training through 
@@ -65,8 +62,6 @@ const Footer = () => {
           </div>
         </div>
       </div>
-    </footer>
-  );
+    </footer>;
 };
-
 export default Footer;
