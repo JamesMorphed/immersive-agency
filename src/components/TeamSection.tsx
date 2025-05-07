@@ -1,6 +1,7 @@
 
 import { Avatar, AvatarImage } from '@/components/ui/avatar';
 import { Mail, Phone, User } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 
 const TeamSection = () => {
   // Team members data
@@ -62,17 +63,84 @@ const TeamSection = () => {
     }
   ];
 
+  // Animation for section title
+  const [isHeaderVisible, setIsHeaderVisible] = useState(false);
+  const headerRef = useRef<HTMLDivElement>(null);
+
+  // Animation for team member cards
+  const [visibleCards, setVisibleCards] = useState<Array<boolean>>(Array(teamMembers.length).fill(false));
+  const cardRefs = useRef<Array<HTMLDivElement | null>>(Array(teamMembers.length).fill(null));
+
+  useEffect(() => {
+    // Set up observers for header
+    const headerObserver = new IntersectionObserver((entries) => {
+      if (entries[0].isIntersecting) {
+        setIsHeaderVisible(true);
+        headerObserver.disconnect();
+      }
+    }, { threshold: 0.1 });
+
+    if (headerRef.current) {
+      headerObserver.observe(headerRef.current);
+    }
+
+    // Set up observers for cards
+    const cardObservers: IntersectionObserver[] = [];
+    
+    cardRefs.current.forEach((ref, index) => {
+      if (ref) {
+        const observer = new IntersectionObserver((entries) => {
+          if (entries[0].isIntersecting) {
+            setVisibleCards(prev => {
+              const newState = [...prev];
+              newState[index] = true;
+              return newState;
+            });
+            observer.disconnect();
+          }
+        }, { threshold: 0.1 });
+        
+        observer.observe(ref);
+        cardObservers.push(observer);
+      }
+    });
+
+    // Cleanup
+    return () => {
+      headerObserver.disconnect();
+      cardObservers.forEach(observer => observer.disconnect());
+    };
+  }, []);
+
   return (
     <section className="py-16 bg-black">
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
-        <div className="mb-12 text-left">
+        <div 
+          ref={headerRef} 
+          className={`mb-12 text-left transition-all duration-1000 transform ${
+            isHeaderVisible 
+              ? 'opacity-100 translate-y-0' 
+              : 'opacity-0 translate-y-10'
+          }`}
+        >
           <h3 className="text-3xl md:text-4xl font-bold mb-3 text-white">Our Team</h3>
           <p className="text-gray-400">Meet the talented individuals behind our innovative solutions.</p>
         </div>
         
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {teamMembers.map((member, index) => (
-            <div key={index} className="p-6 rounded-lg border border-gray-800 bg-gray-900/50 flex flex-col items-start text-left">
+            <div 
+              key={index} 
+              ref={el => cardRefs.current[index] = el}
+              className={`p-6 rounded-lg border border-gray-800 bg-gray-900/50 flex flex-col items-start text-left transition-all duration-700 transform ${
+                visibleCards[index] 
+                  ? 'opacity-100 translate-y-0' 
+                  : 'opacity-0 translate-y-20'
+              }`}
+              style={{
+                transitionDelay: `${index * 150}ms`
+              }}
+            >
               <div className="mb-4">
                 <Avatar className="h-20 w-20 border-2 border-cyberpunk-magenta">
                   <AvatarImage src={member.image} alt={member.name} />
