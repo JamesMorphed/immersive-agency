@@ -29,7 +29,7 @@ const Navbar = () => {
           <div className="flex items-center">
             <Link to="/" className="flex items-center">
               <h1 className="font-bold neon-text-magenta text-base">IMMERSIVE</h1>
-              <span className="ml-1 font-light mt-3 text-slate-50 text-base my-0">AGENCY</span>
+              <span className="ml-1 font-light text-slate-50 text-base">AGENCY</span>
             </Link>
           </div>
           
