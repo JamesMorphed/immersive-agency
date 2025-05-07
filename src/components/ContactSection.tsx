@@ -1,110 +1,205 @@
 
+import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
+import { Checkbox } from '@/components/ui/checkbox';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Label } from '@/components/ui/label';
+import { toast } from '@/components/ui/sonner';
+import { Mail } from 'lucide-react';
 
 const ContactSection = () => {
+  const [formData, setFormData] = useState({
+    firstName: '',
+    lastName: '',
+    email: '',
+    phoneNumber: '',
+    inquiryType: 'General',
+    hearAboutUs: '',
+    message: '',
+    agreeToTerms: false
+  });
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleCheckboxChange = (checked: boolean) => {
+    setFormData(prev => ({ ...prev, agreeToTerms: checked }));
+  };
+
+  const handleSelectChange = (value: string) => {
+    setFormData(prev => ({ ...prev, inquiryType: value }));
+  };
+
+  const handleRadioChange = (value: string) => {
+    setFormData(prev => ({ ...prev, hearAboutUs: value }));
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    console.log('Form submitted:', formData);
+    toast.success('Message sent! We will get back to you soon.');
+    // Reset form
+    setFormData({
+      firstName: '',
+      lastName: '',
+      email: '',
+      phoneNumber: '',
+      inquiryType: 'General',
+      hearAboutUs: '',
+      message: '',
+      agreeToTerms: false
+    });
+  };
+
   return (
-    <section id="contact" className="py-20 bg-black">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6">
+    <section id="contact" className="py-16 bg-black">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6">
         <div className="text-center mb-16">
-          <h2 className="text-cyberpunk-cyan text-xl font-medium mb-3">GET IN TOUCH</h2>
-          <h3 className="text-4xl md:text-5xl font-bold mb-4">
-            <span className="gradient-text">Start Your</span> 
-            <span className="text-white"> Transformation</span>
-          </h3>
-          <p className="text-gray-400 max-w-2xl mx-auto">
-            Ready to revolutionize your pharmaceutical education and training? Contact us to discuss your project.
+          <h2 className="text-3xl md:text-4xl font-bold mb-3 text-white">Get in Touch</h2>
+          <p className="text-gray-400">
+            Ready to bring your ideas to life? Get in touch with us to discuss your projects.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
-          <div className="lg:col-span-2">
-            <form className="space-y-6">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                <div>
-                  <label htmlFor="name" className="block text-sm font-medium text-gray-400 mb-2">Name</label>
-                  <Input 
-                    type="text" 
-                    id="name" 
-                    placeholder="Your name" 
-                    className="bg-gray-900 border-gray-800 focus:border-cyberpunk-magenta text-white"
-                  />
-                </div>
-                <div>
-                  <label htmlFor="email" className="block text-sm font-medium text-gray-400 mb-2">Email</label>
-                  <Input 
-                    type="email" 
-                    id="email" 
-                    placeholder="your@email.com" 
-                    className="bg-gray-900 border-gray-800 focus:border-cyberpunk-magenta text-white"
-                  />
-                </div>
-              </div>
-              
+        <div className="bg-gray-900/50 p-8 rounded-lg border border-gray-800">
+          <form onSubmit={handleSubmit} className="space-y-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
               <div>
-                <label htmlFor="company" className="block text-sm font-medium text-gray-400 mb-2">Company</label>
+                <Label htmlFor="firstName" className="text-white mb-2">First name</Label>
                 <Input 
-                  type="text" 
-                  id="company" 
-                  placeholder="Your company" 
-                  className="bg-gray-900 border-gray-800 focus:border-cyberpunk-magenta text-white"
+                  id="firstName"
+                  name="firstName"
+                  value={formData.firstName}
+                  onChange={handleChange}
+                  placeholder="First name" 
+                  className="bg-gray-800 border-gray-700 text-white"
+                  required
                 />
               </div>
-              
               <div>
-                <label htmlFor="message" className="block text-sm font-medium text-gray-400 mb-2">Message</label>
-                <Textarea 
-                  id="message" 
-                  placeholder="Tell us about your project" 
-                  rows={5}
-                  className="bg-gray-900 border-gray-800 focus:border-cyberpunk-magenta text-white"
+                <Label htmlFor="lastName" className="text-white mb-2">Last name</Label>
+                <Input 
+                  id="lastName"
+                  name="lastName"
+                  value={formData.lastName}
+                  onChange={handleChange}
+                  placeholder="Last name" 
+                  className="bg-gray-800 border-gray-700 text-white"
+                  required
                 />
               </div>
-              
-              <Button className="bg-cyberpunk-magenta hover:bg-cyberpunk-magenta/80 text-white w-full py-6">
-                Send Message
-              </Button>
-            </form>
-          </div>
-          
-          <div className="space-y-8">
-            <div>
-              <h4 className="text-xl font-bold text-white mb-4">Contact Information</h4>
-              <div className="space-y-4">
-                <div>
-                  <p className="text-gray-300">Email</p>
-                  <a href="mailto:info@nexusimmersive.com" className="text-cyberpunk-magenta hover:text-cyberpunk-magenta/80">
-                    info@nexusimmersive.com
-                  </a>
-                </div>
-                
-                <div>
-                  <p className="text-gray-300">Phone</p>
-                  <a href="tel:+1234567890" className="text-cyberpunk-magenta hover:text-cyberpunk-magenta/80">
-                    +1 (234) 567-890
-                  </a>
-                </div>
-                
-                <div>
-                  <p className="text-gray-300">Website</p>
-                  <a href="https://www.nexusimmersive.com" target="_blank" rel="noopener noreferrer" className="text-cyberpunk-magenta hover:text-cyberpunk-magenta/80">
-                    www.nexusimmersive.com
-                  </a>
-                </div>
+            </div>
+            
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+              <div>
+                <Label htmlFor="email" className="text-white mb-2">Email</Label>
+                <Input 
+                  id="email"
+                  name="email"
+                  type="email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  placeholder="your@email.com" 
+                  className="bg-gray-800 border-gray-700 text-white"
+                  required
+                />
+              </div>
+              <div>
+                <Label htmlFor="phoneNumber" className="text-white mb-2">Phone number</Label>
+                <Input 
+                  id="phoneNumber"
+                  name="phoneNumber"
+                  value={formData.phoneNumber}
+                  onChange={handleChange}
+                  placeholder="(123) 456-7890" 
+                  className="bg-gray-800 border-gray-700 text-white"
+                />
               </div>
             </div>
             
             <div>
-              <h4 className="text-xl font-bold text-white mb-4">Office Location</h4>
-              <p className="text-gray-400">
-                Nexus Tower<br />
-                123 Innovation Street<br />
-                Tech District<br />
-                San Francisco, CA 94103
-              </p>
+              <Label htmlFor="inquiryType" className="text-white mb-2">Choose a topic</Label>
+              <Select value={formData.inquiryType} onValueChange={handleSelectChange}>
+                <SelectTrigger className="bg-gray-800 border-gray-700 text-white">
+                  <SelectValue placeholder="Select a topic" />
+                </SelectTrigger>
+                <SelectContent className="bg-gray-800 border-gray-700 text-white">
+                  <SelectItem value="General">General Inquiry</SelectItem>
+                  <SelectItem value="Support">Support</SelectItem>
+                  <SelectItem value="Sales">Sales</SelectItem>
+                  <SelectItem value="Partnership">Partnership</SelectItem>
+                  <SelectItem value="Other">Other</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
-          </div>
+            
+            <div>
+              <p className="text-white mb-3">How did you learn about us?</p>
+              <RadioGroup 
+                value={formData.hearAboutUs} 
+                onValueChange={handleRadioChange}
+                className="grid grid-cols-1 sm:grid-cols-2 gap-2"
+              >
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="social-media" id="social-media" />
+                  <Label htmlFor="social-media" className="text-gray-300">Social Media</Label>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="referral" id="referral" />
+                  <Label htmlFor="referral" className="text-gray-300">Personal referral</Label>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="web-search" id="web-search" />
+                  <Label htmlFor="web-search" className="text-gray-300">Web search</Label>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="other" id="other" />
+                  <Label htmlFor="other" className="text-gray-300">Other</Label>
+                </div>
+              </RadioGroup>
+            </div>
+            
+            <div>
+              <Label htmlFor="message" className="text-white mb-2">Message</Label>
+              <Textarea 
+                id="message" 
+                name="message"
+                value={formData.message}
+                onChange={handleChange}
+                placeholder="Tell us about your project..." 
+                rows={6}
+                className="bg-gray-800 border-gray-700 text-white"
+                required
+              />
+            </div>
+            
+            <div className="flex items-start">
+              <div className="flex items-center h-5">
+                <Checkbox 
+                  id="terms" 
+                  checked={formData.agreeToTerms}
+                  onCheckedChange={handleCheckboxChange} 
+                  className="border-gray-500"
+                />
+              </div>
+              <div className="ml-3 text-sm">
+                <Label htmlFor="terms" className="text-gray-300">
+                  I agree to the terms
+                </Label>
+              </div>
+            </div>
+            
+            <div className="text-right">
+              <Button type="submit" className="bg-cyberpunk-magenta hover:bg-cyberpunk-magenta/80 text-white px-8">
+                Send
+              </Button>
+            </div>
+          </form>
         </div>
       </div>
     </section>
