@@ -59,7 +59,7 @@ const ContactSection = () => {
   return (
     <section id="contact" className="py-16 bg-black">
       <div className="max-w-4xl mx-auto px-4 sm:px-6">
-        <div className="text-center mb-16">
+        <div className="text-left mb-16">
           <h2 className="text-3xl md:text-4xl font-bold mb-3 text-white">Get in Touch</h2>
           <p className="text-gray-400">
             Ready to bring your ideas to life? Get in touch with us to discuss your projects.

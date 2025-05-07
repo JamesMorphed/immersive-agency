@@ -60,14 +60,14 @@ const TeamSection = () => {
   return (
     <section className="py-16 bg-black">
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
-        <div className="text-center mb-12">
+        <div className="mb-12 text-left">
           <h3 className="text-3xl md:text-4xl font-bold mb-3 text-white">Our Team</h3>
           <p className="text-gray-400">Meet the talented individuals behind our innovative solutions.</p>
         </div>
         
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {teamMembers.map((member, index) => (
-            <div key={index} className="p-6 rounded-lg border border-gray-800 bg-gray-900/50 flex flex-col items-center text-center">
+            <div key={index} className="p-6 rounded-lg border border-gray-800 bg-gray-900/50 flex flex-col items-start text-left">
               <div className="mb-4">
                 <Avatar className="h-20 w-20 border-2 border-cyberpunk-magenta">
                   <User className="h-12 w-12 text-gray-400" />
