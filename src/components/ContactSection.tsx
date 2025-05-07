@@ -2,7 +2,6 @@
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import { Mail, Phone, Globe } from 'lucide-react';
 
 const ContactSection = () => {
   return (
@@ -73,40 +72,25 @@ const ContactSection = () => {
             <div>
               <h4 className="text-xl font-bold text-white mb-4">Contact Information</h4>
               <div className="space-y-4">
-                <div className="flex items-start">
-                  <div className="flex-shrink-0 text-cyberpunk-cyan">
-                    <Mail className="h-6 w-6" />
-                  </div>
-                  <div className="ml-4">
-                    <p className="text-gray-300">Email</p>
-                    <a href="mailto:info@nexusimmersive.com" className="text-cyberpunk-magenta hover:text-cyberpunk-magenta/80">
-                      info@nexusimmersive.com
-                    </a>
-                  </div>
+                <div>
+                  <p className="text-gray-300">Email</p>
+                  <a href="mailto:info@nexusimmersive.com" className="text-cyberpunk-magenta hover:text-cyberpunk-magenta/80">
+                    info@nexusimmersive.com
+                  </a>
                 </div>
                 
-                <div className="flex items-start">
-                  <div className="flex-shrink-0 text-cyberpunk-cyan">
-                    <Phone className="h-6 w-6" />
-                  </div>
-                  <div className="ml-4">
-                    <p className="text-gray-300">Phone</p>
-                    <a href="tel:+1234567890" className="text-cyberpunk-magenta hover:text-cyberpunk-magenta/80">
-                      +1 (234) 567-890
-                    </a>
-                  </div>
+                <div>
+                  <p className="text-gray-300">Phone</p>
+                  <a href="tel:+1234567890" className="text-cyberpunk-magenta hover:text-cyberpunk-magenta/80">
+                    +1 (234) 567-890
+                  </a>
                 </div>
                 
-                <div className="flex items-start">
-                  <div className="flex-shrink-0 text-cyberpunk-cyan">
-                    <Globe className="h-6 w-6" />
-                  </div>
-                  <div className="ml-4">
-                    <p className="text-gray-300">Website</p>
-                    <a href="https://www.nexusimmersive.com" target="_blank" rel="noopener noreferrer" className="text-cyberpunk-magenta hover:text-cyberpunk-magenta/80">
-                      www.nexusimmersive.com
-                    </a>
-                  </div>
+                <div>
+                  <p className="text-gray-300">Website</p>
+                  <a href="https://www.nexusimmersive.com" target="_blank" rel="noopener noreferrer" className="text-cyberpunk-magenta hover:text-cyberpunk-magenta/80">
+                    www.nexusimmersive.com
+                  </a>
                 </div>
               </div>
             </div>
