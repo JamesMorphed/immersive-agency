@@ -1,4 +1,7 @@
+
 import { Card } from '@/components/ui/card';
+import { useScrollAnimation } from '@/hooks/useScrollAnimation';
+
 const technologies = [{
   title: "Artificial Intelligence",
   description: "Our AI systems adapt and learn from user interactions to create increasingly effective educational experiences.",
@@ -16,7 +19,11 @@ const technologies = [{
   description: "Dynamic 3D models that can be manipulated to explore pharmaceutical compounds from every possible angle.",
   icon: "/lovable-uploads/80e89f8b-7fea-4ece-9503-e388557a6fd3.png" // 3D icon
 }];
+
 const Technology = () => {
+  const { isVisible: isTextVisible, elementRef: textRef } = useScrollAnimation();
+  const { isVisible: isCardsVisible, elementRef: cardsRef } = useScrollAnimation();
+
   return <section id="technology" className="py-20 bg-gradient-to-b from-cyberpunk-dark-blue to-black relative">
       {/* White perspective grid background */}
       <div className="absolute inset-0 z-0 opacity-10">
@@ -25,7 +32,12 @@ const Technology = () => {
       
       <div className="max-w-7xl mx-auto px-4 sm:px-6 relative z-10">
         <div className="flex flex-col md:flex-row gap-12">
-          <div className="w-full md:w-1/3">
+          <div 
+            ref={textRef}
+            className={`w-full md:w-1/3 transition-all duration-1000 transform ${
+              isTextVisible ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-10'
+            }`}
+          >
             <h2 className="text-cyberpunk-magenta text-xl font-medium mb-3">WHAT WE DO</h2>
             <h3 className="text-4xl md:text-5xl font-bold mb-6">
               <span className="text-white">Cutting-Edge</span> <br />
@@ -41,8 +53,23 @@ const Technology = () => {
             </p>
           </div>
 
-          <div className="w-full md:w-2/3 grid grid-cols-1 sm:grid-cols-2 gap-8">
-            {technologies.map((tech, index) => <Card key={index} className="bg-black/60 backdrop-blur-sm border border-gray-800 hover:border-cyberpunk-cyan transition-all duration-300 p-6 group relative overflow-hidden">
+          <div 
+            ref={cardsRef}
+            className={`w-full md:w-2/3 grid grid-cols-1 sm:grid-cols-2 gap-8 transition-all duration-1000 transform ${
+              isCardsVisible ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-10'
+            }`}
+            style={{ transitionDelay: '200ms' }}
+          >
+            {technologies.map((tech, index) => <Card 
+                key={index} 
+                className="bg-black/60 backdrop-blur-sm border border-gray-800 hover:border-cyberpunk-cyan transition-all duration-300 p-6 group relative overflow-hidden"
+                style={{ 
+                  transitionDelay: `${200 + (index * 150)}ms`,
+                  opacity: isCardsVisible ? 1 : 0,
+                  transform: isCardsVisible ? 'translateY(0)' : 'translateY(20px)',
+                  transition: 'opacity 700ms ease, transform 700ms ease'
+                }}
+              >
                 <div className="absolute top-0 right-0 w-24 h-24 bg-cyberpunk-cyan/5 rounded-full -mr-12 -mt-12 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                 <div className="mb-5 flex justify-center">
                   <img src={tech.icon} alt={tech.title} className="custom-icon group-hover:filter group-hover:brightness-110" />

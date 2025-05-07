@@ -8,6 +8,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Label } from '@/components/ui/label';
 import { toast } from '@/components/ui/sonner';
 import { Mail } from 'lucide-react';
+import { useScrollAnimation } from '@/hooks/useScrollAnimation';
+
 const ContactSection = () => {
   const [formData, setFormData] = useState({
     firstName: '',
@@ -19,6 +21,12 @@ const ContactSection = () => {
     message: '',
     agreeToTerms: false
   });
+
+  const { isVisible: isHeaderVisible, elementRef: headerRef } = useScrollAnimation();
+  const { isVisible: isFormVisible, elementRef: formRef } = useScrollAnimation({
+    threshold: 0.1
+  });
+  
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const {
       name,
@@ -29,24 +37,28 @@ const ContactSection = () => {
       [name]: value
     }));
   };
+  
   const handleCheckboxChange = (checked: boolean) => {
     setFormData(prev => ({
       ...prev,
       agreeToTerms: checked
     }));
   };
+  
   const handleSelectChange = (value: string) => {
     setFormData(prev => ({
       ...prev,
       inquiryType: value
     }));
   };
+  
   const handleRadioChange = (value: string) => {
     setFormData(prev => ({
       ...prev,
       hearAboutUs: value
     }));
   };
+  
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     console.log('Form submitted:', formData);
@@ -63,14 +75,26 @@ const ContactSection = () => {
       agreeToTerms: false
     });
   };
+
   return <section id="contact" className="py-16 bg-black">
       <div className="max-w-4xl mx-auto px-4 sm:px-6">
-        <div className="text-left mb-16">
+        <div 
+          ref={headerRef}
+          className={`text-left mb-16 transition-all duration-1000 transform ${
+            isHeaderVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+          }`}
+        >
           <h2 className="text-3xl md:text-4xl font-bold mb-3 text-white">Immersive Studio project assessment</h2>
           <p className="text-gray-400">The form will take approximately 8 minutes to complete.</p>
         </div>
 
-        <div className="bg-gray-900/50 p-8 rounded-lg border border-gray-800">
+        <div 
+          ref={formRef}
+          className={`bg-gray-900/50 p-8 rounded-lg border border-gray-800 transition-all duration-1000 transform ${
+            isFormVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+          }`}
+          style={{ transitionDelay: '200ms' }}
+        >
           <form onSubmit={handleSubmit} className="space-y-6">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
               <div>
@@ -158,4 +182,5 @@ const ContactSection = () => {
       </div>
     </section>;
 };
+
 export default ContactSection;

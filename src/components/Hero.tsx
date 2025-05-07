@@ -1,11 +1,22 @@
+
 import { Button } from '@/components/ui/button';
 import { ArrowRight } from 'lucide-react';
 import { useEffect, useState } from 'react';
+import { useScrollAnimation } from '@/hooks/useScrollAnimation';
+
 const Hero = () => {
   const titles = ["INNOVATING CONTENT", "EMPOWERING HEALTH", "TRANSFORMING ENGAGEMENT"];
   const [currentTitleIndex, setCurrentTitleIndex] = useState(0);
   const [displayText, setDisplayText] = useState("");
   const [isUnscrambling, setIsUnscrambling] = useState(true);
+  
+  const { isVisible: isContentVisible, elementRef: contentRef } = useScrollAnimation();
+  const { isVisible: isButtonVisible, elementRef: buttonRef } = useScrollAnimation({
+    threshold: 0.1,
+    rootMargin: '0px',
+    triggerOnce: true
+  });
+
   useEffect(() => {
     const targetText = titles[currentTitleIndex];
     if (isUnscrambling) {
@@ -54,12 +65,20 @@ const Hero = () => {
       return () => clearInterval(intervalId);
     }
   }, [currentTitleIndex, isUnscrambling]);
+
   return <section id="home" className="relative min-h-screen flex flex-col justify-center items-center grid-lines-bg">
       {/* Black gradient overlay at the bottom */}
       <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-black to-transparent z-10"></div>
       
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 text-center">
-        <div className="animate-fade-in-up">
+        <div 
+          ref={contentRef}
+          className={`transition-all duration-1000 transform ${
+            isContentVisible 
+              ? 'opacity-100 translate-y-0' 
+              : 'opacity-0 translate-y-10'
+          }`}
+        >
           <h2 className="text-xl md:text-2xl font-medium mb-4 text-slate-50">IMMERSIVE EXPERIENCES</h2>
           <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold mb-6 tracking-tight min-h-[1.2em]">
             <span className="inline-block transition-all duration-100 text-7xl">{displayText}</span><br />
@@ -68,12 +87,17 @@ const Hero = () => {
             Supporting pharmaceutical innovations with cutting-edge AI technology 
             and immersive design solutions that transform education and training.
           </p>
-          
-          
         </div>
       </div>
       
-      <div className="absolute bottom-10 left-0 right-0 flex justify-center animate-bounce z-20">
+      <div 
+        ref={buttonRef}
+        className={`absolute bottom-10 left-0 right-0 flex justify-center z-20 transition-all duration-700 transform ${
+          isButtonVisible 
+            ? 'opacity-100 translate-y-0' 
+            : 'opacity-0 translate-y-10'
+        }`}
+      >
         <a href="#services" className="text-gray-400 hover:text-white">
           <div className="border-2 border-gray-400 rounded-full p-2">
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">

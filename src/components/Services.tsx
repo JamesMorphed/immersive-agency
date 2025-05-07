@@ -3,6 +3,7 @@ import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card';
 import { ArrowRight } from 'lucide-react';
+import { useScrollAnimation } from '@/hooks/useScrollAnimation';
 
 const Services = () => {
   const serviceItems = [
@@ -26,10 +27,18 @@ const Services = () => {
     }
   ];
 
+  const { isVisible: isHeaderVisible, elementRef: headerRef } = useScrollAnimation();
+  const { isVisible: isCardsVisible, elementRef: cardsRef } = useScrollAnimation();
+
   return (
     <section className="py-20 bg-black">
       <div className="container mx-auto px-4">
-        <div className="text-center mb-16">
+        <div 
+          ref={headerRef}
+          className={`text-center mb-16 transition-all duration-1000 transform ${
+            isHeaderVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+          }`}
+        >
           <h2 className="text-4xl md:text-5xl font-bold mb-4">
             <span className="text-slate-50">Our</span>{' '}
             <span className="text-cyberpunk-magenta">Services</span>
@@ -39,9 +48,24 @@ const Services = () => {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {serviceItems.map((service) => (
-            <Card key={service.id} className="bg-black border border-cyberpunk-magenta/20 overflow-hidden">
+        <div 
+          ref={cardsRef}
+          className={`grid grid-cols-1 md:grid-cols-3 gap-8 transition-all duration-1000 transform ${
+            isCardsVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+          }`}
+          style={{ transitionDelay: '200ms' }}
+        >
+          {serviceItems.map((service, index) => (
+            <Card 
+              key={service.id} 
+              className="bg-black border border-cyberpunk-magenta/20 overflow-hidden"
+              style={{ 
+                transitionDelay: `${200 + (index * 150)}ms`,
+                opacity: isCardsVisible ? 1 : 0,
+                transform: isCardsVisible ? 'translateY(0)' : 'translateY(20px)',
+                transition: 'opacity 700ms ease, transform 700ms ease'
+              }}
+            >
               <div className="aspect-video overflow-hidden">
                 <img 
                   src={service.image} 
