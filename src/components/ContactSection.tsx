@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -9,7 +8,6 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Label } from '@/components/ui/label';
 import { toast } from '@/components/ui/sonner';
 import { Mail } from 'lucide-react';
-
 const ContactSection = () => {
   const [formData, setFormData] = useState({
     firstName: '',
@@ -21,24 +19,34 @@ const ContactSection = () => {
     message: '',
     agreeToTerms: false
   });
-
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    const {
+      name,
+      value
+    } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
   };
-
   const handleCheckboxChange = (checked: boolean) => {
-    setFormData(prev => ({ ...prev, agreeToTerms: checked }));
+    setFormData(prev => ({
+      ...prev,
+      agreeToTerms: checked
+    }));
   };
-
   const handleSelectChange = (value: string) => {
-    setFormData(prev => ({ ...prev, inquiryType: value }));
+    setFormData(prev => ({
+      ...prev,
+      inquiryType: value
+    }));
   };
-
   const handleRadioChange = (value: string) => {
-    setFormData(prev => ({ ...prev, hearAboutUs: value }));
+    setFormData(prev => ({
+      ...prev,
+      hearAboutUs: value
+    }));
   };
-
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     console.log('Form submitted:', formData);
@@ -55,15 +63,11 @@ const ContactSection = () => {
       agreeToTerms: false
     });
   };
-
-  return (
-    <section id="contact" className="py-16 bg-black">
+  return <section id="contact" className="py-16 bg-black">
       <div className="max-w-4xl mx-auto px-4 sm:px-6">
         <div className="text-left mb-16">
-          <h2 className="text-3xl md:text-4xl font-bold mb-3 text-white">Get in Touch</h2>
-          <p className="text-gray-400">
-            Ready to bring your ideas to life? Get in touch with us to discuss your projects.
-          </p>
+          <h2 className="text-3xl md:text-4xl font-bold mb-3 text-white">Immersive Studio project assessment</h2>
+          <p className="text-gray-400">The form will take approximately 8 minutes to complete.</p>
         </div>
 
         <div className="bg-gray-900/50 p-8 rounded-lg border border-gray-800">
@@ -71,54 +75,22 @@ const ContactSection = () => {
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
               <div>
                 <Label htmlFor="firstName" className="text-white mb-2">First name</Label>
-                <Input 
-                  id="firstName"
-                  name="firstName"
-                  value={formData.firstName}
-                  onChange={handleChange}
-                  placeholder="First name" 
-                  className="bg-gray-800 border-gray-700 text-white"
-                  required
-                />
+                <Input id="firstName" name="firstName" value={formData.firstName} onChange={handleChange} placeholder="First name" className="bg-gray-800 border-gray-700 text-white" required />
               </div>
               <div>
                 <Label htmlFor="lastName" className="text-white mb-2">Last name</Label>
-                <Input 
-                  id="lastName"
-                  name="lastName"
-                  value={formData.lastName}
-                  onChange={handleChange}
-                  placeholder="Last name" 
-                  className="bg-gray-800 border-gray-700 text-white"
-                  required
-                />
+                <Input id="lastName" name="lastName" value={formData.lastName} onChange={handleChange} placeholder="Last name" className="bg-gray-800 border-gray-700 text-white" required />
               </div>
             </div>
             
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
               <div>
                 <Label htmlFor="email" className="text-white mb-2">Email</Label>
-                <Input 
-                  id="email"
-                  name="email"
-                  type="email"
-                  value={formData.email}
-                  onChange={handleChange}
-                  placeholder="your@email.com" 
-                  className="bg-gray-800 border-gray-700 text-white"
-                  required
-                />
+                <Input id="email" name="email" type="email" value={formData.email} onChange={handleChange} placeholder="your@email.com" className="bg-gray-800 border-gray-700 text-white" required />
               </div>
               <div>
                 <Label htmlFor="phoneNumber" className="text-white mb-2">Phone number</Label>
-                <Input 
-                  id="phoneNumber"
-                  name="phoneNumber"
-                  value={formData.phoneNumber}
-                  onChange={handleChange}
-                  placeholder="(123) 456-7890" 
-                  className="bg-gray-800 border-gray-700 text-white"
-                />
+                <Input id="phoneNumber" name="phoneNumber" value={formData.phoneNumber} onChange={handleChange} placeholder="(123) 456-7890" className="bg-gray-800 border-gray-700 text-white" />
               </div>
             </div>
             
@@ -140,11 +112,7 @@ const ContactSection = () => {
             
             <div>
               <p className="text-white mb-3">How did you learn about us?</p>
-              <RadioGroup 
-                value={formData.hearAboutUs} 
-                onValueChange={handleRadioChange}
-                className="grid grid-cols-1 sm:grid-cols-2 gap-2"
-              >
+              <RadioGroup value={formData.hearAboutUs} onValueChange={handleRadioChange} className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                 <div className="flex items-center space-x-2">
                   <RadioGroupItem value="social-media" id="social-media" />
                   <Label htmlFor="social-media" className="text-gray-300">Social Media</Label>
@@ -166,26 +134,12 @@ const ContactSection = () => {
             
             <div>
               <Label htmlFor="message" className="text-white mb-2">Message</Label>
-              <Textarea 
-                id="message" 
-                name="message"
-                value={formData.message}
-                onChange={handleChange}
-                placeholder="Tell us about your project..." 
-                rows={6}
-                className="bg-gray-800 border-gray-700 text-white"
-                required
-              />
+              <Textarea id="message" name="message" value={formData.message} onChange={handleChange} placeholder="Tell us about your project..." rows={6} className="bg-gray-800 border-gray-700 text-white" required />
             </div>
             
             <div className="flex items-start">
               <div className="flex items-center h-5">
-                <Checkbox 
-                  id="terms" 
-                  checked={formData.agreeToTerms}
-                  onCheckedChange={handleCheckboxChange} 
-                  className="border-gray-500"
-                />
+                <Checkbox id="terms" checked={formData.agreeToTerms} onCheckedChange={handleCheckboxChange} className="border-gray-500" />
               </div>
               <div className="ml-3 text-sm">
                 <Label htmlFor="terms" className="text-gray-300">
@@ -202,8 +156,6 @@ const ContactSection = () => {
           </form>
         </div>
       </div>
-    </section>
-  );
+    </section>;
 };
-
 export default ContactSection;
