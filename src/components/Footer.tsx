@@ -12,20 +12,7 @@ const Footer = () => {
               Pushing the boundaries of pharmaceutical education and training through 
               immersive technology and innovative design solutions.
             </p>
-            <div className="flex space-x-4 mt-6">
-              <a href="#" className="text-gray-400 hover:text-cyberpunk-magenta transition-colors">
-                <Facebook size={20} />
-              </a>
-              <a href="#" className="text-gray-400 hover:text-cyberpunk-magenta transition-colors">
-                <Twitter size={20} />
-              </a>
-              <a href="#" className="text-gray-400 hover:text-cyberpunk-magenta transition-colors">
-                <Instagram size={20} />
-              </a>
-              <a href="#" className="text-gray-400 hover:text-cyberpunk-magenta transition-colors">
-                <Linkedin size={20} />
-              </a>
-            </div>
+            
           </div>
           
           <div>
