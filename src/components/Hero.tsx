@@ -1,3 +1,4 @@
+
 import { Button } from '@/components/ui/button';
 import { ArrowRight } from 'lucide-react';
 const Hero = () => {
@@ -6,7 +7,7 @@ const Hero = () => {
         <div className="animate-fade-in-up">
           <h2 className="text-xl md:text-2xl font-medium mb-4 text-slate-50">IMMERSIVE EXPERIENCES</h2>
           <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold mb-6 tracking-tight">
-             <br />
+            INNOVATING CONTENT<br />
             <span className="gradient-text">PHARMA SOLUTIONS</span>
           </h1>
           <p className="text-lg md:text-xl max-w-3xl mx-auto text-gray-300 mb-8">
