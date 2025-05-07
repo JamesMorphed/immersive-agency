@@ -3,11 +3,11 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 
 const ServicesHighlights = () => {
   const services = [{
-    title: "Immersive Experiences",
+    title: "Reach out to us directly",
     description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique. Duis cursus, mi quis viverra ornare, eros dolor.",
     bgImage: "/lovable-uploads/327266b3-5b53-410c-a2bc-07c8212d93ee.png"
   }, {
-    title: "Virtual Reality Training",
+    title: "Project briefing form",
     description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique. Duis cursus, mi quis viverra ornare, eros dolor.",
     bgImage: "/lovable-uploads/25052a8d-9aa8-4923-8e7d-e35ff888af78.png"
   }];
