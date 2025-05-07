@@ -10,19 +10,19 @@ const Services = () => {
       id: 1,
       title: 'Digital Strategy',
       description: 'We craft comprehensive digital strategies tailored to your business goals, helping you navigate the digital landscape with confidence.',
-      image: '/lovable-uploads/51402e45-82fe-473e-9b47-d98d4c45bd2f.png'
+      image: '/lovable-uploads/753996d7-1824-47d4-965a-34455cb82c44.png'
     },
     {
       id: 2,
       title: 'App Development',
       description: 'Our expert team creates intuitive, high-performance applications that deliver seamless user experiences across all platforms.',
-      image: '/lovable-uploads/80e89f8b-7fea-4ece-9503-e388557a6fd3.png'
+      image: '/lovable-uploads/61b09af8-feee-4583-aaa1-1b782e76c76e.png'
     },
     {
       id: 3,
       title: 'Experience Design',
       description: 'We design immersive digital experiences that captivate your audience and strengthen your brand connection through innovative interfaces.',
-      image: '/lovable-uploads/b18971a1-8da3-4e08-9765-335dda7922c3.png'
+      image: '/lovable-uploads/43322700-8af4-44cc-97f2-3d09e6482f5e.png'
     }
   ];
 
