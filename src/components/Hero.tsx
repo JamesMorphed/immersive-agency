@@ -69,15 +69,7 @@ const Hero = () => {
             and immersive design solutions that transform education and training.
           </p>
           
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button className="bg-cyberpunk-magenta hover:bg-cyberpunk-magenta/80 text-white px-8 py-6 text-lg">
-              View Our Work
-            </Button>
-            <Button variant="outline" className="border-cyberpunk-cyan text-cyberpunk-cyan hover:bg-cyberpunk-cyan/20 px-8 py-6 text-lg">
-              Get in Touch
-              <ArrowRight className="ml-2 h-5 w-5" />
-            </Button>
-          </div>
+          
         </div>
       </div>
       

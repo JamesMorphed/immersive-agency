@@ -1,19 +1,12 @@
-
 import { Button } from '@/components/ui/button';
 import { ArrowRight } from 'lucide-react';
-
 const FeaturedProject = () => {
-  return (
-    <section className="relative bg-black py-20">
+  return <section className="relative bg-black py-20">
       <div className="container mx-auto px-4">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
           {/* Left side - Image */}
           <div className="relative">
-            <img 
-              src="/lovable-uploads/b18971a1-8da3-4e08-9765-335dda7922c3.png" 
-              alt="Project Showcase" 
-              className="w-full rounded-md shadow-lg border border-cyberpunk-magenta/20"
-            />
+            <img alt="Project Showcase" className="w-full rounded-md shadow-lg border border-cyberpunk-magenta/20" src="/lovable-uploads/9a65e14a-201c-4fbd-9f38-ff5993abda13.png" />
             <div className="absolute bottom-4 left-4 text-sm font-medium text-gray-300 uppercase tracking-wider">
               SUPERBOWL PROJECT 2024
             </div>
@@ -21,14 +14,14 @@ const FeaturedProject = () => {
           
           {/* Right side - Content */}
           <div className="space-y-6">
-            <p className="text-cyberpunk-cyan text-lg mb-2">FEATURED INNOVATION</p>
+            <p className="text-lg mb-2 text-cyberpunk-magenta">FEATURED INNOVATION</p>
             
             <h2 className="text-5xl md:text-7xl font-bold">
-              <span className="text-cyberpunk-cyan">Big </span>
-              <span className="text-cyberpunk-magenta">header</span>
+              <span className="text-slate-50">Headline here</span>
+              
             </h2>
             
-            <h3 className="text-xl text-white mt-4">Headline goes here</h3>
+            <h3 className="text-xl text-white mt-4 my-[17px]">Headline goes here</h3>
             
             <p className="text-gray-300">
               Put some body copy in here that goes over a few lines to show that there 
@@ -46,8 +39,6 @@ const FeaturedProject = () => {
       
       {/* Gradient overlay for seamless transition to next section */}
       <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-black to-transparent"></div>
-    </section>
-  );
+    </section>;
 };
-
 export default FeaturedProject;
