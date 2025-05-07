@@ -1,4 +1,3 @@
-
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans:wght@300;400;500;600;700;800;900&display=swap');
 
 @tailwind base;
@@ -43,12 +42,12 @@
   }
 
   body {
-    @apply bg-black text-foreground font-noto-sans;
+    @apply bg-black text-foreground font-host-grotesk;
     font-feature-settings: "ss01", "ss02";
   }
 
   h1, h2, h3, h4, h5, h6 {
-    @apply font-noto-sans;
+    @apply font-host-grotesk;
   }
 }
 
@@ -110,8 +109,8 @@
     color: transparent;
   }
 
-  .font-noto-sans {
-    font-family: 'Noto Sans', sans-serif;
+  .font-host-grotesk {
+    font-family: 'Host Grotesk', sans-serif;
   }
 
   .custom-icon {

@@ -72,6 +72,7 @@ export default {
 				}
 			},
 			fontFamily: {
+				'host-grotesk': ['Host Grotesk', 'sans-serif'],
 				'noto-sans': ['Noto Sans', 'sans-serif'],
 			},
 			borderRadius: {
