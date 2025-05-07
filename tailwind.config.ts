@@ -72,7 +72,6 @@ export default {
 				}
 			},
 			fontFamily: {
-				'orbitron': ['Orbitron', 'sans-serif'],
 				'noto-sans': ['Noto Sans', 'sans-serif'],
 			},
 			borderRadius: {
