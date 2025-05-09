@@ -44,6 +44,7 @@ const Navbar = () => {
               <NavMenuItem to="/services">Services</NavMenuItem>
               <NavMenuItem to="/projects">Projects</NavMenuItem>
               <NavMenuItem to="/technology">Technology</NavMenuItem>
+              <NavMenuItem to="/blog">Blog</NavMenuItem>
               <NavMenuItem to="/contact">Contact</NavMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>

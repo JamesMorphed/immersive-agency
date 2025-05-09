@@ -3,6 +3,7 @@ import React from 'react';
 import { Card } from '@/components/ui/card';
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
 import { ArrowRight, BookOpen } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 const blogPosts = [
   {
@@ -99,13 +100,13 @@ const Blog = () => {
         </div>
         
         <div className="mt-12 text-center">
-          <a 
-            href="#" 
+          <Link 
+            to="/blog" 
             className="inline-flex items-center px-6 py-3 border border-cyberpunk-cyan text-cyberpunk-cyan hover:bg-cyberpunk-cyan hover:text-black transition-colors duration-300 rounded-md font-medium"
           >
             View All Articles
             <ArrowRight size={16} className="ml-2" />
-          </a>
+          </Link>
         </div>
       </div>
     </section>
