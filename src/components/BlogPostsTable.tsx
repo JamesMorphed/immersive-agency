@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { format } from 'date-fns';
 import { supabase } from '@/integrations/supabase/client';
-import { Calendar, FileText, Pencil, Trash, Tag, Video } from 'lucide-react';
+import { Calendar, FileText, Pencil, Trash, Tag, Video, Image } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import {
@@ -36,6 +36,7 @@ type BlogPost = {
   created_at: string;
   tags: string[] | null;
   video_url: string | null;
+  image_gallery: string[] | null;
 };
 
 const BlogPostsTable = () => {
@@ -54,7 +55,7 @@ const BlogPostsTable = () => {
     try {
       const { data, error } = await supabase
         .from('blog_posts')
-        .select('id, Title, slug, category, published_at, created_at, tags, video_url')
+        .select('id, Title, slug, category, published_at, created_at, tags, video_url, image_gallery')
         .order('created_at', { ascending: false });
 
       if (error) {
@@ -193,6 +194,22 @@ const BlogPostsTable = () => {
                               </TooltipTrigger>
                               <TooltipContent>
                                 Has video content
+                              </TooltipContent>
+                            </Tooltip>
+                          )}
+
+                          {post.image_gallery && post.image_gallery.length > 0 && (
+                            <Tooltip>
+                              <TooltipTrigger>
+                                <Badge variant="outline" className="flex items-center gap-1">
+                                  <Image className="h-3 w-3" />
+                                  {post.image_gallery.length}
+                                </Badge>
+                              </TooltipTrigger>
+                              <TooltipContent>
+                                <div className="text-xs">
+                                  Image gallery: {post.image_gallery.length} images
+                                </div>
                               </TooltipContent>
                             </Tooltip>
                           )}

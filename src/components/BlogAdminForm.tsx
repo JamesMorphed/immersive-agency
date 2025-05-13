@@ -4,7 +4,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { format } from 'date-fns';
-import { CalendarIcon } from "lucide-react";
+import { CalendarIcon, Plus, X } from "lucide-react";
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 
@@ -49,6 +49,7 @@ const blogPostSchema = z.object({
   image_url: z.string().url({ message: "Please enter a valid URL for the image" }),
   video_url: z.string().url({ message: "Please enter a valid URL for the video" }).optional().or(z.literal("")),
   tags: z.array(z.string()).default([]),
+  image_gallery: z.array(z.string().url()).default([]),
   read_time: z.string().min(1, { message: "Read time is required" }),
   publish: z.boolean().default(false),
   published_at: z.date().optional(),
@@ -59,6 +60,7 @@ type BlogPostFormValues = z.infer<typeof blogPostSchema>;
 const BlogAdminForm = () => {
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [galleryUrlInput, setGalleryUrlInput] = useState("");
 
   // Define form
   const form = useForm<BlogPostFormValues>({
@@ -72,6 +74,7 @@ const BlogAdminForm = () => {
       image_url: "",
       video_url: "",
       tags: [],
+      image_gallery: [],
       read_time: "",
       publish: false,
       published_at: new Date(),
@@ -91,6 +94,35 @@ const BlogAdminForm = () => {
     }
   };
 
+  // Function to add an image URL to the gallery
+  const addToGallery = () => {
+    if (galleryUrlInput && galleryUrlInput.trim() !== "") {
+      try {
+        // Basic URL validation
+        new URL(galleryUrlInput);
+        
+        const currentGallery = form.getValues("image_gallery") || [];
+        form.setValue("image_gallery", [...currentGallery, galleryUrlInput]);
+        setGalleryUrlInput("");
+      } catch (e) {
+        toast({
+          title: "Invalid URL",
+          description: "Please enter a valid image URL",
+          variant: "destructive",
+        });
+      }
+    }
+  };
+
+  // Function to remove an image from the gallery
+  const removeFromGallery = (indexToRemove: number) => {
+    const currentGallery = form.getValues("image_gallery");
+    form.setValue(
+      "image_gallery", 
+      currentGallery.filter((_, index) => index !== indexToRemove)
+    );
+  };
+
   const onSubmit = async (values: BlogPostFormValues) => {
     setIsSubmitting(true);
     
@@ -104,6 +136,7 @@ const BlogAdminForm = () => {
         category: values.category,
         image_url: values.image_url,
         video_url: values.video_url || null,
+        image_gallery: values.image_gallery.length > 0 ? values.image_gallery : null,
         tags: values.tags.length > 0 ? values.tags : null,
         read_time: values.read_time,
         published_at: values.publish ? values.published_at?.toISOString() : null,
@@ -292,6 +325,69 @@ const BlogAdminForm = () => {
               )}
             />
           </div>
+
+          <FormField
+            control={form.control}
+            name="image_gallery"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Image Gallery (optional)</FormLabel>
+                <div className="space-y-4">
+                  <div className="flex gap-2">
+                    <Input 
+                      placeholder="https://example.com/gallery-image.jpg"
+                      value={galleryUrlInput}
+                      onChange={(e) => setGalleryUrlInput(e.target.value)}
+                      className="flex-1"
+                    />
+                    <Button 
+                      type="button" 
+                      onClick={addToGallery}
+                      className="flex-shrink-0"
+                    >
+                      <Plus className="h-4 w-4 mr-1" />
+                      Add
+                    </Button>
+                  </div>
+                  
+                  {field.value.length > 0 && (
+                    <div className="bg-gray-900/50 p-3 rounded-md border border-gray-700">
+                      <p className="text-sm mb-2">Gallery images ({field.value.length}):</p>
+                      <div className="space-y-2">
+                        {field.value.map((url, index) => (
+                          <div key={index} className="flex items-center justify-between bg-gray-900 p-2 rounded">
+                            <div className="flex items-center space-x-2 overflow-hidden">
+                              <div className="flex-shrink-0 w-10 h-10 bg-gray-800 rounded overflow-hidden">
+                                <img 
+                                  src={url} 
+                                  alt={`Gallery ${index}`}
+                                  className="w-full h-full object-cover"
+                                  onError={(e) => {
+                                    (e.target as HTMLImageElement).src = "https://via.placeholder.com/40?text=Error";
+                                  }}
+                                />
+                              </div>
+                              <span className="text-sm truncate max-w-[180px]">{url}</span>
+                            </div>
+                            <Button 
+                              type="button" 
+                              variant="ghost" 
+                              size="sm" 
+                              onClick={() => removeFromGallery(index)}
+                              className="text-gray-400 hover:text-red-500"
+                            >
+                              <X className="h-4 w-4" />
+                            </Button>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
           <FormField
             control={form.control}

@@ -7,8 +7,8 @@ import Footer from "@/components/Footer";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { Card } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import { CalendarIcon, Clock, ArrowLeft, Share2, BookmarkPlus, Tag } from 'lucide-react';
-import { useToast } from "@/components/ui/use-toast";
+import { CalendarIcon, Clock, ArrowLeft, Share2, BookmarkPlus, Tag, ChevronLeft, ChevronRight, X } from 'lucide-react';
+import { useToast } from '@/hooks/use-toast';
 
 // Define the BlogPost type to match our Supabase schema
 type BlogPost = {
@@ -24,6 +24,7 @@ type BlogPost = {
   image_url: string;
   video_url: string | null;
   tags: string[] | null;
+  image_gallery: string[] | null;
 };
 
 const BlogPostPage = () => {
@@ -31,6 +32,8 @@ const BlogPostPage = () => {
   const [post, setPost] = useState<BlogPost | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [galleryOpen, setGalleryOpen] = useState(false);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const { toast } = useToast();
   
   useEffect(() => {
@@ -88,6 +91,33 @@ const BlogPostPage = () => {
       title: "Post saved!",
       description: "Blog post saved to your bookmarks.",
     });
+  };
+
+  const openGallery = (index: number) => {
+    setCurrentImageIndex(index);
+    setGalleryOpen(true);
+    document.body.style.overflow = 'hidden';
+  };
+
+  const closeGallery = () => {
+    setGalleryOpen(false);
+    document.body.style.overflow = 'auto';
+  };
+
+  const nextImage = () => {
+    if (post?.image_gallery && post.image_gallery.length > 0) {
+      setCurrentImageIndex((prev) => 
+        prev === post.image_gallery!.length - 1 ? 0 : prev + 1
+      );
+    }
+  };
+
+  const prevImage = () => {
+    if (post?.image_gallery && post.image_gallery.length > 0) {
+      setCurrentImageIndex((prev) => 
+        prev === 0 ? post.image_gallery!.length - 1 : prev - 1
+      );
+    }
   };
   
   // Add CSS for the rich text content
@@ -261,6 +291,33 @@ const BlogPostPage = () => {
                 />
               </div>
               
+              {/* Image Gallery */}
+              {post.image_gallery && post.image_gallery.length > 0 && (
+                <div className="mt-12 mb-8">
+                  <h3 className="text-xl font-bold mb-4">Image Gallery</h3>
+                  <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                    {post.image_gallery.map((image, index) => (
+                      <div 
+                        key={index} 
+                        className="relative overflow-hidden rounded-lg cursor-pointer group"
+                        onClick={() => openGallery(index)}
+                      >
+                        <div className="aspect-w-1 aspect-h-1">
+                          <img 
+                            src={image} 
+                            alt={`Gallery image ${index + 1}`}
+                            className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                          />
+                        </div>
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end justify-center pb-2">
+                          <span className="text-white text-sm">View</span>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+              
               {/* Embedded Video */}
               {post.video_url && (
                 <div className="mt-8 mb-12">
@@ -287,6 +344,42 @@ const BlogPostPage = () => {
           )}
         </div>
       </div>
+      
+      {/* Fullscreen Image Gallery */}
+      {galleryOpen && post?.image_gallery && post.image_gallery.length > 0 && (
+        <div className="fixed inset-0 z-50 bg-black/95 flex items-center justify-center">
+          <button 
+            onClick={closeGallery}
+            className="absolute top-4 right-4 text-white hover:text-cyberpunk-cyan"
+          >
+            <X size={24} />
+          </button>
+          
+          <button 
+            onClick={prevImage}
+            className="absolute left-4 text-white hover:text-cyberpunk-cyan"
+          >
+            <ChevronLeft size={36} />
+          </button>
+          
+          <img 
+            src={post.image_gallery[currentImageIndex]} 
+            alt="Gallery Image"
+            className="max-w-full max-h-[85vh] object-contain"
+          />
+          
+          <button 
+            onClick={nextImage}
+            className="absolute right-4 text-white hover:text-cyberpunk-cyan"
+          >
+            <ChevronRight size={36} />
+          </button>
+          
+          <div className="absolute bottom-4 text-white">
+            {currentImageIndex + 1} / {post.image_gallery.length}
+          </div>
+        </div>
+      )}
       
       <Footer />
     </div>
