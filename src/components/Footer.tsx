@@ -6,7 +6,7 @@ const Footer = () => {
           <div className="col-span-1 md:col-span-2">
             <div className="flex items-center">
               <h1 className="font-bold neon-text-magenta text-lg">IMMERSIVE</h1>
-              <span className="ml-1 mt-3 text-white font-light text-lg px-0 my-0">AGENCY</span>
+              <span className="text-white font-light text-lg">AGENCY</span>
             </div>
             <p className="mt-4 text-gray-400 max-w-md">
               Pushing the boundaries of pharmaceutical education and training through 
