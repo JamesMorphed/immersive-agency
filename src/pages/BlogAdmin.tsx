@@ -15,7 +15,7 @@ const BlogAdminPage = () => {
         <h1 className="text-3xl font-bold mb-6">Blog Management</h1>
         
         <Tabs defaultValue="create" className="w-full">
-          <div className="flex justify-end">
+          <div className="flex justify-center">
             <TabsList className="mb-6">
               <TabsTrigger value="create">Create Post</TabsTrigger>
               <TabsTrigger value="manage">Manage Posts</TabsTrigger>
