@@ -15,10 +15,12 @@ const BlogAdminPage = () => {
         <h1 className="text-3xl font-bold mb-6">Blog Management</h1>
         
         <Tabs defaultValue="create" className="w-full">
-          <TabsList className="mb-6">
-            <TabsTrigger value="create">Create Post</TabsTrigger>
-            <TabsTrigger value="manage">Manage Posts</TabsTrigger>
-          </TabsList>
+          <div className="flex justify-end">
+            <TabsList className="mb-6">
+              <TabsTrigger value="create">Create Post</TabsTrigger>
+              <TabsTrigger value="manage">Manage Posts</TabsTrigger>
+            </TabsList>
+          </div>
           
           <TabsContent value="create" className="space-y-4">
             <BlogAdminForm />
