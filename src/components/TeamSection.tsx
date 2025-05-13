@@ -1,5 +1,6 @@
+
 import { Avatar, AvatarImage } from '@/components/ui/avatar';
-import { Linkedin } from "lucide-react";
+import { Linkedin, User } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
 const TeamSection = () => {
