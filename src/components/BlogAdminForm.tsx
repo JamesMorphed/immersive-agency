@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -19,6 +18,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import RichTextEditor from "@/components/RichTextEditor";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Calendar } from "@/components/ui/calendar";
 import {
@@ -41,7 +41,7 @@ const blogPostSchema = z.object({
     .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, { 
       message: "Slug must contain only lowercase letters, numbers, and hyphens" 
     }),
-  content: z.string().min(50, { message: "Content must be at least 50 characters" }),
+  content: z.string().min(10, { message: "Content is required" }),
   excerpt: z.string().min(10, { message: "Excerpt must be at least 10 characters" }),
   author: z.string().min(2, { message: "Author name is required" }),
   category: z.string().min(1, { message: "Category is required" }),
@@ -247,10 +247,10 @@ const BlogAdminForm = () => {
               <FormItem>
                 <FormLabel>Content</FormLabel>
                 <FormControl>
-                  <Textarea 
-                    placeholder="Full blog post content" 
-                    className="h-40"
-                    {...field} 
+                  <RichTextEditor
+                    value={field.value}
+                    onChange={field.onChange}
+                    placeholder="Write your blog post content here..."
                   />
                 </FormControl>
                 <FormMessage />

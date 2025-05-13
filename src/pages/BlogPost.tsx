@@ -89,6 +89,64 @@ const BlogPostPage = () => {
     });
   };
   
+  // Add CSS for the rich text content
+  useEffect(() => {
+    const styleElement = document.createElement('style');
+    styleElement.textContent = `
+      .rich-text-content h1 { 
+        font-size: 2.25rem;
+        font-weight: 700;
+        margin-top: 1.5rem;
+        margin-bottom: 1rem;
+      }
+      .rich-text-content h2 {
+        font-size: 1.875rem;
+        font-weight: 700;
+        margin-top: 1.25rem;
+        margin-bottom: 0.75rem;
+      }
+      .rich-text-content h3 {
+        font-size: 1.5rem;
+        font-weight: 600;
+        margin-top: 1.25rem;
+        margin-bottom: 0.75rem;
+      }
+      .rich-text-content p {
+        margin-bottom: 1rem;
+      }
+      .rich-text-content ul, .rich-text-content ol {
+        margin-left: 1.5rem;
+        margin-bottom: 1rem;
+      }
+      .rich-text-content ul {
+        list-style-type: disc;
+      }
+      .rich-text-content ol {
+        list-style-type: decimal;
+      }
+      .rich-text-content a {
+        color: #38bdf8;
+        text-decoration: underline;
+      }
+      .rich-text-content img {
+        max-width: 100%;
+        height: auto;
+        margin: 1.5rem 0;
+      }
+      .rich-text-content blockquote {
+        border-left: 4px solid #38bdf8;
+        padding-left: 1rem;
+        font-style: italic;
+        margin: 1.5rem 0;
+      }
+    `;
+    document.head.appendChild(styleElement);
+    
+    return () => {
+      document.head.removeChild(styleElement);
+    };
+  }, []);
+  
   return (
     <div className="min-h-screen bg-black text-white">
       <Navbar />
@@ -183,7 +241,7 @@ const BlogPostPage = () => {
                 </p>
                 
                 <div 
-                  className="text-gray-200 leading-relaxed space-y-6" 
+                  className="rich-text-content text-gray-200 leading-relaxed space-y-6" 
                   dangerouslySetInnerHTML={{ __html: post.content || '' }}
                 />
               </div>
