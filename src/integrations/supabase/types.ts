@@ -21,7 +21,9 @@ export type Database = {
           published_at: string | null
           read_time: string | null
           slug: string | null
+          tags: string[] | null
           Title: string | null
+          video_url: string | null
         }
         Insert: {
           author?: string | null
@@ -34,7 +36,9 @@ export type Database = {
           published_at?: string | null
           read_time?: string | null
           slug?: string | null
+          tags?: string[] | null
           Title?: string | null
+          video_url?: string | null
         }
         Update: {
           author?: string | null
@@ -47,7 +51,9 @@ export type Database = {
           published_at?: string | null
           read_time?: string | null
           slug?: string | null
+          tags?: string[] | null
           Title?: string | null
+          video_url?: string | null
         }
         Relationships: []
       }

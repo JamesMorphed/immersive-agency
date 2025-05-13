@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { supabase } from "@/integrations/supabase/client";
@@ -6,7 +7,7 @@ import Footer from "@/components/Footer";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { Card } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import { CalendarIcon, Clock, ArrowLeft, Share2, BookmarkPlus } from 'lucide-react';
+import { CalendarIcon, Clock, ArrowLeft, Share2, BookmarkPlus, Tag } from 'lucide-react';
 import { useToast } from "@/components/ui/use-toast";
 
 // Define the BlogPost type to match our Supabase schema
@@ -20,6 +21,9 @@ type BlogPost = {
   read_time: string;
   published_at: string;
   slug: string;
+  image_url: string;
+  video_url: string | null;
+  tags: string[] | null;
 };
 
 const BlogPostPage = () => {
@@ -219,7 +223,8 @@ const BlogPostPage = () => {
                   </button>
                 </div>
               </div>
-              
+
+              {/* Featured image */}
               <div className="mb-8 rounded-lg overflow-hidden">
                 <AspectRatio ratio={16 / 9}>
                   <img 
@@ -230,6 +235,21 @@ const BlogPostPage = () => {
                 </AspectRatio>
               </div>
               
+              {/* Tags */}
+              {post.tags && post.tags.length > 0 && (
+                <div className="mb-6 flex flex-wrap items-center gap-2">
+                  <Tag size={16} className="text-cyberpunk-cyan" />
+                  {post.tags.map((tag, index) => (
+                    <span 
+                      key={index}
+                      className="bg-gray-800 text-gray-300 text-xs px-2 py-1 rounded"
+                    >
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+              )}
+
               <div className="prose prose-lg prose-invert max-w-none">
                 <p className="text-xl text-gray-300 mb-8 font-medium leading-relaxed">
                   {post.excerpt}
@@ -240,6 +260,24 @@ const BlogPostPage = () => {
                   dangerouslySetInnerHTML={{ __html: post.content || '' }}
                 />
               </div>
+              
+              {/* Embedded Video */}
+              {post.video_url && (
+                <div className="mt-8 mb-12">
+                  <h3 className="text-xl font-bold mb-4">Related Video</h3>
+                  <div className="rounded-lg overflow-hidden">
+                    <AspectRatio ratio={16 / 9}>
+                      <iframe
+                        src={post.video_url}
+                        title="Video content"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowFullScreen
+                        className="w-full h-full"
+                      ></iframe>
+                    </AspectRatio>
+                  </div>
+                </div>
+              )}
               
               <div className="mt-12 pt-8 border-t border-gray-800">
                 <h3 className="text-2xl font-bold mb-6">Related Articles</h3>

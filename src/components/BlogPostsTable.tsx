@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { format } from 'date-fns';
 import { supabase } from '@/integrations/supabase/client';
-import { Calendar, FileText, Pencil, Trash } from 'lucide-react';
+import { Calendar, FileText, Pencil, Trash, Tag, Video } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import {
@@ -24,6 +24,8 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
+import { Badge } from '@/components/ui/badge';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 
 type BlogPost = {
   id: number;
@@ -32,6 +34,8 @@ type BlogPost = {
   category: string;
   published_at: string | null;
   created_at: string;
+  tags: string[] | null;
+  video_url: string | null;
 };
 
 const BlogPostsTable = () => {
@@ -50,7 +54,7 @@ const BlogPostsTable = () => {
     try {
       const { data, error } = await supabase
         .from('blog_posts')
-        .select('id, Title, slug, category, published_at, created_at')
+        .select('id, Title, slug, category, published_at, created_at, tags, video_url')
         .order('created_at', { ascending: false });
 
       if (error) {
@@ -133,13 +137,14 @@ const BlogPostsTable = () => {
                 <TableHead>Category</TableHead>
                 <TableHead>Status</TableHead>
                 <TableHead>Created At</TableHead>
+                <TableHead>Features</TableHead>
                 <TableHead className="text-right">Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {blogPosts.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={5} className="text-center py-6">
+                  <TableCell colSpan={6} className="text-center py-6">
                     No blog posts found. Create your first post!
                   </TableCell>
                 </TableRow>
@@ -158,6 +163,40 @@ const BlogPostsTable = () => {
                       <div className="flex items-center gap-1.5">
                         <Calendar className="h-4 w-4" />
                         {format(new Date(post.created_at), 'MM/dd/yyyy')}
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      <div className="flex items-center gap-2">
+                        <TooltipProvider>
+                          {post.tags && post.tags.length > 0 && (
+                            <Tooltip>
+                              <TooltipTrigger>
+                                <Badge variant="outline" className="flex items-center gap-1">
+                                  <Tag className="h-3 w-3" />
+                                  {post.tags.length}
+                                </Badge>
+                              </TooltipTrigger>
+                              <TooltipContent>
+                                <div className="text-xs">
+                                  Tags: {post.tags.join(', ')}
+                                </div>
+                              </TooltipContent>
+                            </Tooltip>
+                          )}
+
+                          {post.video_url && (
+                            <Tooltip>
+                              <TooltipTrigger>
+                                <Badge variant="outline" className="flex items-center gap-1">
+                                  <Video className="h-3 w-3" />
+                                </Badge>
+                              </TooltipTrigger>
+                              <TooltipContent>
+                                Has video content
+                              </TooltipContent>
+                            </Tooltip>
+                          )}
+                        </TooltipProvider>
                       </div>
                     </TableCell>
                     <TableCell className="text-right">

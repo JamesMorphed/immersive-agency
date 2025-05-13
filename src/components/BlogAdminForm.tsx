@@ -20,6 +20,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import RichTextEditor from "@/components/RichTextEditor";
+import TagsInput from "@/components/TagsInput";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Calendar } from "@/components/ui/calendar";
 import {
@@ -46,6 +47,8 @@ const blogPostSchema = z.object({
   excerpt: z.string().min(10, { message: "Excerpt must be at least 10 characters" }),
   category: z.string().min(1, { message: "Category is required" }),
   image_url: z.string().url({ message: "Please enter a valid URL for the image" }),
+  video_url: z.string().url({ message: "Please enter a valid URL for the video" }).optional().or(z.literal("")),
+  tags: z.array(z.string()).default([]),
   read_time: z.string().min(1, { message: "Read time is required" }),
   publish: z.boolean().default(false),
   published_at: z.date().optional(),
@@ -67,6 +70,8 @@ const BlogAdminForm = () => {
       excerpt: "",
       category: "",
       image_url: "",
+      video_url: "",
+      tags: [],
       read_time: "",
       publish: false,
       published_at: new Date(),
@@ -98,6 +103,8 @@ const BlogAdminForm = () => {
         excerpt: values.excerpt,
         category: values.category,
         image_url: values.image_url,
+        video_url: values.video_url || null,
+        tags: values.tags.length > 0 ? values.tags : null,
         read_time: values.read_time,
         published_at: values.publish ? values.published_at?.toISOString() : null,
       };
@@ -256,14 +263,47 @@ const BlogAdminForm = () => {
             )}
           />
           
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <FormField
+              control={form.control}
+              name="image_url"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Featured Image URL</FormLabel>
+                  <FormControl>
+                    <Input placeholder="https://example.com/image.jpg" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            
+            <FormField
+              control={form.control}
+              name="video_url"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Video URL (optional)</FormLabel>
+                  <FormControl>
+                    <Input placeholder="https://youtube.com/embed/..." {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+
           <FormField
             control={form.control}
-            name="image_url"
+            name="tags"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Featured Image URL</FormLabel>
+                <FormLabel>Tags</FormLabel>
                 <FormControl>
-                  <Input placeholder="https://example.com/image.jpg" {...field} />
+                  <TagsInput 
+                    value={field.value} 
+                    onChange={field.onChange} 
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
