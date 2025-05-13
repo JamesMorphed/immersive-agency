@@ -5,27 +5,31 @@ import { useScrollAnimation } from '@/hooks/useScrollAnimation';
 import { ArrowRight, BookOpen } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
+// Simplified blogPosts array with slugs for routing
 const blogPosts = [
   {
     title: "The Future of Immersive Learning in Healthcare",
     excerpt: "Exploring how VR and AR are transforming medical education and patient care experiences.",
     date: "May 6, 2025",
     image: "/lovable-uploads/9a65e14a-201c-4fbd-9f38-ff5993abda13.png",
-    category: "Virtual Reality"
+    category: "Virtual Reality",
+    slug: "future-immersive-learning-healthcare"
   },
   {
     title: "AI-Powered Patient Education: Case Studies",
     excerpt: "How pharmaceutical companies are leveraging artificial intelligence to improve patient understanding.",
     date: "April 28, 2025",
     image: "/lovable-uploads/a107c033-2a7a-4b3d-9018-76d2d14c7e9c.png",
-    category: "Artificial Intelligence"
+    category: "Artificial Intelligence",
+    slug: "ai-powered-patient-education"
   },
   {
     title: "Interactive 3D Models in Medical Training",
     excerpt: "Breaking down complex procedures through interactive visualization technology.",
     date: "April 15, 2025",
     image: "/lovable-uploads/80e89f8b-7fea-4ece-9503-e388557a6fd3.png",
-    category: "3D Technology"
+    category: "3D Technology",
+    slug: "interactive-3d-models-medical-training"
   }
 ];
 
@@ -90,10 +94,13 @@ const Blog = () => {
                 <p className="text-gray-400 mb-4">
                   {post.excerpt}
                 </p>
-                <div className="flex items-center text-cyberpunk-cyan font-medium group-hover:text-cyberpunk-magenta transition-colors duration-300">
+                <Link 
+                  to={`/blog/${post.slug}`} 
+                  className="flex items-center text-cyberpunk-cyan font-medium group-hover:text-cyberpunk-magenta transition-colors duration-300"
+                >
                   <span>Read Article</span>
                   <ArrowRight size={16} className="ml-2 transition-transform group-hover:translate-x-1" />
-                </div>
+                </Link>
               </div>
             </Card>
           ))}

@@ -1,0 +1,205 @@
+
+import React, { useEffect, useState } from 'react';
+import { useParams, Link } from 'react-router-dom';
+import { supabase } from "@/integrations/supabase/client";
+import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
+import { AspectRatio } from "@/components/ui/aspect-ratio";
+import { Card } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
+import { CalendarIcon, Clock, ArrowLeft, Share2, BookmarkPlus } from 'lucide-react';
+import { useToast } from "@/components/ui/use-toast";
+
+// Define the BlogPost type to match our Supabase schema
+type BlogPost = {
+  id: number;
+  created_at: string;
+  Title: string;
+  excerpt: string;
+  content: string;
+  author: string;
+  image_url: string;
+  category: string;
+  read_time: string;
+  published_at: string;
+  slug: string;
+};
+
+const BlogPostPage = () => {
+  const { slug } = useParams<{ slug: string }>();
+  const [post, setPost] = useState<BlogPost | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const { toast } = useToast();
+  
+  useEffect(() => {
+    const fetchBlogPost = async () => {
+      setLoading(true);
+      
+      try {
+        const { data, error } = await supabase
+          .from('blog_posts')
+          .select('*')
+          .eq('slug', slug)
+          .single();
+          
+        if (error) {
+          console.error('Error fetching blog post:', error);
+          setError('Failed to load blog post. Please try again later.');
+        } else if (data) {
+          setPost(data);
+          setError(null);
+        } else {
+          setError('Blog post not found.');
+        }
+      } catch (err) {
+        console.error('Exception fetching blog post:', err);
+        setError('An unexpected error occurred. Please try again later.');
+      } finally {
+        setLoading(false);
+      }
+    };
+    
+    if (slug) {
+      fetchBlogPost();
+    }
+  }, [slug]);
+  
+  const handleShare = () => {
+    if (navigator.share) {
+      navigator.share({
+        title: post?.Title || 'Blog Post',
+        text: post?.excerpt || 'Check out this blog post',
+        url: window.location.href,
+      })
+      .catch((err) => console.error('Error sharing:', err));
+    } else {
+      navigator.clipboard.writeText(window.location.href);
+      toast({
+        title: "Link copied!",
+        description: "Blog post link copied to clipboard.",
+      });
+    }
+  };
+  
+  const handleBookmark = () => {
+    toast({
+      title: "Post saved!",
+      description: "Blog post saved to your bookmarks.",
+    });
+  };
+  
+  return (
+    <div className="min-h-screen bg-black text-white">
+      <Navbar />
+      
+      <div className="pt-28 pb-20">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <Link 
+            to="/blog" 
+            className="inline-flex items-center text-cyberpunk-cyan mb-8 hover:text-cyberpunk-magenta transition-colors"
+          >
+            <ArrowLeft size={16} className="mr-2" />
+            Back to all articles
+          </Link>
+          
+          {loading ? (
+            <div className="space-y-4">
+              <Skeleton className="h-12 w-3/4 bg-gray-800" />
+              <Skeleton className="h-6 w-1/2 bg-gray-800" />
+              <Skeleton className="h-96 w-full bg-gray-800" />
+              <Skeleton className="h-6 w-full bg-gray-800" />
+              <Skeleton className="h-6 w-full bg-gray-800" />
+              <Skeleton className="h-6 w-3/4 bg-gray-800" />
+            </div>
+          ) : error ? (
+            <Card className="bg-black/60 backdrop-blur-sm border border-gray-800 p-8 text-center">
+              <h2 className="text-xl text-cyberpunk-magenta mb-4">{error}</h2>
+              <Link 
+                to="/blog" 
+                className="inline-flex items-center px-4 py-2 border border-cyberpunk-cyan text-cyberpunk-cyan hover:bg-cyberpunk-cyan hover:text-black transition-colors rounded-md"
+              >
+                Return to Blog
+              </Link>
+            </Card>
+          ) : post && (
+            <>
+              <div className="mb-6">
+                <span className="bg-cyberpunk-magenta/80 text-white text-xs px-3 py-1 rounded-full">
+                  {post.category}
+                </span>
+              </div>
+              
+              <h1 className="text-4xl md:text-5xl font-bold mb-6">{post.Title}</h1>
+              
+              <div className="flex items-center mb-8 text-sm text-gray-400">
+                <span className="font-medium text-white mr-2">{post.author}</span>
+                <span className="mx-2">·</span>
+                <CalendarIcon size={16} className="mr-1" />
+                <span className="mr-2">
+                  {new Date(post.published_at).toLocaleDateString('en-US', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                  })}
+                </span>
+                <span className="mx-2">·</span>
+                <Clock size={16} className="mr-1" />
+                <span>{post.read_time}</span>
+              </div>
+              
+              <div className="mb-8 border-y border-gray-800 py-4 flex justify-between">
+                <div className="flex items-center space-x-4">
+                  <button 
+                    onClick={handleShare} 
+                    className="flex items-center text-gray-400 hover:text-cyberpunk-cyan transition-colors"
+                  >
+                    <Share2 size={18} className="mr-2" />
+                    <span>Share</span>
+                  </button>
+                  <button 
+                    onClick={handleBookmark} 
+                    className="flex items-center text-gray-400 hover:text-cyberpunk-cyan transition-colors"
+                  >
+                    <BookmarkPlus size={18} className="mr-2" />
+                    <span>Save</span>
+                  </button>
+                </div>
+              </div>
+              
+              <div className="mb-8 rounded-lg overflow-hidden">
+                <AspectRatio ratio={16 / 9}>
+                  <img 
+                    src={post.image_url} 
+                    alt={post.Title} 
+                    className="w-full h-full object-cover"
+                  />
+                </AspectRatio>
+              </div>
+              
+              <div className="prose prose-lg prose-invert max-w-none">
+                <p className="text-xl text-gray-300 mb-8 font-medium leading-relaxed">
+                  {post.excerpt}
+                </p>
+                
+                <div 
+                  className="text-gray-200 leading-relaxed space-y-6" 
+                  dangerouslySetInnerHTML={{ __html: post.content || '' }}
+                />
+              </div>
+              
+              <div className="mt-12 pt-8 border-t border-gray-800">
+                <h3 className="text-2xl font-bold mb-6">Related Articles</h3>
+                <p className="text-cyberpunk-cyan">Future enhancement: Display related articles here</p>
+              </div>
+            </>
+          )}
+        </div>
+      </div>
+      
+      <Footer />
+    </div>
+  );
+};
+
+export default BlogPostPage;
