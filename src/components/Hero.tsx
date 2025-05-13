@@ -66,7 +66,10 @@ const Hero = () => {
     }
   }, [currentTitleIndex, isUnscrambling]);
 
-  return <section id="home" className="relative min-h-screen flex flex-col justify-center items-center grid-lines-bg">
+  return <section id="home" className="relative min-h-screen flex flex-col justify-center items-center bg-cover bg-center" style={{backgroundImage: "url('/lovable-uploads/faa6ceae-2d1d-4713-9f88-b52c23d0803e.png')"}}>
+      {/* Overlay to enhance text visibility */}
+      <div className="absolute inset-0 bg-black/30 z-0"></div>
+      
       {/* Black gradient overlay at the bottom */}
       <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-black to-transparent z-10"></div>
       
