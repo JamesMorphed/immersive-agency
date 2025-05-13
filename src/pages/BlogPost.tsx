@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { supabase } from "@/integrations/supabase/client";
@@ -17,8 +16,6 @@ type BlogPost = {
   Title: string;
   excerpt: string;
   content: string;
-  author: string;
-  image_url: string;
   category: string;
   read_time: string;
   published_at: string;
@@ -191,8 +188,6 @@ const BlogPostPage = () => {
               <h1 className="text-4xl md:text-5xl font-bold mb-6">{post.Title}</h1>
               
               <div className="flex items-center mb-8 text-sm text-gray-400">
-                <span className="font-medium text-white mr-2">{post.author}</span>
-                <span className="mx-2">·</span>
                 <CalendarIcon size={16} className="mr-1" />
                 <span className="mr-2">
                   {new Date(post.published_at).toLocaleDateString('en-US', {

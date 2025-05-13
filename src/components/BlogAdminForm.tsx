@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -43,7 +44,6 @@ const blogPostSchema = z.object({
     }),
   content: z.string().min(10, { message: "Content is required" }),
   excerpt: z.string().min(10, { message: "Excerpt must be at least 10 characters" }),
-  author: z.string().min(2, { message: "Author name is required" }),
   category: z.string().min(1, { message: "Category is required" }),
   image_url: z.string().url({ message: "Please enter a valid URL for the image" }),
   read_time: z.string().min(1, { message: "Read time is required" }),
@@ -65,7 +65,6 @@ const BlogAdminForm = () => {
       slug: "",
       content: "",
       excerpt: "",
-      author: "",
       category: "",
       image_url: "",
       read_time: "",
@@ -97,7 +96,6 @@ const BlogAdminForm = () => {
         slug: values.slug,
         content: values.content,
         excerpt: values.excerpt,
-        author: values.author,
         category: values.category,
         image_url: values.image_url,
         read_time: values.read_time,
@@ -181,20 +179,6 @@ const BlogAdminForm = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <FormField
               control={form.control}
-              name="author"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Author</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Author name" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            
-            <FormField
-              control={form.control}
               name="category"
               render={({ field }) => (
                 <FormItem>
@@ -216,6 +200,20 @@ const BlogAdminForm = () => {
                       <SelectItem value="development">Development</SelectItem>
                     </SelectContent>
                   </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="read_time"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Read Time</FormLabel>
+                  <FormControl>
+                    <Input placeholder="5 min read" {...field} />
+                  </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
@@ -258,35 +256,19 @@ const BlogAdminForm = () => {
             )}
           />
           
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <FormField
-              control={form.control}
-              name="image_url"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Featured Image URL</FormLabel>
-                  <FormControl>
-                    <Input placeholder="https://example.com/image.jpg" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            
-            <FormField
-              control={form.control}
-              name="read_time"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Read Time</FormLabel>
-                  <FormControl>
-                    <Input placeholder="5 min read" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </div>
+          <FormField
+            control={form.control}
+            name="image_url"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Featured Image URL</FormLabel>
+                <FormControl>
+                  <Input placeholder="https://example.com/image.jpg" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
           
           <div className="flex flex-col space-y-4">
             <FormField

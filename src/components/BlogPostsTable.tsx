@@ -29,7 +29,6 @@ type BlogPost = {
   id: number;
   Title: string;
   slug: string;
-  author: string;
   category: string;
   published_at: string | null;
   created_at: string;
@@ -51,7 +50,7 @@ const BlogPostsTable = () => {
     try {
       const { data, error } = await supabase
         .from('blog_posts')
-        .select('id, Title, slug, author, category, published_at, created_at')
+        .select('id, Title, slug, category, published_at, created_at')
         .order('created_at', { ascending: false });
 
       if (error) {
@@ -131,7 +130,6 @@ const BlogPostsTable = () => {
             <TableHeader>
               <TableRow>
                 <TableHead className="w-[250px]">Title</TableHead>
-                <TableHead>Author</TableHead>
                 <TableHead>Category</TableHead>
                 <TableHead>Status</TableHead>
                 <TableHead>Created At</TableHead>
@@ -141,7 +139,7 @@ const BlogPostsTable = () => {
             <TableBody>
               {blogPosts.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={6} className="text-center py-6">
+                  <TableCell colSpan={5} className="text-center py-6">
                     No blog posts found. Create your first post!
                   </TableCell>
                 </TableRow>
@@ -149,7 +147,6 @@ const BlogPostsTable = () => {
                 blogPosts.map((post) => (
                   <TableRow key={post.id}>
                     <TableCell className="font-medium">{post.Title}</TableCell>
-                    <TableCell>{post.author}</TableCell>
                     <TableCell>{post.category}</TableCell>
                     <TableCell>
                       <div className="flex items-center gap-2">
