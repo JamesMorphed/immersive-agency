@@ -3,7 +3,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { format } from 'date-fns';
-import { CalendarIcon, Plus, X, Image, ImageUp, Loader2 } from "lucide-react";
+import { CalendarIcon, Plus, X, Image, ImageUp, Loader2, FileText, Briefcase, Podcast, Chip, Newspaper } from "lucide-react";
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 
@@ -329,11 +329,36 @@ const BlogAdminForm = () => {
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      <SelectItem value="technology">Technology</SelectItem>
-                      <SelectItem value="business">Business</SelectItem>
-                      <SelectItem value="design">Design</SelectItem>
-                      <SelectItem value="marketing">Marketing</SelectItem>
-                      <SelectItem value="development">Development</SelectItem>
+                      <SelectItem value="news-insights">
+                        <div className="flex items-center">
+                          <Newspaper className="mr-2 h-4 w-4" />
+                          News & Insights
+                        </div>
+                      </SelectItem>
+                      <SelectItem value="case-studies">
+                        <div className="flex items-center">
+                          <FileText className="mr-2 h-4 w-4" />
+                          Case Studies
+                        </div>
+                      </SelectItem>
+                      <SelectItem value="podcasts">
+                        <div className="flex items-center">
+                          <Podcast className="mr-2 h-4 w-4" />
+                          Podcasts
+                        </div>
+                      </SelectItem>
+                      <SelectItem value="tech-trends">
+                        <div className="flex items-center">
+                          <Chip className="mr-2 h-4 w-4" />
+                          Tech & Trends
+                        </div>
+                      </SelectItem>
+                      <SelectItem value="our-work">
+                        <div className="flex items-center">
+                          <Briefcase className="mr-2 h-4 w-4" />
+                          Our Work
+                        </div>
+                      </SelectItem>
                     </SelectContent>
                   </Select>
                   <FormMessage />
