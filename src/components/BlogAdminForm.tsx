@@ -409,7 +409,6 @@ const BlogAdminForm = () => {
                   <RichTextEditor
                     value={field.value}
                     onChange={field.onChange}
-                    placeholder="Write your blog post content here..."
                   />
                 </FormControl>
                 <FormMessage />
