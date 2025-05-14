@@ -3,7 +3,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { format } from 'date-fns';
-import { CalendarIcon, Plus, X, Image, ImageUp, Loader2, FileText, Briefcase, Podcast, Chip, Newspaper } from "lucide-react";
+import { CalendarIcon, Plus, X, Image, ImageUp, Loader2, FileText, Briefcase, Podcast, Cpu, Newspaper } from "lucide-react";
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 
@@ -349,7 +349,7 @@ const BlogAdminForm = () => {
                       </SelectItem>
                       <SelectItem value="tech-trends">
                         <div className="flex items-center">
-                          <Chip className="mr-2 h-4 w-4" />
+                          <Cpu className="mr-2 h-4 w-4" />
                           Tech & Trends
                         </div>
                       </SelectItem>
