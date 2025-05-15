@@ -11,7 +11,7 @@ const BlogAdminPage = () => {
   }, []);
 
   return (
-    <div className="container mx-auto py-8 px-4 md:px-6">
+    <div className="w-full py-8 px-4 md:px-6">
       <div className="mb-10">
         <h1 className="text-3xl font-bold mb-6 text-center">Blog Management</h1>
         
