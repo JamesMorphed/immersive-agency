@@ -21,7 +21,7 @@ const ServicesHighlights = () => {
 
   return (
     <section className="py-16 bg-black relative overflow-hidden">
-      {/* Pink perspective grid */}
+      {/* Pink perspective grid with fading edges */}
       <div className="absolute inset-0 w-full h-full" style={{ 
         perspective: '800px',
         transformStyle: 'preserve-3d'
@@ -34,6 +34,12 @@ const ServicesHighlights = () => {
           transformOrigin: 'bottom',
           backgroundPosition: 'center',
           zIndex: '1'
+        }}></div>
+        
+        {/* Gradient overlays for fading edges */}
+        <div className="absolute inset-0 w-full h-full" style={{
+          background: 'linear-gradient(90deg, black, transparent 20%, transparent 80%, black), linear-gradient(180deg, transparent 40%, black)',
+          zIndex: '2'
         }}></div>
       </div>
 
