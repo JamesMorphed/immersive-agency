@@ -10,7 +10,7 @@ const ServicesPage = () => {
     <div className="min-h-screen bg-black text-white overflow-x-hidden">
       <Navbar />
       <ServiceHeader />
-      <div className="pt-10">
+      <div className="pt-16">
         <Services />
       </div>
       <ServicesHighlights />
