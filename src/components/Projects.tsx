@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
 import { AspectRatio } from '@/components/ui/aspect-ratio';
@@ -219,7 +218,6 @@ const ProjectItem = ({ project, isFeatured = false }: ProjectItemProps) => {
             <div className="absolute bottom-0 left-0 right-0 p-4 flex justify-between items-end">
               <div>
                 <h3 className="text-lg font-medium text-white">{project.title}</h3>
-                <p className="text-sm text-gray-300">{project.type}</p>
               </div>
               <div className="text-xs text-gray-400">0{project.id}</div>
             </div>
