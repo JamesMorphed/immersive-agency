@@ -75,7 +75,7 @@ const Projects = () => {
 
   return (
     <section className="py-16 bg-black">
-      <div className="container mx-auto px-4 max-w-7xl">
+      <div className="container mx-auto max-w-7xl px-4 sm:px-6">
         <header className="mb-12">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
             <h1 className="text-5xl md:text-7xl font-bold">

@@ -7,7 +7,9 @@ const ProjectsPage = () => {
   return (
     <div className="min-h-screen bg-black text-white overflow-x-hidden">
       <Navbar />
-      <Projects />
+      <div className="pt-32">
+        <Projects />
+      </div>
       <Footer />
     </div>
   );
