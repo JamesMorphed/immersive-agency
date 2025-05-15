@@ -2,6 +2,7 @@
 import React, { useEffect } from "react";
 import BlogAdminForm from "@/components/BlogAdminForm";
 import BlogPostsTable from "@/components/BlogPostsTable";
+import BlogPreview from "@/components/BlogPreview";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 const BlogAdminPage = () => {
@@ -23,7 +24,10 @@ const BlogAdminPage = () => {
           </div>
           
           <TabsContent value="create" className="space-y-4">
-            <BlogAdminForm />
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <BlogAdminForm />
+              <BlogPreview />
+            </div>
           </TabsContent>
           
           <TabsContent value="manage" className="space-y-4">

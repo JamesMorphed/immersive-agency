@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
@@ -56,6 +56,14 @@ const blogPostSchema = z.object({
 
 type BlogPostFormValues = z.infer<typeof blogPostSchema>;
 
+// Helper function to dispatch form update events
+const dispatchFormUpdate = (formData: Partial<BlogPostFormValues>) => {
+  const event = new CustomEvent('blog-form-update', {
+    detail: formData
+  });
+  window.dispatchEvent(event);
+};
+
 const BlogAdminForm = () => {
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -78,6 +86,14 @@ const BlogAdminForm = () => {
       published_at: new Date(),
     },
   });
+
+  // Watch form values for preview
+  const watchedValues = form.watch();
+  
+  // Update preview when form values change
+  useEffect(() => {
+    dispatchFormUpdate(watchedValues);
+  }, [watchedValues]);
 
   // Function to generate slug from title
   const generateSlug = () => {
@@ -186,7 +202,7 @@ const BlogAdminForm = () => {
   };
 
   return (
-    <div className="max-w-3xl mx-auto p-6 bg-gray-800 rounded-lg shadow-md">
+    <div className="bg-gray-800 rounded-lg shadow-md p-6">
       <h2 className="text-2xl font-bold mb-6">Create New Blog Post</h2>
       
       <Form {...form}>
