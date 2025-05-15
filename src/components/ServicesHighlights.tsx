@@ -19,8 +19,25 @@ const ServicesHighlights = () => {
     threshold: 0.2
   });
 
-  return <section className="py-16 bg-gray-900/50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6">
+  return (
+    <section className="py-16 bg-black relative overflow-hidden">
+      {/* Pink perspective grid */}
+      <div className="absolute inset-0 w-full h-full" style={{ 
+        perspective: '800px',
+        transformStyle: 'preserve-3d'
+      }}>
+        <div className="absolute inset-0 w-full h-full" style={{
+          backgroundImage: 'linear-gradient(#FF37BB 1px, transparent 1px), linear-gradient(90deg, #FF37BB 1px, transparent 1px)',
+          backgroundSize: '40px 40px',
+          opacity: '0.5',
+          transform: 'rotateX(60deg)',
+          transformOrigin: 'bottom',
+          backgroundPosition: 'center',
+          zIndex: '1'
+        }}></div>
+      </div>
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 relative z-10">
         <div 
           ref={headerRef}
           className={`text-left mb-12 transition-all duration-1000 transform ${
@@ -71,7 +88,8 @@ const ServicesHighlights = () => {
           ))}
         </div>
       </div>
-    </section>;
+    </section>
+  );
 };
 
 export default ServicesHighlights;
