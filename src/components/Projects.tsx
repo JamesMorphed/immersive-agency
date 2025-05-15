@@ -43,7 +43,8 @@ const projectsData = [
     image: "/lovable-uploads/51402e45-82fe-473e-9b47-d98d4c45bd2f.png",
     videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ",
     type: "Web",
-    size: "small",
+    size: "large", // Changed from small to large
+    featured: true, // Added a featured flag for the second row project
   },
   {
     id: 5,
@@ -72,6 +73,10 @@ const Projects = () => {
   const filteredProjects = activeFilter === "all" 
     ? projectsData 
     : projectsData.filter(project => project.type.toLowerCase() === activeFilter.toLowerCase());
+
+  // Separate the featured project from the others
+  const featuredProject = filteredProjects.find(project => project.featured);
+  const regularProjects = filteredProjects.filter(project => !project.featured);
 
   return (
     <section className="py-16 bg-black">
@@ -118,8 +123,32 @@ const Projects = () => {
             isVisible ? 'opacity-100' : 'opacity-0'
           }`}
         >
+          {/* First row of projects */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-2 mb-2">
+            {regularProjects.slice(0, 3).map((project) => (
+              <ProjectItem 
+                key={project.id}
+                project={project}
+              />
+            ))}
+          </div>
+
+          {/* Second row with featured project */}
+          {featuredProject && (
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-2 mb-2">
+              <div className="lg:col-span-12">
+                <ProjectItem 
+                  key={featuredProject.id}
+                  project={featuredProject}
+                  isFeatured={true}
+                />
+              </div>
+            </div>
+          )}
+
+          {/* Third row of projects */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-2">
-            {filteredProjects.map((project) => (
+            {regularProjects.slice(3).map((project) => (
               <ProjectItem 
                 key={project.id}
                 project={project}
@@ -142,10 +171,12 @@ interface ProjectItemProps {
     videoUrl: string;
     type: string;
     size: string;
+    featured?: boolean;
   };
+  isFeatured?: boolean;
 }
 
-const ProjectItem = ({ project }: ProjectItemProps) => {
+const ProjectItem = ({ project, isFeatured = false }: ProjectItemProps) => {
   const { isVisible, elementRef } = useScrollAnimation();
   
   // Determine grid column span based on size
@@ -171,7 +202,7 @@ const ProjectItem = ({ project }: ProjectItemProps) => {
         <DialogTrigger className="w-full block">
           <div className="relative">
             <AspectRatio 
-              ratio={project.size === "large" ? 16/9 : 4/3} 
+              ratio={isFeatured || project.size === "large" ? 16/9 : 4/3} 
               className="bg-gray-900 overflow-hidden"
             >
               <img 
