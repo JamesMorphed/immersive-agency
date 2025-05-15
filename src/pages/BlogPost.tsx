@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { supabase } from "@/integrations/supabase/client";
@@ -120,6 +119,44 @@ const BlogPostPage = () => {
     }
   };
   
+  // Function to process content and wrap images in AspectRatio
+  const processContent = (content: string) => {
+    if (!content) return '';
+    
+    // Create a temporary div to parse HTML
+    const tempDiv = document.createElement('div');
+    tempDiv.innerHTML = content;
+    
+    // Find all images
+    const images = tempDiv.querySelectorAll('img');
+    
+    // Replace each image with wrapped version
+    images.forEach(img => {
+      // Create wrapper elements
+      const wrapper = document.createElement('div');
+      wrapper.className = 'aspect-ratio-wrapper my-6';
+      
+      // Create the aspect ratio div
+      const aspectRatioDiv = document.createElement('div');
+      aspectRatioDiv.className = 'aspect-w-16 aspect-h-9 rounded-lg overflow-hidden';
+      
+      // Move the image into our structure
+      img.className = 'w-full h-full object-cover';
+      img.parentNode?.removeChild(img);
+      aspectRatioDiv.appendChild(img);
+      wrapper.appendChild(aspectRatioDiv);
+      
+      // Replace the original image with our wrapper
+      if (img.parentNode) {
+        img.parentNode.replaceChild(wrapper, img);
+      } else {
+        tempDiv.appendChild(wrapper);
+      }
+    });
+    
+    return tempDiv.innerHTML;
+  };
+  
   // Add CSS for the rich text content
   useEffect(() => {
     const styleElement = document.createElement('style');
@@ -169,6 +206,24 @@ const BlogPostPage = () => {
         padding-left: 1rem;
         font-style: italic;
         margin: 1.5rem 0;
+      }
+      .aspect-w-16 {
+        position: relative;
+        padding-bottom: 56.25%;
+      }
+      .aspect-h-9 {
+        position: relative;
+      }
+      .aspect-w-16 > img, .aspect-h-9 > img {
+        position: absolute;
+        height: 100%;
+        width: 100%;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        object-fit: cover;
+        border-radius: 0.5rem;
       }
     `;
     document.head.appendChild(styleElement);
@@ -287,7 +342,7 @@ const BlogPostPage = () => {
                 
                 <div 
                   className="rich-text-content text-gray-200 leading-relaxed space-y-6" 
-                  dangerouslySetInnerHTML={{ __html: post.content || '' }}
+                  dangerouslySetInnerHTML={{ __html: processContent(post.content || '') }}
                 />
               </div>
               
@@ -302,13 +357,13 @@ const BlogPostPage = () => {
                         className="relative overflow-hidden rounded-lg cursor-pointer group"
                         onClick={() => openGallery(index)}
                       >
-                        <div className="aspect-w-1 aspect-h-1">
+                        <AspectRatio ratio={16/9} className="overflow-hidden">
                           <img 
                             src={image} 
                             alt={`Gallery image ${index + 1}`}
                             className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
                           />
-                        </div>
+                        </AspectRatio>
                         <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end justify-center pb-2">
                           <span className="text-white text-sm">View</span>
                         </div>
@@ -362,11 +417,15 @@ const BlogPostPage = () => {
             <ChevronLeft size={36} />
           </button>
           
-          <img 
-            src={post.image_gallery[currentImageIndex]} 
-            alt="Gallery Image"
-            className="max-w-full max-h-[85vh] object-contain"
-          />
+          <div className="w-full max-w-4xl">
+            <AspectRatio ratio={16/9} className="overflow-hidden">
+              <img 
+                src={post.image_gallery[currentImageIndex]} 
+                alt="Gallery Image"
+                className="w-full h-full object-contain"
+              />
+            </AspectRatio>
+          </div>
           
           <button 
             onClick={nextImage}
