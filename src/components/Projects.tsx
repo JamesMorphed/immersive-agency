@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
 import { AspectRatio } from '@/components/ui/aspect-ratio';
@@ -5,6 +6,7 @@ import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
 import { Play } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Badge } from "@/components/ui/badge";
 
 // Project data structure
 const projectsData = [
@@ -210,6 +212,16 @@ const ProjectItem = ({ project, isFeatured = false }: ProjectItemProps) => {
                 className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
               />
             </AspectRatio>
+            
+            {/* Project type tag - appears on hover */}
+            <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+              <Badge 
+                variant="secondary" 
+                className="bg-black bg-opacity-50 text-white border-none font-normal px-3 py-1"
+              >
+                {project.type}
+              </Badge>
+            </div>
             
             <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-30 transition-all duration-300 flex items-center justify-center">
               <Play className="w-12 h-12 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
