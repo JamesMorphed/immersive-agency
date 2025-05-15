@@ -16,10 +16,12 @@ import {
   List, 
   ListOrdered, 
   Link as LinkIcon,
-  Image as ImageIcon, 
+  ImageUp, 
   Undo, 
-  Redo 
+  Redo,
+  Loader2
 } from 'lucide-react';
+import { Input } from "@/components/ui/input";
 
 interface RichTextEditorProps {
   value: string;
@@ -30,6 +32,7 @@ interface RichTextEditorProps {
 const RichTextEditor = ({ value, onChange, placeholder }: RichTextEditorProps) => {
   const [isLinkModalOpen, setIsLinkModalOpen] = useState(false);
   const [linkUrl, setLinkUrl] = useState('');
+  const [isImageLoading, setIsImageLoading] = useState(false);
   
   const editor = useEditor({
     extensions: [
@@ -68,11 +71,27 @@ const RichTextEditor = ({ value, onChange, placeholder }: RichTextEditorProps) =
     }
   };
 
-  const addImage = () => {
-    const url = window.prompt('URL');
-    if (url) {
-      editor.chain().focus().setImage({ src: url }).run();
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (!files || files.length === 0) {
+      return;
     }
+    
+    const file = files[0];
+    const reader = new FileReader();
+    setIsImageLoading(true);
+
+    reader.onload = (e) => {
+      const url = e.target?.result as string;
+      editor.chain().focus().setImage({ src: url }).run();
+      setIsImageLoading(false);
+    };
+
+    reader.onerror = () => {
+      setIsImageLoading(false);
+    };
+
+    reader.readAsDataURL(file);
   };
 
   return (
@@ -171,12 +190,31 @@ const RichTextEditor = ({ value, onChange, placeholder }: RichTextEditorProps) =
           </Button>
           
           <Button
-            size="icon"
-            variant="ghost"
+            variant="outline"
             type="button"
-            onClick={addImage}
+            onClick={() => document.getElementById('imageUpload')?.click()}
+            disabled={isImageLoading}
+            className="flex items-center gap-2"
           >
-            <ImageIcon className="h-4 w-4" />
+            {isImageLoading ? (
+              <>
+                <Loader2 className="h-4 w-4 animate-spin" />
+                <span>Uploading...</span>
+              </>
+            ) : (
+              <>
+                <ImageUp className="h-4 w-4" />
+                <span>Insert Image</span>
+              </>
+            )}
+            <input
+              id="imageUpload"
+              type="file"
+              accept="image/*"
+              onChange={handleImageUpload}
+              className="hidden"
+              disabled={isImageLoading}
+            />
           </Button>
         </div>
 

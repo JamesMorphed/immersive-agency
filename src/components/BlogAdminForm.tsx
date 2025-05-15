@@ -1,9 +1,10 @@
+
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { format } from 'date-fns';
-import { CalendarIcon, Plus, X, Image, ImageUp, Loader2, FileText, Briefcase, Podcast, Cpu, Newspaper } from "lucide-react";
+import { CalendarIcon, Loader2, FileText, Briefcase, Podcast, Cpu, Newspaper, ImageUp } from "lucide-react";
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 
@@ -48,7 +49,6 @@ const blogPostSchema = z.object({
   image_url: z.string().url({ message: "Please upload an image" }).or(z.string().length(0)),
   video_url: z.string().url({ message: "Please enter a valid URL for the video" }).optional().or(z.literal("")),
   tags: z.array(z.string()).default([]),
-  image_gallery: z.array(z.string().url()).default([]),
   read_time: z.string().min(1, { message: "Read time is required" }),
   publish: z.boolean().default(false),
   published_at: z.date().optional(),
@@ -59,9 +59,7 @@ type BlogPostFormValues = z.infer<typeof blogPostSchema>;
 const BlogAdminForm = () => {
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [galleryUrlInput, setGalleryUrlInput] = useState("");
   const [uploadingFeaturedImage, setUploadingFeaturedImage] = useState(false);
-  const [uploadingGalleryImage, setUploadingGalleryImage] = useState(false);
 
   // Define form
   const form = useForm<BlogPostFormValues>({
@@ -75,7 +73,6 @@ const BlogAdminForm = () => {
       image_url: "",
       video_url: "",
       tags: [],
-      image_gallery: [],
       read_time: "",
       publish: false,
       published_at: new Date(),
@@ -142,83 +139,6 @@ const BlogAdminForm = () => {
     }
   };
 
-  // Function to handle image uploads for gallery
-  const handleGalleryImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = e.target.files;
-    if (!files || files.length === 0) {
-      return;
-    }
-
-    const file = files[0];
-    const fileExt = file.name.split('.').pop();
-    const fileName = `gallery-${Math.random().toString(36).substring(2, 15)}.${fileExt}`;
-    const filePath = `blog/${fileName}`;
-
-    try {
-      setUploadingGalleryImage(true);
-      
-      // Upload image to Supabase Storage
-      const { data, error } = await supabase.storage
-        .from('blog_images')
-        .upload(filePath, file);
-        
-      if (error) {
-        throw error;
-      }
-      
-      // Get public URL
-      const { data: publicUrlData } = supabase.storage
-        .from('blog_images')
-        .getPublicUrl(filePath);
-      
-      const currentGallery = form.getValues("image_gallery") || [];
-      form.setValue("image_gallery", [...currentGallery, publicUrlData.publicUrl]);
-      
-      toast({
-        title: "Gallery image uploaded",
-        description: "Your image has been added to the gallery.",
-      });
-    } catch (error) {
-      console.error("Error uploading gallery image:", error);
-      toast({
-        title: "Upload failed",
-        description: error instanceof Error ? error.message : "Failed to upload image",
-        variant: "destructive",
-      });
-    } finally {
-      setUploadingGalleryImage(false);
-    }
-  };
-
-  // Function to add an image URL to the gallery
-  const addToGallery = () => {
-    if (galleryUrlInput && galleryUrlInput.trim() !== "") {
-      try {
-        // Basic URL validation
-        new URL(galleryUrlInput);
-        
-        const currentGallery = form.getValues("image_gallery") || [];
-        form.setValue("image_gallery", [...currentGallery, galleryUrlInput]);
-        setGalleryUrlInput("");
-      } catch (e) {
-        toast({
-          title: "Invalid URL",
-          description: "Please enter a valid image URL",
-          variant: "destructive",
-        });
-      }
-    }
-  };
-
-  // Function to remove an image from the gallery
-  const removeFromGallery = (indexToRemove: number) => {
-    const currentGallery = form.getValues("image_gallery");
-    form.setValue(
-      "image_gallery", 
-      currentGallery.filter((_, index) => index !== indexToRemove)
-    );
-  };
-
   const onSubmit = async (values: BlogPostFormValues) => {
     setIsSubmitting(true);
     
@@ -232,7 +152,6 @@ const BlogAdminForm = () => {
         category: values.category,
         image_url: values.image_url,
         video_url: values.video_url || null,
-        image_gallery: values.image_gallery.length > 0 ? values.image_gallery : null,
         tags: values.tags.length > 0 ? values.tags : null,
         read_time: values.read_time,
         published_at: values.publish ? values.published_at?.toISOString() : null,
@@ -457,18 +376,6 @@ const BlogAdminForm = () => {
                             />
                           </div>
                         </FormControl>
-                        
-                        {field.value && (
-                          <Button
-                            type="button"
-                            variant="ghost"
-                            size="sm"
-                            onClick={() => form.setValue("image_url", "")}
-                            className="text-gray-400 hover:text-red-500"
-                          >
-                            <X className="h-4 w-4" />
-                          </Button>
-                        )}
                       </div>
                       
                       {field.value && (
@@ -509,99 +416,6 @@ const BlogAdminForm = () => {
               )}
             />
           </div>
-
-          <FormField
-            control={form.control}
-            name="image_gallery"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Image Gallery (optional)</FormLabel>
-                <div className="space-y-4">
-                  <div className="flex flex-col gap-2">
-                    <Button
-                      type="button"
-                      variant="outline"
-                      onClick={() => document.getElementById('galleryImageUpload')?.click()}
-                      disabled={uploadingGalleryImage}
-                      className="w-full"
-                    >
-                      {uploadingGalleryImage ? (
-                        <>
-                          <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                          Uploading...
-                        </>
-                      ) : (
-                        <>
-                          <Image className="h-4 w-4 mr-2" />
-                          Upload Gallery Image
-                        </>
-                      )}
-                    </Button>
-                    <Input
-                      id="galleryImageUpload"
-                      type="file"
-                      accept="image/*"
-                      className="hidden"
-                      onChange={handleGalleryImageUpload}
-                      disabled={uploadingGalleryImage}
-                    />
-                    
-                    <div className="flex items-center gap-2">
-                      <p className="text-sm text-gray-400">or add by URL:</p>
-                      <div className="flex flex-1 gap-2">
-                        <Input 
-                          placeholder="https://example.com/gallery-image.jpg"
-                          value={galleryUrlInput}
-                          onChange={(e) => setGalleryUrlInput(e.target.value)}
-                          className="flex-1"
-                        />
-                        <Button 
-                          type="button" 
-                          onClick={addToGallery}
-                          className="flex-shrink-0"
-                        >
-                          <Plus className="h-4 w-4 mr-1" />
-                          Add
-                        </Button>
-                      </div>
-                    </div>
-                  </div>
-                  
-                  {field.value.length > 0 && (
-                    <div className="bg-gray-900/50 p-3 rounded-md border border-gray-700">
-                      <p className="text-sm mb-2">Gallery images ({field.value.length}):</p>
-                      <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
-                        {field.value.map((url, index) => (
-                          <div key={index} className="relative group">
-                            <div className="h-24 bg-gray-800 rounded overflow-hidden border border-gray-700">
-                              <img 
-                                src={url} 
-                                alt={`Gallery ${index}`}
-                                className="w-full h-full object-cover"
-                                onError={(e) => {
-                                  (e.target as HTMLImageElement).src = "https://via.placeholder.com/120?text=Error";
-                                }}
-                              />
-                            </div>
-                            <Button 
-                              type="button" 
-                              variant="destructive" 
-                              size="sm" 
-                              onClick={() => removeFromGallery(index)}
-                              className="absolute top-1 right-1 opacity-0 group-hover:opacity-100 transition-opacity h-6 w-6 p-0"
-                            >
-                              <X className="h-3 w-3" />
-                            </Button>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-                </div>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
 
           <FormField
             control={form.control}
