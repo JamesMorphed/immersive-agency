@@ -36,7 +36,7 @@ const Navbar = () => {
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" size="icon" className="text-white hover:text-cyberpunk-magenta">
-                <Grid3X3 size={24} />
+                <Grid3X3 className="h-6 w-6" />
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="bg-black/95 backdrop-blur-md border border-cyberpunk-cyan/30 w-40">
