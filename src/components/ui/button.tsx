@@ -10,16 +10,15 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        default: "bg-gradient-to-r from-cyberpunk-magenta/80 to-cyberpunk-magenta text-white backdrop-blur-sm shadow-lg hover:shadow-cyberpunk-magenta/20",
+        default: "bg-black/90 text-white border border-transparent bg-gradient-to-r from-cyberpunk-magenta/40 via-cyberpunk-cyan/40 to-cyberpunk-magenta/40 bg-clip-padding backdrop-blur-sm shadow-sm hover:shadow-cyberpunk-magenta/20 hover:bg-black",
         destructive:
-          "bg-destructive text-destructive-foreground hover:bg-destructive/90",
+          "bg-black/90 text-white border border-transparent bg-gradient-to-r from-red-500/40 via-red-400/40 to-red-500/40 bg-clip-padding backdrop-blur-sm shadow-sm hover:bg-black",
         outline:
-          "border border-input bg-background/40 backdrop-blur-sm hover:bg-accent hover:text-accent-foreground",
+          "border border-transparent bg-gradient-to-r from-cyberpunk-magenta/40 via-cyberpunk-cyan/40 to-cyberpunk-magenta/40 bg-clip-padding backdrop-blur-sm bg-black/80 text-white hover:bg-black",
         secondary:
-          "bg-secondary text-secondary-foreground hover:bg-secondary/80",
-        ghost: "hover:bg-accent hover:text-accent-foreground",
+          "bg-black/90 text-white border border-transparent bg-gradient-to-r from-cyberpunk-cyan/40 via-cyberpunk-cyan/20 to-cyberpunk-cyan/40 bg-clip-padding backdrop-blur-sm shadow-sm hover:bg-black",
+        ghost: "text-white hover:bg-black/50 hover:text-white",
         link: "text-primary underline-offset-4 hover:underline",
-        // Adding glass variant for glassmorphism effect
         glass: "bg-black/50 backdrop-blur-sm border border-white/10 text-white hover:bg-black/60",
       },
       size: {
