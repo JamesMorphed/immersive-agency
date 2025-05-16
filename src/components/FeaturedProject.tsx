@@ -46,7 +46,7 @@ const FeaturedProject = () => {
               with immersive design to create unforgettable experiences.
             </p>
             
-            <Button className="mt-4 border border-cyberpunk-magenta bg-transparent text-cyberpunk-magenta hover:bg-cyberpunk-magenta/10">
+            <Button variant="default" className="mt-4">
               SEE PROJECT
               <ArrowRight className="ml-2 h-5 w-5" />
             </Button>
