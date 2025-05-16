@@ -1,6 +1,17 @@
 
 import { Card } from '@/components/ui/card';
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
+import { 
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious
+} from '@/components/ui/carousel';
+import { Button } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
+import { useEffect, useState } from 'react';
+import { ArrowLeft, ArrowRight } from 'lucide-react';
 
 const technologies = [{
   title: "Artificial Intelligence",
@@ -22,68 +33,93 @@ const technologies = [{
 
 const Technology = () => {
   const { isVisible: isTextVisible, elementRef: textRef } = useScrollAnimation();
-  const { isVisible: isCardsVisible, elementRef: cardsRef } = useScrollAnimation();
+  const { isVisible: isSliderVisible, elementRef: sliderRef } = useScrollAnimation();
+  const [current, setCurrent] = useState(0);
 
-  return <section id="technology" className="py-20 bg-gradient-to-b from-cyberpunk-dark-blue to-black relative">
-      {/* White perspective grid background */}
-      <div className="absolute inset-0 z-0 opacity-10">
+  return <section id="technology" className="py-20 bg-gradient-to-b from-cyberpunk-dark-blue to-black relative overflow-hidden">
+      {/* White perspective grid background with increased opacity for more impact */}
+      <div className="absolute inset-0 z-0 opacity-15">
         <div className="w-full h-full perspective-grid"></div>
       </div>
       
       <div className="max-w-7xl mx-auto px-4 sm:px-6 relative z-10">
-        <div className="flex flex-col md:flex-row gap-12">
-          <div 
-            ref={textRef}
-            className={`w-full md:w-1/3 transition-all duration-1000 transform ${
-              isTextVisible ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-10'
-            }`}
-          >
-            <h2 className="text-cyberpunk-magenta text-xl font-medium mb-3">WHAT WE DO</h2>
-            <h3 className="text-4xl md:text-5xl font-bold mb-6">
-              <span className="text-white">Cutting-Edge</span> <br />
-              <span className="gradient-text">Technology</span>
-            </h3>
-            <p className="text-gray-400 mb-6">
-              We leverage the latest advancements in immersive technology and artificial intelligence to 
-              create memorable educational experiences that drive understanding and retention.
-            </p>
-            <p className="text-gray-400">
-              Our proprietary platforms combine multiple technologies to deliver seamless, 
-              intuitive experiences tailored specifically to the needs of healthcare professionals.
-            </p>
-          </div>
+        <div
+          ref={textRef}
+          className={`text-center mb-16 transition-all duration-1000 transform ${
+            isTextVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+          }`}
+        >
+          <h2 className="text-cyberpunk-magenta text-xl font-medium mb-3">WHAT WE DO</h2>
+          <h3 className="text-4xl md:text-5xl font-bold mb-6">
+            <span className="text-white">Cutting-Edge</span>{' '}
+            <span className="gradient-text">Technology</span>
+          </h3>
+          <p className="text-gray-400 max-w-3xl mx-auto">
+            We leverage the latest advancements in immersive technology and artificial intelligence to 
+            create memorable educational experiences that drive understanding and retention.
+          </p>
+        </div>
 
-          <div 
-            ref={cardsRef}
-            className={`w-full md:w-2/3 grid grid-cols-1 sm:grid-cols-2 gap-8 transition-all duration-1000 transform ${
-              isCardsVisible ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-10'
-            }`}
-            style={{ transitionDelay: '200ms' }}
+        <div
+          ref={sliderRef}
+          className={`transition-all duration-1000 transform ${
+            isSliderVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+          }`}
+        >
+          <Carousel 
+            className="w-full" 
+            opts={{
+              align: "start",
+              loop: true,
+            }}
           >
-            {technologies.map((tech, index) => <Card 
-                key={index} 
-                className="bg-black/60 backdrop-blur-sm border border-gray-800 hover:border-cyberpunk-cyan transition-all duration-300 p-6 group relative overflow-hidden"
-                style={{ 
-                  transitionDelay: `${200 + (index * 150)}ms`,
-                  opacity: isCardsVisible ? 1 : 0,
-                  transform: isCardsVisible ? 'translateY(0)' : 'translateY(20px)',
-                  transition: 'opacity 700ms ease, transform 700ms ease'
-                }}
+            <CarouselContent className="-ml-2 md:-ml-4">
+              {technologies.map((tech, index) => (
+                <CarouselItem key={index} className="pl-2 md:pl-4 md:basis-1/2 lg:basis-1/3">
+                  <div className="p-1">
+                    <Card className={cn(
+                      "bg-black/60 backdrop-blur-sm border border-gray-800 hover:border-cyberpunk-cyan transition-all duration-500 p-6 h-full group relative overflow-hidden",
+                      current === index ? "border-cyberpunk-magenta shadow-lg shadow-cyberpunk-magenta/20" : ""
+                    )}>
+                      <div className="absolute top-0 right-0 w-32 h-32 bg-cyberpunk-cyan/5 rounded-full -mr-16 -mt-16 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                      <div className="mb-6 flex justify-center">
+                        <img 
+                          src={tech.icon} 
+                          alt={tech.title} 
+                          className="custom-icon w-20 h-20 group-hover:filter group-hover:brightness-110" 
+                        />
+                      </div>
+                      <h4 className="text-2xl font-bold mb-4 text-white group-hover:text-cyberpunk-cyan transition-colors duration-300">
+                        {tech.title}
+                      </h4>
+                      <p className="text-gray-400">
+                        {tech.description}
+                      </p>
+                    </Card>
+                  </div>
+                </CarouselItem>
+              ))}
+            </CarouselContent>
+            <div className="flex justify-center gap-4 mt-8">
+              <Button 
+                variant="outline" 
+                size="icon" 
+                className="rounded-full border border-cyberpunk-magenta shadow-sm hover:shadow-cyberpunk-magenta/20"
               >
-                <div className="absolute top-0 right-0 w-24 h-24 bg-cyberpunk-cyan/5 rounded-full -mr-12 -mt-12 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                <div className="mb-5 flex justify-center">
-                  <img src={tech.icon} alt={tech.title} className="custom-icon group-hover:filter group-hover:brightness-110" />
-                </div>
-                <h4 className="text-xl font-bold mb-3 text-white group-hover:text-cyberpunk-cyan transition-colors duration-300">
-                  {tech.title}
-                </h4>
-                <p className="text-gray-400">
-                  {tech.description}
-                </p>
-              </Card>)}
-          </div>
+                <CarouselPrevious className="absolute h-10 w-10 left-auto right-auto" />
+              </Button>
+              <Button 
+                variant="outline" 
+                size="icon" 
+                className="rounded-full border border-cyberpunk-magenta shadow-sm hover:shadow-cyberpunk-magenta/20"
+              >
+                <CarouselNext className="absolute h-10 w-10 left-auto right-auto" />
+              </Button>
+            </div>
+          </Carousel>
         </div>
       </div>
     </section>;
 };
+
 export default Technology;
