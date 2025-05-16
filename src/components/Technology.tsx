@@ -11,7 +11,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { useEffect, useState } from 'react';
-import { ArrowLeft, ArrowRight } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Star } from 'lucide-react';
 
 const technologies = [{
   title: "Artificial Intelligence",
@@ -102,16 +102,16 @@ const Technology = () => {
             </CarouselContent>
             <div className="flex justify-center gap-4 mt-8">
               <Button 
-                variant="outline" 
+                variant="quest" 
                 size="icon" 
-                className="rounded-full border border-cyberpunk-magenta shadow-sm hover:shadow-cyberpunk-magenta/20"
+                className="rounded-full overflow-hidden w-10 h-10"
               >
                 <CarouselPrevious className="absolute h-10 w-10 left-auto right-auto" />
               </Button>
               <Button 
-                variant="outline" 
+                variant="quest" 
                 size="icon" 
-                className="rounded-full border border-cyberpunk-magenta shadow-sm hover:shadow-cyberpunk-magenta/20"
+                className="rounded-full overflow-hidden w-10 h-10"
               >
                 <CarouselNext className="absolute h-10 w-10 left-auto right-auto" />
               </Button>
