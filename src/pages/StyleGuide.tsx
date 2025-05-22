@@ -12,6 +12,7 @@ import ButtonsSection from "@/components/style-guide/ButtonsSection";
 import CardsSection from "@/components/style-guide/CardsSection";
 import IconsSection from "@/components/style-guide/IconsSection";
 import CustomIconsSection from "@/components/style-guide/CustomIconsSection";
+import IMSIconsSection from "@/components/style-guide/IMSIconsSection";
 
 const StyleGuidePage = () => {
   const { isVisible, elementRef } = useScrollAnimation();
@@ -44,6 +45,7 @@ const StyleGuidePage = () => {
               <TabsTrigger value="cards">Cards</TabsTrigger>
               <TabsTrigger value="icons">Icons</TabsTrigger>
               <TabsTrigger value="custom-icons">Custom Icons</TabsTrigger>
+              <TabsTrigger value="ims-icons">IMS Icons</TabsTrigger>
             </TabsList>
             
             <TabsContent value="typography">
@@ -71,6 +73,10 @@ const StyleGuidePage = () => {
                 refreshCount={refreshCount} 
                 onRefresh={handleIconsRefresh} 
               />
+            </TabsContent>
+            
+            <TabsContent value="ims-icons">
+              <IMSIconsSection />
             </TabsContent>
           </Tabs>
         </div>
