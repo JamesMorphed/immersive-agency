@@ -1,4 +1,3 @@
-
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans:wght@300;400;500;600;700;800;900&display=swap');
 
 @tailwind base;
@@ -146,15 +145,15 @@
     top: -20%;
   }
   
-  /* New neon glow animation */
+  /* New neon glow animation - updated to use magenta instead of purple */
   @keyframes neon-pulse {
     0%, 100% {
       opacity: 0.8;
-      box-shadow: 0 0 10px 2px rgba(155, 135, 245, 0.3);
+      box-shadow: 0 0 10px 2px rgba(255, 55, 187, 0.3);
     }
     50% {
       opacity: 1;
-      box-shadow: 0 0 20px 5px rgba(155, 135, 245, 0.5);
+      box-shadow: 0 0 20px 5px rgba(255, 55, 187, 0.5);
     }
   }
 

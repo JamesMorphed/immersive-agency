@@ -21,7 +21,7 @@ const buttonVariants = cva(
         link: "text-primary underline-offset-4 hover:underline",
         glass: "bg-black/50 backdrop-blur-sm border border-white/10 text-white hover:bg-black/60",
         quest: "relative bg-black text-white font-medium px-6 py-3 rounded-full border border-transparent overflow-hidden transition-all duration-300 hover:shadow-[0_0_10px_2px_rgba(255,55,187,0.3)] group",
-        neon: "relative bg-black text-white font-medium px-6 py-3 rounded-full border border-transparent overflow-hidden transition-all duration-500 shadow-[0_0_10px_2px_rgba(155,135,245,0.3)] group hover:shadow-[0_0_20px_5px_rgba(155,135,245,0.5)]",
+        neon: "relative bg-black text-white font-medium px-6 py-3 rounded-full border border-transparent overflow-hidden transition-all duration-500 shadow-[0_0_10px_2px_rgba(255,55,187,0.3)] group hover:shadow-[0_0_20px_5px_rgba(255,55,187,0.5)]",
       },
       size: {
         default: "h-10 px-6 py-2",
@@ -55,12 +55,12 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       </>
     )
     
-    // Create the neon glow overlay for neon variant
+    // Create the neon glow overlay for neon variant - updated to use cyberpunk-magenta (#FF37BB) instead of purple (#9b87f5)
     const neonGradientOverlay = variant === 'neon' && (
       <>
-        <span className="absolute inset-0 border border-[#9b87f5] rounded-full opacity-80 group-hover:opacity-100 transition-opacity duration-500"></span>
-        <span className="absolute inset-0 bg-gradient-to-r from-[#9b87f5]/10 via-[#9b87f5]/5 to-[#9b87f5]/10 opacity-20 group-hover:opacity-40 transition-opacity duration-500"></span>
-        <span className="absolute -inset-0.5 rounded-full bg-gradient-to-r from-[#9b87f5] to-[#7E69AB] opacity-0 blur-md group-hover:opacity-30 transition-opacity duration-500 group-hover:animate-pulse"></span>
+        <span className="absolute inset-0 border border-cyberpunk-magenta rounded-full opacity-80 group-hover:opacity-100 transition-opacity duration-500"></span>
+        <span className="absolute inset-0 bg-gradient-to-r from-cyberpunk-magenta/10 via-cyberpunk-magenta/5 to-cyberpunk-magenta/10 opacity-20 group-hover:opacity-40 transition-opacity duration-500"></span>
+        <span className="absolute -inset-0.5 rounded-full bg-gradient-to-r from-cyberpunk-magenta to-cyberpunk-light-magenta opacity-0 blur-md group-hover:opacity-30 transition-opacity duration-500 group-hover:animate-pulse"></span>
       </>
     )
     
