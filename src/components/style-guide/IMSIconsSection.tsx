@@ -2,7 +2,6 @@
 import React, { useState, useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsList, TabsContent, TabsTrigger } from "@/components/ui/tabs";
-import { CustomIcon } from "@/components/ui/custom-icon";
 import { supabase } from "@/integrations/supabase/client";
 
 interface IMSIcon {
@@ -48,21 +47,6 @@ const IMSIconsSection = () => {
 
         allIcons = [...allIcons, ...folderIcons];
       }
-
-      // Create unique list of icon names across all folders
-      const uniqueIconNames = [...new Set(allIcons.map(icon => icon.name))];
-      
-      // Create a list of icons with information about which folders they exist in
-      const uniqueIcons = uniqueIconNames.map(name => {
-        const iconFolders = allIcons
-          .filter(icon => icon.name === name)
-          .map(icon => icon.folder);
-          
-        return {
-          name,
-          folders: iconFolders
-        };
-      });
 
       setIcons(allIcons);
     } catch (error) {
