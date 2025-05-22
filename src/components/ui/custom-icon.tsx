@@ -35,14 +35,12 @@ export const CustomIcon = ({
         setLoading(true);
         setError(false);
         
-        const { data, error: fetchError } = await supabase
+        // The getPublicUrl method doesn't actually throw errors, it only returns data
+        // So we need to check if the file exists ourselves
+        const { data } = await supabase
           .storage
           .from('icons')
           .getPublicUrl(iconPath);
-        
-        if (fetchError) {
-          throw fetchError;
-        }
         
         if (data?.publicUrl) {
           setIconUrl(data.publicUrl);
