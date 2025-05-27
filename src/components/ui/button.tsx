@@ -72,7 +72,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       >
         {variant === 'quest' && questGradientOverlay}
         {variant === 'neon' && neonGradientOverlay}
-        <span className="relative z-10">{props.children}</span>
+        <span className="relative z-10 flex items-center gap-2">{props.children}</span>
       </Comp>
     )
   }
