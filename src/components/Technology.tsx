@@ -37,9 +37,14 @@ const Technology = () => {
   const [current, setCurrent] = useState(0);
 
   return <section id="technology" className="py-20 bg-gradient-to-b from-cyberpunk-dark-blue to-black relative overflow-hidden">
-      {/* White perspective grid background with increased opacity for more impact */}
-      <div className="absolute inset-0 z-0 opacity-15">
-        <div className="w-full h-full perspective-grid"></div>
+      {/* Dynamic animated grid background with pulsing effect */}
+      <div className="absolute inset-0 z-0 opacity-20">
+        <div className="w-full h-full dynamic-perspective-grid"></div>
+      </div>
+      
+      {/* Additional floating particles for more dynamism */}
+      <div className="absolute inset-0 z-0 opacity-10">
+        <div className="floating-particles"></div>
       </div>
       
       <div className="max-w-7xl mx-auto px-4 sm:px-6 relative z-10">
