@@ -1,3 +1,4 @@
+
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Check, Info, Search, X } from "lucide-react";
@@ -15,7 +16,7 @@ const ButtonsSection = () => {
               <Button variant="default">Default Button</Button>
               <Button variant="default" disabled>Default Disabled</Button>
             </div>
-            <p className="text-sm text-gray-400">Standard button with transparent background and gradient border</p>
+            <p className="text-sm text-gray-400">Standard button with magenta glow effect</p>
           </div>
           
           <div className="bg-black/50 border border-gray-800 rounded-lg p-6 space-y-6">
@@ -24,43 +25,34 @@ const ButtonsSection = () => {
               <Button variant="secondary">Secondary Button</Button>
               <Button variant="secondary" disabled>Secondary Disabled</Button>
             </div>
-            <p className="text-sm text-gray-400">Blue-accented button with subtle cyan gradient</p>
+            <p className="text-sm text-gray-400">Button with white glow effect</p>
           </div>
           
           <div className="bg-black/50 border border-gray-800 rounded-lg p-6 space-y-6">
-            <h3 className="text-xl font-bold">Neon</h3>
+            <h3 className="text-xl font-bold">Destructive</h3>
             <div className="flex flex-wrap gap-4">
-              <Button variant="neon">Neon Button</Button>
-              <Button variant="neon" disabled>Neon Disabled</Button>
+              <Button variant="destructive">Destructive Button</Button>
+              <Button variant="destructive" disabled>Destructive Disabled</Button>
             </div>
-            <p className="text-sm text-gray-400">Button with purple neon border and glow effect</p>
+            <p className="text-sm text-gray-400">Button for destructive actions with red gradient</p>
           </div>
           
           <div className="bg-black/50 border border-gray-800 rounded-lg p-6 space-y-6">
-            <h3 className="text-xl font-bold">Quest</h3>
+            <h3 className="text-xl font-bold">Ghost</h3>
             <div className="flex flex-wrap gap-4">
-              <Button variant="quest">Quest Button</Button>
-              <Button variant="quest" disabled>Quest Disabled</Button>
+              <Button variant="ghost">Ghost Button</Button>
+              <Button variant="ghost" disabled>Ghost Disabled</Button>
             </div>
-            <p className="text-sm text-gray-400">Button with magenta glow and hover effects</p>
+            <p className="text-sm text-gray-400">Minimal button with no background</p>
           </div>
           
           <div className="bg-black/50 border border-gray-800 rounded-lg p-6 space-y-6">
-            <h3 className="text-xl font-bold">Outline</h3>
+            <h3 className="text-xl font-bold">Link</h3>
             <div className="flex flex-wrap gap-4">
-              <Button variant="outline">Outline Button</Button>
-              <Button variant="outline" disabled>Outline Disabled</Button>
+              <Button variant="link">Link Button</Button>
+              <Button variant="link" disabled>Link Disabled</Button>
             </div>
-            <p className="text-sm text-gray-400">Button with just an outline and transparent background</p>
-          </div>
-          
-          <div className="bg-black/50 border border-gray-800 rounded-lg p-6 space-y-6">
-            <h3 className="text-xl font-bold">Glass</h3>
-            <div className="flex flex-wrap gap-4">
-              <Button variant="glass">Glass Button</Button>
-              <Button variant="glass" disabled>Glass Disabled</Button>
-            </div>
-            <p className="text-sm text-gray-400">Semi-transparent button with backdrop blur effect</p>
+            <p className="text-sm text-gray-400">Button styled as a link</p>
           </div>
         </div>
       </div>
@@ -71,19 +63,19 @@ const ButtonsSection = () => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <div className="bg-black/50 border border-gray-800 rounded-lg p-6 space-y-6">
             <h3 className="text-xl font-bold">Small</h3>
-            <Button variant="neon" size="sm">Small Button</Button>
+            <Button variant="default" size="sm">Small Button</Button>
             <p className="text-sm text-gray-400">Small button variant (size="sm")</p>
           </div>
           
           <div className="bg-black/50 border border-gray-800 rounded-lg p-6 space-y-6">
             <h3 className="text-xl font-bold">Default</h3>
-            <Button variant="neon">Default Button</Button>
+            <Button variant="default">Default Button</Button>
             <p className="text-sm text-gray-400">Default button size</p>
           </div>
           
           <div className="bg-black/50 border border-gray-800 rounded-lg p-6 space-y-6">
             <h3 className="text-xl font-bold">Large</h3>
-            <Button variant="neon" size="lg">Large Button</Button>
+            <Button variant="default" size="lg">Large Button</Button>
             <p className="text-sm text-gray-400">Large button variant (size="lg")</p>
           </div>
         </div>
@@ -95,7 +87,7 @@ const ButtonsSection = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="bg-black/50 border border-gray-800 rounded-lg p-6 space-y-6">
             <div className="flex items-center gap-4">
-              <Button variant="neon">
+              <Button variant="default">
                 <Search className="h-4 w-4" /> 
                 Search
               </Button>
@@ -105,7 +97,7 @@ const ButtonsSection = () => {
           
           <div className="bg-black/50 border border-gray-800 rounded-lg p-6 space-y-6">
             <div className="flex items-center gap-4">
-              <Button variant="neon">
+              <Button variant="default">
                 Next
                 <ArrowRight className="h-4 w-4" />
               </Button>
@@ -116,13 +108,13 @@ const ButtonsSection = () => {
           <div className="bg-black/50 border border-gray-800 rounded-lg p-6 space-y-6">
             <h3 className="text-xl font-bold">Icon Only</h3>
             <div className="flex gap-4">
-              <Button variant="neon" size="icon">
+              <Button variant="default" size="icon">
                 <X className="h-4 w-4" />
               </Button>
-              <Button variant="neon" size="icon">
+              <Button variant="default" size="icon">
                 <Check className="h-4 w-4" />
               </Button>
-              <Button variant="neon" size="icon">
+              <Button variant="default" size="icon">
                 <Info className="h-4 w-4" />
               </Button>
             </div>
