@@ -16,7 +16,7 @@ const buttonVariants = cva(
         outline:
           "border border-transparent bg-gradient-to-r from-cyberpunk-magenta/20 via-cyberpunk-cyan/20 to-cyberpunk-magenta/20 bg-clip-padding backdrop-blur-sm bg-black/80 text-white hover:bg-black/60 hover:border-cyberpunk-magenta/50",
         secondary:
-          "bg-black/90 text-white border border-transparent bg-gradient-to-r from-cyberpunk-cyan/20 via-cyberpunk-cyan/10 to-cyberpunk-cyan/20 bg-clip-padding backdrop-blur-sm shadow-sm hover:bg-black",
+          "relative bg-black text-white font-medium px-6 py-3 rounded-full border border-transparent overflow-hidden transition-all duration-500 shadow-[0_0_10px_2px_rgba(255,255,255,0.3)] group hover:shadow-[0_0_20px_5px_rgba(255,255,255,0.5)]",
         ghost: "text-white hover:bg-black/50 hover:text-white",
         link: "text-primary underline-offset-4 hover:underline",
         glass: "bg-black/50 backdrop-blur-sm border border-white/10 text-white hover:bg-black/60",
@@ -64,6 +64,15 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       </>
     )
     
+    // Create the white glow overlay for secondary variant
+    const secondaryGradientOverlay = variant === 'secondary' && (
+      <>
+        <span className="absolute inset-0 border border-white rounded-full opacity-80 group-hover:opacity-100 transition-opacity duration-500"></span>
+        <span className="absolute inset-0 bg-gradient-to-r from-white/10 via-white/5 to-white/10 opacity-20 group-hover:opacity-40 transition-opacity duration-500"></span>
+        <span className="absolute -inset-0.5 rounded-full bg-gradient-to-r from-white to-gray-200 opacity-0 blur-md group-hover:opacity-30 transition-opacity duration-500 group-hover:animate-pulse"></span>
+      </>
+    )
+    
     return (
       <Comp
         className={cn(buttonVariants({ variant, size, className }))}
@@ -72,6 +81,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       >
         {variant === 'quest' && questGradientOverlay}
         {(variant === 'neon' || variant === 'default') && neonGradientOverlay}
+        {variant === 'secondary' && secondaryGradientOverlay}
         <span className="relative z-10 flex items-center gap-2">{props.children}</span>
       </Comp>
     )
