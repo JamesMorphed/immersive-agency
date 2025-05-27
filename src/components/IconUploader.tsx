@@ -6,6 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { toast } from '@/hooks/use-toast';
 import { Upload, Loader2 } from 'lucide-react';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 interface IconUploaderProps {
   onSuccess?: () => void;
@@ -13,9 +14,8 @@ interface IconUploaderProps {
 
 const IconUploader = ({ onSuccess }: IconUploaderProps) => {
   const [iconName, setIconName] = useState('');
-  const [defaultIcon, setDefaultIcon] = useState<File | null>(null);
-  const [magentaIcon, setMagentaIcon] = useState<File | null>(null);
-  const [cyanIcon, setCyanIcon] = useState<File | null>(null);
+  const [iconFile, setIconFile] = useState<File | null>(null);
+  const [folder, setFolder] = useState<string>('');
   const [uploading, setUploading] = useState(false);
 
   const handleUpload = async (e: React.FormEvent) => {
@@ -30,11 +30,20 @@ const IconUploader = ({ onSuccess }: IconUploaderProps) => {
       return;
     }
 
-    if (!defaultIcon) {
+    if (!iconFile) {
       toast({
         variant: 'destructive',
-        title: 'Default icon required',
-        description: 'Please upload at least the default icon',
+        title: 'Icon file required',
+        description: 'Please upload an SVG file',
+      });
+      return;
+    }
+
+    if (!folder) {
+      toast({
+        variant: 'destructive',
+        title: 'Folder required',
+        description: 'Please select a folder for the icon',
       });
       return;
     }
@@ -42,59 +51,65 @@ const IconUploader = ({ onSuccess }: IconUploaderProps) => {
     setUploading(true);
 
     try {
-      // Upload default icon
-      const defaultIconPath = `${iconName}.svg`;
-      await uploadFile(defaultIcon, defaultIconPath);
+      // Upload to storage
+      const filePath = `${folder}/${iconName}.svg`;
+      const { error: uploadError } = await supabase.storage
+        .from('icons')
+        .upload(filePath, iconFile, {
+          cacheControl: '3600',
+          upsert: true,
+        });
 
-      // Upload magenta variant if provided
-      if (magentaIcon) {
-        const magentaIconPath = `${iconName}-magenta.svg`;
-        await uploadFile(magentaIcon, magentaIconPath);
+      if (uploadError) {
+        throw uploadError;
       }
 
-      // Upload cyan variant if provided
-      if (cyanIcon) {
-        const cyanIconPath = `${iconName}-cyan.svg`;
-        await uploadFile(cyanIcon, cyanIconPath);
+      // Get public URL
+      const publicUrl = supabase.storage
+        .from('icons')
+        .getPublicUrl(filePath).data.publicUrl;
+
+      // Insert into database
+      const { error: dbError } = await supabase
+        .from('icons')
+        .insert({
+          name: iconName,
+          folder: folder,
+          file_path: filePath,
+          file_size: iconFile.size,
+          content_type: iconFile.type,
+          public_url: publicUrl,
+          tags: [],
+          description: null
+        });
+
+      if (dbError) {
+        throw dbError;
       }
 
       toast({
         title: 'Icon uploaded successfully',
-        description: `${iconName} icon has been uploaded with its variants`,
+        description: `${iconName} icon has been uploaded to ${folder} folder`,
       });
 
       // Reset form
       setIconName('');
-      setDefaultIcon(null);
-      setMagentaIcon(null);
-      setCyanIcon(null);
+      setIconFile(null);
+      setFolder('');
 
       // Call success callback if provided
       if (onSuccess) {
         onSuccess();
       }
-    } catch (error) {
-      console.error('Error uploading icons:', error);
+    } catch (error: any) {
+      console.error('Error uploading icon:', error);
       toast({
         variant: 'destructive',
         title: 'Upload failed',
-        description: 'There was an error uploading the icons',
+        description: error.message || 'There was an error uploading the icon',
       });
     } finally {
       setUploading(false);
-    }
-  };
-
-  const uploadFile = async (file: File, path: string) => {
-    const { error } = await supabase.storage
-      .from('icons')
-      .upload(path, file, {
-        cacheControl: '3600',
-        upsert: true,
-      });
-
-    if (error) {
-      throw error;
     }
   };
 
@@ -116,36 +131,26 @@ const IconUploader = ({ onSuccess }: IconUploaderProps) => {
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="default-icon">Default Icon (SVG)</Label>
-        <Input
-          id="default-icon"
-          type="file"
-          accept=".svg"
-          onChange={(e) => setDefaultIcon(e.target.files?.[0] || null)}
-          className="bg-black/50"
-          disabled={uploading}
-        />
+        <Label htmlFor="folder-select">Folder</Label>
+        <Select value={folder} onValueChange={setFolder} disabled={uploading}>
+          <SelectTrigger className="bg-black/50">
+            <SelectValue placeholder="Select folder" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="white">White</SelectItem>
+            <SelectItem value="gradient">Gradient</SelectItem>
+            <SelectItem value="black">Black</SelectItem>
+          </SelectContent>
+        </Select>
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="magenta-icon">Magenta Variant (SVG) - Optional</Label>
+        <Label htmlFor="icon-file">Icon File (SVG)</Label>
         <Input
-          id="magenta-icon"
+          id="icon-file"
           type="file"
           accept=".svg"
-          onChange={(e) => setMagentaIcon(e.target.files?.[0] || null)}
-          className="bg-black/50"
-          disabled={uploading}
-        />
-      </div>
-
-      <div className="space-y-2">
-        <Label htmlFor="cyan-icon">Cyan Variant (SVG) - Optional</Label>
-        <Input
-          id="cyan-icon"
-          type="file"
-          accept=".svg"
-          onChange={(e) => setCyanIcon(e.target.files?.[0] || null)}
+          onChange={(e) => setIconFile(e.target.files?.[0] || null)}
           className="bg-black/50"
           disabled={uploading}
         />
@@ -154,7 +159,7 @@ const IconUploader = ({ onSuccess }: IconUploaderProps) => {
       <Button 
         type="submit" 
         variant="default" 
-        disabled={uploading}
+        disabled={uploading || !iconName || !iconFile || !folder}
         className="w-full"
       >
         {uploading ? (

@@ -6,8 +6,10 @@ import { supabase } from "@/integrations/supabase/client";
 import IconsTable from "./IconsTable";
 
 interface IMSIcon {
+  id: string;
   name: string;
   folder: string;
+  public_url: string;
 }
 
 const IMSIconsSection = () => {
@@ -21,37 +23,21 @@ const IMSIconsSection = () => {
   const fetchIcons = async () => {
     setLoading(true);
     try {
-      // Fetch icons from all three folders
-      const folders = ["white", "gradient", "black"];
-      let allIcons: IMSIcon[] = [];
+      const { data, error } = await supabase
+        .from('icons')
+        .select('id, name, folder, public_url')
+        .order('name');
 
-      for (const folder of folders) {
-        const { data, error } = await supabase
-          .storage
-          .from('icons')
-          .list(folder, {
-            sortBy: { column: 'name', order: 'asc' },
-          });
-
-        if (error) {
-          console.error(`Error fetching icons from ${folder}:`, error);
-          continue;
-        }
-
-        // Filter SVG files and add to allIcons with folder info
-        const folderIcons = data
-          .filter(file => file.name.endsWith('.svg'))
-          .map(file => ({
-            name: file.name.replace('.svg', ''),
-            folder
-          }));
-
-        allIcons = [...allIcons, ...folderIcons];
+      if (error) {
+        console.error('Error fetching icons from database:', error);
+        setIcons([]);
+        return;
       }
 
-      setIcons(allIcons);
+      setIcons(data || []);
     } catch (error) {
       console.error('Error fetching icons:', error);
+      setIcons([]);
     } finally {
       setLoading(false);
     }
@@ -63,7 +49,7 @@ const IMSIconsSection = () => {
     if (folderIcons.length === 0) {
       return (
         <div className="p-8 text-center text-gray-400">
-          No icons found in this folder
+          No icons found in this folder. Use the "Sync with Storage" button in the table view to import icons.
         </div>
       );
     }
@@ -71,11 +57,11 @@ const IMSIconsSection = () => {
     return (
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
         {folderIcons.map((icon) => (
-          <Card key={`${icon.folder}-${icon.name}`} className="bg-black/50 border border-gray-800">
+          <Card key={icon.id} className="bg-black/50 border border-gray-800">
             <CardContent className="p-4 flex flex-col items-center">
               <div className="h-16 w-16 flex items-center justify-center mb-2">
                 <img
-                  src={`${supabase.storage.from('icons').getPublicUrl(`${icon.folder}/${icon.name}.svg`).data.publicUrl}`}
+                  src={icon.public_url}
                   alt={`${icon.name} icon`}
                   className="max-h-12 max-w-12 object-contain"
                 />
@@ -115,8 +101,8 @@ const IMSIconsSection = () => {
                 </TabsList>
                 
                 <TabsContent value="table">
-                  <h3 className="text-xl font-bold mb-4">All Icons Table</h3>
-                  <p className="text-gray-400 mb-6">Complete overview of all icons across all variants in a structured table format.</p>
+                  <h3 className="text-xl font-bold mb-4">Icons Database</h3>
+                  <p className="text-gray-400 mb-6">Complete overview of all icons stored in the database with management features.</p>
                   <IconsTable />
                 </TabsContent>
                 
