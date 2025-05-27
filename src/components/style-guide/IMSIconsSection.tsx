@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsList, TabsContent, TabsTrigger } from "@/components/ui/tabs";
 import { supabase } from "@/integrations/supabase/client";
+import IconsTable from "./IconsTable";
 
 interface IMSIcon {
   name: string;
@@ -105,12 +106,19 @@ const IMSIconsSection = () => {
                 <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-white"></div>
               </div>
             ) : (
-              <Tabs defaultValue="white" className="w-full">
+              <Tabs defaultValue="table" className="w-full">
                 <TabsList className="mb-6">
+                  <TabsTrigger value="table">Table View</TabsTrigger>
                   <TabsTrigger value="white">White</TabsTrigger>
                   <TabsTrigger value="gradient">Gradient</TabsTrigger>
                   <TabsTrigger value="black">Black</TabsTrigger>
                 </TabsList>
+                
+                <TabsContent value="table">
+                  <h3 className="text-xl font-bold mb-4">All Icons Table</h3>
+                  <p className="text-gray-400 mb-6">Complete overview of all icons across all variants in a structured table format.</p>
+                  <IconsTable />
+                </TabsContent>
                 
                 <TabsContent value="white">
                   <h3 className="text-xl font-bold mb-4">White Icons</h3>
