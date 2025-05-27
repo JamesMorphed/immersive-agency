@@ -10,7 +10,7 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        default: "bg-black/90 text-white border border-transparent bg-gradient-to-r from-cyberpunk-magenta/20 via-cyberpunk-cyan/20 to-cyberpunk-magenta/20 bg-clip-padding backdrop-blur-sm shadow-sm hover:shadow-cyberpunk-magenta/20 hover:border-cyberpunk-magenta/50 hover:bg-black/80",
+        default: "relative bg-black text-white font-medium px-6 py-3 rounded-full border border-transparent overflow-hidden transition-all duration-500 shadow-[0_0_10px_2px_rgba(255,55,187,0.3)] group hover:shadow-[0_0_20px_5px_rgba(255,55,187,0.5)]",
         destructive:
           "bg-black/90 text-white border border-transparent bg-gradient-to-r from-red-500/40 via-red-400/40 to-red-500/40 bg-clip-padding backdrop-blur-sm shadow-sm hover:bg-black",
         outline:
@@ -55,8 +55,8 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       </>
     )
     
-    // Create the neon glow overlay for neon variant - updated to use cyberpunk-magenta (#FF37BB) instead of purple (#9b87f5)
-    const neonGradientOverlay = variant === 'neon' && (
+    // Create the neon glow overlay for neon variant and default variant (since default is now neon)
+    const neonGradientOverlay = (variant === 'neon' || variant === 'default') && (
       <>
         <span className="absolute inset-0 border border-cyberpunk-magenta rounded-full opacity-80 group-hover:opacity-100 transition-opacity duration-500"></span>
         <span className="absolute inset-0 bg-gradient-to-r from-cyberpunk-magenta/10 via-cyberpunk-magenta/5 to-cyberpunk-magenta/10 opacity-20 group-hover:opacity-40 transition-opacity duration-500"></span>
@@ -71,7 +71,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         {...props}
       >
         {variant === 'quest' && questGradientOverlay}
-        {variant === 'neon' && neonGradientOverlay}
+        {(variant === 'neon' || variant === 'default') && neonGradientOverlay}
         <span className="relative z-10 flex items-center gap-2">{props.children}</span>
       </Comp>
     )
