@@ -1,4 +1,5 @@
 
+
 import type { Config } from "tailwindcss";
 
 export default {
@@ -72,8 +73,10 @@ export default {
 				}
 			},
 			fontFamily: {
+				'manrope': ['Manrope', 'sans-serif'],
 				'host-grotesk': ['Host Grotesk', 'sans-serif'],
 				'noto-sans': ['Noto Sans', 'sans-serif'],
+				'sans': ['Manrope', 'ui-sans-serif', 'system-ui', 'sans-serif'],
 			},
 			borderRadius: {
 				lg: 'var(--radius)',
@@ -117,3 +120,4 @@ export default {
 	},
 	plugins: [require("tailwindcss-animate")],
 } satisfies Config;
+

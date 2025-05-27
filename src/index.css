@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Noto+Sans:wght@300;400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;500;600;700;800&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -42,12 +42,12 @@
   }
 
   body {
-    @apply bg-black text-foreground font-host-grotesk;
+    @apply bg-black text-foreground font-manrope;
     font-feature-settings: "ss01", "ss02";
   }
 
   h1, h2, h3, h4, h5, h6 {
-    @apply font-host-grotesk;
+    @apply font-manrope;
   }
 }
 
