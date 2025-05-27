@@ -190,7 +190,7 @@ const IconsTable = () => {
         <Button
           onClick={syncWithStorage}
           disabled={syncing}
-          variant="outline"
+          variant="secondary"
           size="sm"
           className="flex items-center gap-2"
         >
