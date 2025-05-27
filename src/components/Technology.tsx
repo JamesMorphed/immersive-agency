@@ -102,14 +102,14 @@ const Technology = () => {
             </CarouselContent>
             <div className="flex justify-center gap-4 mt-8">
               <Button 
-                variant="neon" 
+                variant="default" 
                 size="icon" 
                 className="rounded-full overflow-hidden w-10 h-10"
               >
                 <CarouselPrevious className="absolute h-10 w-10 left-auto right-auto" />
               </Button>
               <Button 
-                variant="neon" 
+                variant="default" 
                 size="icon" 
                 className="rounded-full overflow-hidden w-10 h-10"
               >

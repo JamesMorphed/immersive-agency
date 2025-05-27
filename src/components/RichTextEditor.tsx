@@ -190,7 +190,7 @@ const RichTextEditor = ({ value, onChange, placeholder }: RichTextEditorProps) =
           </Button>
           
           <Button
-            variant="outline"
+            variant="secondary"
             type="button"
             onClick={() => document.getElementById('imageUpload')?.click()}
             disabled={isImageLoading}

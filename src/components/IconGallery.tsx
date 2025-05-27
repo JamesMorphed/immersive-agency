@@ -68,7 +68,7 @@ const IconGallery = ({ onRefresh }: IconGalleryProps) => {
       <div className="flex justify-between items-center">
         <h3 className="text-xl font-bold">Icon Gallery</h3>
         <Button
-          variant="outline"
+          variant="secondary"
           size="sm"
           onClick={handleRefresh}
           disabled={refreshing}

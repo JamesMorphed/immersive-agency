@@ -221,7 +221,7 @@ const BlogAdminForm = () => {
                   <div className="mt-2">
                     <Button 
                       type="button" 
-                      variant="outline" 
+                      variant="secondary" 
                       size="sm"
                       onClick={generateSlug}
                     >
@@ -365,7 +365,7 @@ const BlogAdminForm = () => {
                           <div className="flex items-center gap-2">
                             <Button
                               type="button"
-                              variant="outline"
+                              variant="secondary"
                               onClick={() => document.getElementById('featuredImageUpload')?.click()}
                               disabled={uploadingFeaturedImage}
                               className="w-full h-10"
@@ -482,7 +482,7 @@ const BlogAdminForm = () => {
                     <PopoverTrigger asChild>
                       <FormControl>
                         <Button
-                          variant={"outline"}
+                          variant={"secondary"}
                           className={`w-full pl-3 text-left font-normal ${
                             !field.value ? "text-muted-foreground" : ""
                           }`}

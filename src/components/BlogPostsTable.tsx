@@ -119,7 +119,7 @@ const BlogPostsTable = () => {
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <h2 className="text-2xl font-bold">Manage Blog Posts</h2>
-        <Button onClick={fetchBlogPosts} variant="outline">
+        <Button onClick={fetchBlogPosts} variant="secondary">
           Refresh
         </Button>
       </div>
@@ -172,7 +172,7 @@ const BlogPostsTable = () => {
                           {post.tags && post.tags.length > 0 && (
                             <Tooltip>
                               <TooltipTrigger>
-                                <Badge variant="outline" className="flex items-center gap-1">
+                                <Badge variant="secondary" className="flex items-center gap-1">
                                   <Tag className="h-3 w-3" />
                                   {post.tags.length}
                                 </Badge>
@@ -188,7 +188,7 @@ const BlogPostsTable = () => {
                           {post.video_url && (
                             <Tooltip>
                               <TooltipTrigger>
-                                <Badge variant="outline" className="flex items-center gap-1">
+                                <Badge variant="secondary" className="flex items-center gap-1">
                                   <Video className="h-3 w-3" />
                                 </Badge>
                               </TooltipTrigger>
@@ -201,7 +201,7 @@ const BlogPostsTable = () => {
                           {post.image_gallery && post.image_gallery.length > 0 && (
                             <Tooltip>
                               <TooltipTrigger>
-                                <Badge variant="outline" className="flex items-center gap-1">
+                                <Badge variant="secondary" className="flex items-center gap-1">
                                   <Image className="h-3 w-3" />
                                   {post.image_gallery.length}
                                 </Badge>
@@ -219,7 +219,7 @@ const BlogPostsTable = () => {
                     <TableCell className="text-right">
                       <div className="flex justify-end gap-2">
                         <Button 
-                          variant="outline" 
+                          variant="secondary" 
                           size="sm"
                           onClick={() => handleViewPost(post.slug)}
                           title="View post"
@@ -227,7 +227,7 @@ const BlogPostsTable = () => {
                           <FileText className="h-4 w-4" />
                         </Button>
                         <Button 
-                          variant="outline" 
+                          variant="secondary" 
                           size="sm" 
                           className="text-blue-600"
                           onClick={() => alert("Edit functionality to be implemented")}
@@ -236,7 +236,7 @@ const BlogPostsTable = () => {
                           <Pencil className="h-4 w-4" />
                         </Button>
                         <Button 
-                          variant="outline" 
+                          variant="secondary" 
                           size="sm"
                           className="text-red-600"
                           onClick={() => handleDeleteClick(post.id)}
@@ -265,7 +265,7 @@ const BlogPostsTable = () => {
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setIsDialogOpen(false)}>
+            <Button variant="secondary" onClick={() => setIsDialogOpen(false)}>
               Cancel
             </Button>
             <Button variant="destructive" onClick={handleDeleteConfirm}>

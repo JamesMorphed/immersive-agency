@@ -153,7 +153,7 @@ const IconUploader = ({ onSuccess }: IconUploaderProps) => {
 
       <Button 
         type="submit" 
-        variant="neon" 
+        variant="default" 
         disabled={uploading}
         className="w-full"
       >
