@@ -11,16 +11,10 @@ import ColorsSection from "@/components/style-guide/ColorsSection";
 import ButtonsSection from "@/components/style-guide/ButtonsSection";
 import CardsSection from "@/components/style-guide/CardsSection";
 import IconsSection from "@/components/style-guide/IconsSection";
-import CustomIconsSection from "@/components/style-guide/CustomIconsSection";
 import IMSIconsSection from "@/components/style-guide/IMSIconsSection";
 
 const StyleGuidePage = () => {
   const { isVisible, elementRef } = useScrollAnimation();
-  const [refreshCount, setRefreshCount] = useState(0);
-  
-  const handleIconsRefresh = () => {
-    setRefreshCount(prev => prev + 1);
-  };
   
   return (
     <div className="min-h-screen bg-black text-white">
@@ -44,7 +38,6 @@ const StyleGuidePage = () => {
               <TabsTrigger value="buttons">Buttons</TabsTrigger>
               <TabsTrigger value="cards">Cards</TabsTrigger>
               <TabsTrigger value="icons">Icons</TabsTrigger>
-              <TabsTrigger value="custom-icons">Custom Icons</TabsTrigger>
               <TabsTrigger value="ims-icons">IMS Icons</TabsTrigger>
             </TabsList>
             
@@ -66,13 +59,6 @@ const StyleGuidePage = () => {
             
             <TabsContent value="icons">
               <IconsSection />
-            </TabsContent>
-            
-            <TabsContent value="custom-icons">
-              <CustomIconsSection 
-                refreshCount={refreshCount} 
-                onRefresh={handleIconsRefresh} 
-              />
             </TabsContent>
             
             <TabsContent value="ims-icons">
