@@ -95,19 +95,21 @@ const ButtonsSection = () => {
         
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="bg-black/50 border border-gray-800 rounded-lg p-6 space-y-6">
-            <h3 className="text-xl font-bold">Leading Icon</h3>
-            <Button variant="neon">
-              <Search className="mr-2 h-4 w-4" /> Search
-            </Button>
-            <p className="text-sm text-gray-400">Button with an icon before text</p>
+            <div className="flex items-center gap-4">
+              <Button variant="neon">
+                <Search className="mr-2 h-4 w-4" /> Search
+              </Button>
+              <p className="text-sm text-gray-400">Button with an icon before text</p>
+            </div>
           </div>
           
           <div className="bg-black/50 border border-gray-800 rounded-lg p-6 space-y-6">
-            <h3 className="text-xl font-bold">Trailing Icon</h3>
-            <Button variant="neon">
-              Next <ArrowRight className="ml-2 h-4 w-4" />
-            </Button>
-            <p className="text-sm text-gray-400">Button with an icon after text</p>
+            <div className="flex items-center gap-4">
+              <Button variant="neon">
+                Next <ArrowRight className="ml-2 h-4 w-4" />
+              </Button>
+              <p className="text-sm text-gray-400">Button with an icon after text</p>
+            </div>
           </div>
           
           <div className="bg-black/50 border border-gray-800 rounded-lg p-6 space-y-6">
