@@ -1,50 +1,62 @@
-
 import React, { useState } from 'react';
 import { ArrowRight } from 'lucide-react';
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
 import { AspectRatio } from '@/components/ui/aspect-ratio';
 import { HoverCard, HoverCardTrigger, HoverCardContent } from '@/components/ui/hover-card';
+import { useNavigate } from 'react-router-dom';
 
 const Services = () => {
+  const navigate = useNavigate();
+  
   const serviceItems = [{
     id: 1,
     title: 'Congress',
+    slug: 'congress',
     image: '/lovable-uploads/753996d7-1824-47d4-965a-34455cb82c44.png'
   }, {
     id: 2,
     title: 'Digital People',
+    slug: 'digital-people',
     image: '/lovable-uploads/61b09af8-feee-4583-aaa1-1b782e76c76e.png'
   }, {
     id: 3,
     title: '3D Models',
+    slug: '3d-models',
     image: '/lovable-uploads/43322700-8af4-44cc-97f2-3d09e6482f5e.png'
   }, {
     id: 4,
     title: 'Infographics',
+    slug: 'infographics',
     image: '/lovable-uploads/753996d7-1824-47d4-965a-34455cb82c44.png'
   }, {
     id: 5,
     title: '360 Experiences',
+    slug: '360-experiences',
     image: '/lovable-uploads/61b09af8-feee-4583-aaa1-1b782e76c76e.png'
   }, {
     id: 6,
     title: 'XR - Mixed Reality',
+    slug: 'xr-mixed-reality',
     image: '/lovable-uploads/43322700-8af4-44cc-97f2-3d09e6482f5e.png'
   }, {
     id: 7,
     title: 'Video & Animation',
+    slug: 'video-animation',
     image: '/lovable-uploads/753996d7-1824-47d4-965a-34455cb82c44.png'
   }, {
     id: 8,
     title: 'Interactive Data',
+    slug: 'interactive-data',
     image: '/lovable-uploads/61b09af8-feee-4583-aaa1-1b782e76c76e.png'
   }, {
     id: 9,
     title: 'Books & Comics',
+    slug: 'books-comics',
     image: '/lovable-uploads/43322700-8af4-44cc-97f2-3d09e6482f5e.png'
   }, {
     id: 10,
     title: 'Games',
+    slug: 'games',
     image: '/lovable-uploads/753996d7-1824-47d4-965a-34455cb82c44.png'
   }];
   
@@ -57,6 +69,10 @@ const Services = () => {
     isVisible: isCardsVisible,
     elementRef: cardsRef
   } = useScrollAnimation();
+  
+  const handleServiceClick = (slug: string) => {
+    navigate(`/services/${slug}`);
+  };
   
   return (
     <section className="py-20 bg-black">
@@ -81,7 +97,8 @@ const Services = () => {
           {serviceItems.map((service, index) => (
             <div
               key={service.id}
-              className="group relative overflow-hidden rounded-lg aspect-[4/3] cursor-pointer border border-cyberpunk-magenta/20"
+              onClick={() => handleServiceClick(service.slug)}
+              className="group relative overflow-hidden rounded-lg aspect-[4/3] cursor-pointer border border-cyberpunk-magenta/20 hover:border-cyberpunk-magenta transition-all duration-300"
               style={{
                 transitionDelay: `${200 + index * 100}ms`,
                 opacity: isCardsVisible ? 1 : 0,

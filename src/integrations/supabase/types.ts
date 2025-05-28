@@ -102,6 +102,54 @@ export type Database = {
         }
         Relationships: []
       }
+      service_details: {
+        Row: {
+          case_studies: Json | null
+          created_at: string
+          description: string | null
+          features: Json | null
+          gallery_images: Json | null
+          hero_image: string | null
+          id: string
+          overview: string | null
+          pricing_info: Json | null
+          slug: string
+          technologies: Json | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          case_studies?: Json | null
+          created_at?: string
+          description?: string | null
+          features?: Json | null
+          gallery_images?: Json | null
+          hero_image?: string | null
+          id?: string
+          overview?: string | null
+          pricing_info?: Json | null
+          slug: string
+          technologies?: Json | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          case_studies?: Json | null
+          created_at?: string
+          description?: string | null
+          features?: Json | null
+          gallery_images?: Json | null
+          hero_image?: string | null
+          id?: string
+          overview?: string | null
+          pricing_info?: Json | null
+          slug?: string
+          technologies?: Json | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
