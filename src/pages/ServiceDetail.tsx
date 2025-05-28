@@ -7,6 +7,7 @@ import Footer from '@/components/Footer';
 import ServiceDetailHero from '@/components/ServiceDetailHero';
 import ServiceDetailContent from '@/components/ServiceDetailContent';
 import { Skeleton } from '@/components/ui/skeleton';
+import type { ServiceDetail } from '@/types/service';
 
 const ServiceDetail = () => {
   const { slug } = useParams<{ slug: string }>();
@@ -23,7 +24,21 @@ const ServiceDetail = () => {
         .maybeSingle();
 
       if (error) throw error;
-      return data;
+      if (!data) return null;
+
+      // Transform the database response to match our TypeScript interfaces
+      const transformedData: ServiceDetail = {
+        ...data,
+        features: Array.isArray(data.features) ? data.features : [],
+        technologies: Array.isArray(data.technologies) ? data.technologies : [],
+        case_studies: Array.isArray(data.case_studies) ? data.case_studies : [],
+        gallery_images: Array.isArray(data.gallery_images) ? data.gallery_images : [],
+        pricing_info: typeof data.pricing_info === 'object' && data.pricing_info !== null 
+          ? data.pricing_info as ServiceDetail['pricing_info']
+          : { starting_price: '', includes: [], duration: '' }
+      };
+
+      return transformedData;
     },
     enabled: !!slug,
   });

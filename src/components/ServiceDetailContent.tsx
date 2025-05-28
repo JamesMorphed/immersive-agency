@@ -4,19 +4,10 @@ import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { CheckCircle, Star, ArrowRight } from 'lucide-react';
+import type { ServiceDetail } from '@/types/service';
 
 interface ServiceDetailContentProps {
-  service: {
-    features: any[];
-    technologies: any[];
-    case_studies: any[];
-    gallery_images: string[];
-    pricing_info: {
-      starting_price: string;
-      includes: string[];
-      duration: string;
-    };
-  };
+  service: ServiceDetail;
 }
 
 const ServiceDetailContent = ({ service }: ServiceDetailContentProps) => {
@@ -43,7 +34,7 @@ const ServiceDetailContent = ({ service }: ServiceDetailContentProps) => {
               <span className="gradient-text">Features</span>
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              {service.features.map((feature: any, index: number) => (
+              {service.features.map((feature, index) => (
                 <Card key={index} className="bg-black/60 backdrop-blur-sm border border-gray-800 hover:border-cyberpunk-cyan transition-all duration-500 p-6 group">
                   <div className="flex items-start space-x-4">
                     <CheckCircle className="text-cyberpunk-magenta w-6 h-6 mt-1 flex-shrink-0" />
@@ -75,7 +66,7 @@ const ServiceDetailContent = ({ service }: ServiceDetailContentProps) => {
               <span className="gradient-text">We Use</span>
             </h2>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-              {service.technologies.map((tech: any, index: number) => (
+              {service.technologies.map((tech, index) => (
                 <Card key={index} className="bg-black/60 backdrop-blur-sm border border-gray-800 hover:border-cyberpunk-magenta transition-all duration-500 p-6 text-center group">
                   <img 
                     src={tech.icon} 
@@ -104,7 +95,7 @@ const ServiceDetailContent = ({ service }: ServiceDetailContentProps) => {
               <span className="gradient-text">Stories</span>
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              {service.case_studies.map((study: any, index: number) => (
+              {service.case_studies.map((study, index) => (
                 <Card key={index} className="bg-black/60 backdrop-blur-sm border border-gray-800 hover:border-cyberpunk-cyan transition-all duration-500 p-8 group">
                   <div className="flex items-center mb-4">
                     <Star className="text-cyberpunk-magenta w-5 h-5 mr-2" />
@@ -140,7 +131,7 @@ const ServiceDetailContent = ({ service }: ServiceDetailContentProps) => {
               <span className="gradient-text">Gallery</span>
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {service.gallery_images.map((image: string, index: number) => (
+              {service.gallery_images.map((image, index) => (
                 <div key={index} className="group relative overflow-hidden rounded-lg aspect-video">
                   <img 
                     src={image} 
@@ -177,7 +168,7 @@ const ServiceDetailContent = ({ service }: ServiceDetailContentProps) => {
               <div className="mb-8">
                 <h3 className="text-xl font-bold text-white mb-4">What's Included:</h3>
                 <ul className="space-y-3">
-                  {service.pricing_info.includes.map((item: string, index: number) => (
+                  {service.pricing_info.includes.map((item, index) => (
                     <li key={index} className="flex items-center text-gray-300">
                       <CheckCircle className="text-cyberpunk-magenta w-5 h-5 mr-3" />
                       {item}

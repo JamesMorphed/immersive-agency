@@ -1,13 +1,9 @@
 
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
+import type { ServiceDetail } from '@/types/service';
 
 interface ServiceDetailHeroProps {
-  service: {
-    title: string;
-    description: string;
-    hero_image: string;
-    overview: string;
-  };
+  service: ServiceDetail;
 }
 
 const ServiceDetailHero = ({ service }: ServiceDetailHeroProps) => {
