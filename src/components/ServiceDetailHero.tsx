@@ -10,43 +10,75 @@ const ServiceDetailHero = ({ service }: ServiceDetailHeroProps) => {
   const { isVisible, elementRef } = useScrollAnimation();
 
   return (
-    <section className="relative min-h-screen overflow-hidden">
-      {/* Background Image with Overlay */}
-      <div className="absolute inset-0 z-0">
-        <img 
-          src={service.hero_image} 
-          alt={service.title}
-          className="w-full h-full object-cover"
-        />
-        <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/60 to-black z-10"></div>
-        <div className="absolute inset-0 bg-gradient-to-r from-cyberpunk-magenta/20 to-cyberpunk-cyan/20 z-10"></div>
+    <section className="relative min-h-screen overflow-hidden bg-gradient-to-br from-purple-900 via-blue-900 to-black">
+      {/* Grid pattern overlay */}
+      <div className="absolute inset-0 opacity-20">
+        <div className="absolute inset-0" style={{
+          backgroundImage: `
+            linear-gradient(rgba(255, 55, 187, 0.1) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(0, 56, 255, 0.1) 1px, transparent 1px)
+          `,
+          backgroundSize: '50px 50px'
+        }}></div>
       </div>
 
-      {/* Dynamic grid overlay */}
-      <div className="absolute inset-0 z-10 opacity-15">
-        <div className="w-full h-full dynamic-perspective-grid"></div>
-      </div>
-
-      {/* Content */}
-      <div className="relative z-20 flex items-center min-h-screen">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6">
-          <div 
-            ref={elementRef}
-            className={`transition-all duration-1000 transform ${
-              isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
-            }`}
-          >
-            <div className="max-w-4xl">
-              <h1 className="text-5xl sm:text-7xl md:text-8xl font-bold text-white mb-6 leading-tight">
-                {service.title}
+      {/* Content Container */}
+      <div className="relative z-20 pt-20 px-4 sm:px-6">
+        <div className="max-w-7xl mx-auto">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center min-h-screen">
+            
+            {/* Left Content */}
+            <div 
+              ref={elementRef}
+              className={`transition-all duration-1000 transform ${
+                isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-10'
+              }`}
+            >
+              <h1 className="text-6xl md:text-8xl font-bold mb-6 leading-tight">
+                <span className="text-white">{service.title}</span>
               </h1>
-              <p className="text-xl md:text-2xl text-gray-300 mb-8 leading-relaxed">
-                {service.description}
-              </p>
-              <div className="bg-black/40 backdrop-blur-sm border border-white/20 p-6 rounded-lg">
-                <p className="text-lg text-gray-200 leading-relaxed">
-                  {service.overview}
-                </p>
+              
+              <div className="mb-8">
+                <h2 className="text-3xl md:text-5xl font-bold mb-6 leading-tight">
+                  <span className="text-blue-400">Harnessing the</span><br />
+                  <span className="gradient-text">virtual world</span>
+                </h2>
+              </div>
+
+              <div className="space-y-6">
+                <div className="bg-black/40 backdrop-blur-sm border border-white/20 p-6 rounded-lg">
+                  <h3 className="text-lg font-bold text-white mb-3">A bit about {service.title}...</h3>
+                  <p className="text-gray-300 leading-relaxed">
+                    {service.overview}
+                  </p>
+                </div>
+
+                <div className="bg-black/40 backdrop-blur-sm border border-white/20 p-6 rounded-lg">
+                  <h3 className="text-lg font-bold text-white mb-3">{service.title} are great for...</h3>
+                  <p className="text-gray-300 leading-relaxed">
+                    {service.description}
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Right Image */}
+            <div className={`transition-all duration-1000 transform delay-300 ${
+              isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-10'
+            }`}>
+              <div className="relative">
+                <div className="aspect-[4/3] rounded-2xl overflow-hidden border-4 border-gradient-to-r from-cyberpunk-magenta to-cyberpunk-cyan shadow-2xl">
+                  <img 
+                    src={service.hero_image} 
+                    alt={service.title}
+                    className="w-full h-full object-cover"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
+                </div>
+                
+                {/* Floating elements for visual interest */}
+                <div className="absolute -top-4 -right-4 w-8 h-8 bg-cyberpunk-magenta rounded-full animate-pulse"></div>
+                <div className="absolute -bottom-4 -left-4 w-6 h-6 bg-cyberpunk-cyan rounded-full animate-pulse delay-1000"></div>
               </div>
             </div>
           </div>
