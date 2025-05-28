@@ -29,11 +29,11 @@ const ServiceDetail = () => {
       // Transform the database response to match our TypeScript interfaces
       const transformedData: ServiceDetail = {
         ...data,
-        features: Array.isArray(data.features) ? data.features : [],
-        technologies: Array.isArray(data.technologies) ? data.technologies : [],
-        case_studies: Array.isArray(data.case_studies) ? data.case_studies : [],
-        gallery_images: Array.isArray(data.gallery_images) ? data.gallery_images : [],
-        pricing_info: typeof data.pricing_info === 'object' && data.pricing_info !== null 
+        features: Array.isArray(data.features) ? data.features as ServiceDetail['features'] : [],
+        technologies: Array.isArray(data.technologies) ? data.technologies as ServiceDetail['technologies'] : [],
+        case_studies: Array.isArray(data.case_studies) ? data.case_studies as ServiceDetail['case_studies'] : [],
+        gallery_images: Array.isArray(data.gallery_images) ? data.gallery_images as string[] : [],
+        pricing_info: typeof data.pricing_info === 'object' && data.pricing_info !== null && !Array.isArray(data.pricing_info)
           ? data.pricing_info as ServiceDetail['pricing_info']
           : { starting_price: '', includes: [], duration: '' }
       };
