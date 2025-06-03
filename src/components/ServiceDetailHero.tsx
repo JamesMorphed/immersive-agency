@@ -10,13 +10,13 @@ const ServiceDetailHero = ({ service }: ServiceDetailHeroProps) => {
   const { isVisible, elementRef } = useScrollAnimation();
 
   return (
-    <section className="relative min-h-screen overflow-hidden bg-gradient-to-br from-blue-900 via-purple-900 to-black">
+    <section className="relative min-h-screen overflow-hidden bg-black">
       {/* Grid pattern overlay */}
-      <div className="absolute inset-0 opacity-20">
+      <div className="absolute inset-0 opacity-10">
         <div className="absolute inset-0" style={{
           backgroundImage: `
-            linear-gradient(rgba(255, 55, 187, 0.1) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(0, 56, 255, 0.1) 1px, transparent 1px)
+            linear-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(255, 255, 255, 0.1) 1px, transparent 1px)
           `,
           backgroundSize: '50px 50px'
         }}></div>
@@ -25,7 +25,7 @@ const ServiceDetailHero = ({ service }: ServiceDetailHeroProps) => {
       {/* Content Container */}
       <div className="relative z-20 pt-20 px-4 sm:px-6">
         <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center min-h-screen">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center min-h-screen">
             
             {/* Left Content */}
             <div 
@@ -34,32 +34,40 @@ const ServiceDetailHero = ({ service }: ServiceDetailHeroProps) => {
                 isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-10'
               }`}
             >
-              <h1 className="text-6xl md:text-8xl font-bold mb-8 leading-tight">
-                <span className="text-white">{service.title}</span>
+              {/* Service Title */}
+              <h1 className="text-6xl md:text-8xl font-light mb-8 text-white">
+                {service.title}
               </h1>
               
-              <div className="mb-12">
-                <h2 className="text-4xl md:text-6xl font-bold mb-8 leading-tight">
-                  <span className="text-cyberpunk-cyan">Harnessing the</span><br />
-                  <span className="gradient-text">virtual world</span>
+              {/* Main Headline */}
+              <div className="mb-16">
+                <h2 className="text-4xl md:text-6xl font-light leading-tight">
+                  <span className="text-white italic">A new</span><br />
+                  <span className="gradient-text font-medium">digital you</span>
                 </h2>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              {/* Two Column Content */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
                 <div>
-                  <h3 className="text-lg font-bold text-white mb-4">A bit about {service.title}...</h3>
+                  <h3 className="text-lg font-medium text-white mb-6">What is {service.title.replace(/s$/, '')}?</h3>
                   <p className="text-gray-300 leading-relaxed text-sm">
                     {service.overview}
                   </p>
                 </div>
 
                 <div>
-                  <h3 className="text-lg font-bold text-white mb-4">{service.title} are great for...</h3>
-                  <div className="space-y-3">
+                  <h3 className="text-lg font-medium text-white mb-6">{service.title} are great for...</h3>
+                  <div className="space-y-4">
                     {service.features.slice(0, 3).map((feature, index) => (
                       <div key={index} className="flex items-start">
-                        <div className="w-2 h-2 bg-cyberpunk-cyan rounded-full mt-2 mr-3 flex-shrink-0"></div>
-                        <p className="text-gray-300 text-sm">{feature.description}</p>
+                        <div className="w-8 h-8 rounded-full border border-gray-600 flex items-center justify-center mr-4 mt-1 flex-shrink-0">
+                          <div className="w-3 h-3 bg-cyberpunk-cyan rounded-full"></div>
+                        </div>
+                        <div>
+                          <p className="text-gray-300 text-sm font-medium mb-1">{feature.title}</p>
+                          <p className="text-gray-400 text-xs">{feature.description}</p>
+                        </div>
                       </div>
                     ))}
                   </div>
@@ -72,13 +80,14 @@ const ServiceDetailHero = ({ service }: ServiceDetailHeroProps) => {
               isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-10'
             }`}>
               <div className="relative">
-                <div className="aspect-[16/9] rounded-2xl overflow-hidden border border-cyberpunk-magenta/30 shadow-2xl">
+                <div className="aspect-[16/10] rounded-3xl overflow-hidden">
                   <img 
                     src={service.hero_image} 
                     alt={service.title}
                     className="w-full h-full object-cover"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
+                  {/* Gradient overlay for better text contrast */}
+                  <div className="absolute inset-0 bg-gradient-to-br from-cyberpunk-magenta/20 via-transparent to-cyberpunk-cyan/20"></div>
                 </div>
               </div>
             </div>
