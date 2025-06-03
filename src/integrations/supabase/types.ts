@@ -104,51 +104,122 @@ export type Database = {
       }
       service_details: {
         Row: {
+          background_image: string | null
           case_studies: Json | null
           created_at: string
           description: string | null
+          featured_images: Json | null
           features: Json | null
           gallery_images: Json | null
           hero_image: string | null
           id: string
           overview: string | null
           pricing_info: Json | null
+          service_icons: Json | null
           slug: string
           technologies: Json | null
+          thumbnail_image: string | null
           title: string
           updated_at: string
         }
         Insert: {
+          background_image?: string | null
           case_studies?: Json | null
           created_at?: string
           description?: string | null
+          featured_images?: Json | null
           features?: Json | null
           gallery_images?: Json | null
           hero_image?: string | null
           id?: string
           overview?: string | null
           pricing_info?: Json | null
+          service_icons?: Json | null
           slug: string
           technologies?: Json | null
+          thumbnail_image?: string | null
           title: string
           updated_at?: string
         }
         Update: {
+          background_image?: string | null
           case_studies?: Json | null
           created_at?: string
           description?: string | null
+          featured_images?: Json | null
           features?: Json | null
           gallery_images?: Json | null
           hero_image?: string | null
           id?: string
           overview?: string | null
           pricing_info?: Json | null
+          service_icons?: Json | null
           slug?: string
           technologies?: Json | null
+          thumbnail_image?: string | null
           title?: string
           updated_at?: string
         }
         Relationships: []
+      }
+      service_projects: {
+        Row: {
+          category: string | null
+          created_at: string
+          description: string | null
+          display_order: number | null
+          id: string
+          image_url: string | null
+          is_featured: boolean | null
+          metrics: string | null
+          project_url: string | null
+          service_id: string
+          tags: string[] | null
+          title: string
+          updated_at: string
+          video_url: string | null
+        }
+        Insert: {
+          category?: string | null
+          created_at?: string
+          description?: string | null
+          display_order?: number | null
+          id?: string
+          image_url?: string | null
+          is_featured?: boolean | null
+          metrics?: string | null
+          project_url?: string | null
+          service_id: string
+          tags?: string[] | null
+          title: string
+          updated_at?: string
+          video_url?: string | null
+        }
+        Update: {
+          category?: string | null
+          created_at?: string
+          description?: string | null
+          display_order?: number | null
+          id?: string
+          image_url?: string | null
+          is_featured?: boolean | null
+          metrics?: string | null
+          project_url?: string | null
+          service_id?: string
+          tags?: string[] | null
+          title?: string
+          updated_at?: string
+          video_url?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "service_projects_service_id_fkey"
+            columns: ["service_id"]
+            isOneToOne: false
+            referencedRelation: "service_details"
+            referencedColumns: ["id"]
+          },
+        ]
       }
     }
     Views: {

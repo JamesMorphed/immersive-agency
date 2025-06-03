@@ -1,64 +1,35 @@
-import React, { useState } from 'react';
+
+import React from 'react';
 import { ArrowRight } from 'lucide-react';
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
-import { AspectRatio } from '@/components/ui/aspect-ratio';
-import { HoverCard, HoverCardTrigger, HoverCardContent } from '@/components/ui/hover-card';
 import { useNavigate } from 'react-router-dom';
+import { useQuery } from '@tanstack/react-query';
+import { supabase } from '@/integrations/supabase/client';
+import { Skeleton } from '@/components/ui/skeleton';
 
 const Services = () => {
   const navigate = useNavigate();
   
-  const serviceItems = [{
-    id: 1,
-    title: 'Congress',
-    slug: 'congress',
-    image: '/lovable-uploads/753996d7-1824-47d4-965a-34455cb82c44.png'
-  }, {
-    id: 2,
-    title: 'Digital People',
-    slug: 'digital-people',
-    image: '/lovable-uploads/61b09af8-feee-4583-aaa1-1b782e76c76e.png'
-  }, {
-    id: 3,
-    title: '3D Models',
-    slug: '3d-models',
-    image: '/lovable-uploads/43322700-8af4-44cc-97f2-3d09e6482f5e.png'
-  }, {
-    id: 4,
-    title: 'Infographics',
-    slug: 'infographics',
-    image: '/lovable-uploads/753996d7-1824-47d4-965a-34455cb82c44.png'
-  }, {
-    id: 5,
-    title: '360 Experiences',
-    slug: '360-experiences',
-    image: '/lovable-uploads/61b09af8-feee-4583-aaa1-1b782e76c76e.png'
-  }, {
-    id: 6,
-    title: 'XR - Mixed Reality',
-    slug: 'xr-mixed-reality',
-    image: '/lovable-uploads/43322700-8af4-44cc-97f2-3d09e6482f5e.png'
-  }, {
-    id: 7,
-    title: 'Video & Animation',
-    slug: 'video-animation',
-    image: '/lovable-uploads/753996d7-1824-47d4-965a-34455cb82c44.png'
-  }, {
-    id: 8,
-    title: 'Interactive Data',
-    slug: 'interactive-data',
-    image: '/lovable-uploads/61b09af8-feee-4583-aaa1-1b782e76c76e.png'
-  }, {
-    id: 9,
-    title: 'Books & Comics',
-    slug: 'books-comics',
-    image: '/lovable-uploads/43322700-8af4-44cc-97f2-3d09e6482f5e.png'
-  }, {
-    id: 10,
-    title: 'Games',
-    slug: 'games',
-    image: '/lovable-uploads/753996d7-1824-47d4-965a-34455cb82c44.png'
-  }];
+  // Fetch services from the database
+  const { data: serviceItems, isLoading, error } = useQuery({
+    queryKey: ['services'],
+    queryFn: async () => {
+      console.log('Fetching services from database...');
+      
+      const { data, error } = await supabase
+        .from('service_details')
+        .select('id, title, slug, hero_image, thumbnail_image, description')
+        .order('title');
+
+      if (error) {
+        console.error('Error fetching services:', error);
+        throw error;
+      }
+      
+      console.log('Services fetched:', data);
+      return data;
+    },
+  });
   
   const {
     isVisible: isHeaderVisible,
@@ -94,39 +65,63 @@ const Services = () => {
           ref={cardsRef}
           className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4"
         >
-          {serviceItems.map((service, index) => (
-            <div
-              key={service.id}
-              onClick={() => handleServiceClick(service.slug)}
-              className="group relative overflow-hidden rounded-lg aspect-[4/3] cursor-pointer border border-cyberpunk-magenta/20 hover:border-cyberpunk-magenta transition-all duration-300"
-              style={{
-                transitionDelay: `${200 + index * 100}ms`,
-                opacity: isCardsVisible ? 1 : 0,
-                transform: isCardsVisible ? 'translateY(0)' : 'translateY(20px)',
-                transition: 'opacity 700ms ease, transform 700ms ease'
-              }}
-            >
-              {/* Full cover image */}
-              <div className="absolute inset-0 w-full h-full">
-                <img 
-                  src={service.image} 
-                  alt={service.title} 
-                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                />
+          {isLoading ? (
+            // Loading skeletons
+            Array.from({ length: 8 }).map((_, index) => (
+              <div key={index} className="aspect-[4/3]">
+                <Skeleton className="w-full h-full rounded-lg" />
               </div>
-              
-              {/* Gradient overlay for readability */}
-              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent opacity-90 transition-opacity duration-300 group-hover:opacity-100" />
-              
-              {/* Title with hover effect */}
-              <div className="absolute bottom-0 left-0 right-0 p-6 flex items-center justify-between transition-all duration-300 group-hover:bg-black/50">
-                <h3 className="text-xl font-bold text-white">{service.title}</h3>
-                <ArrowRight 
-                  className="text-cyberpunk-magenta h-0 w-0 opacity-0 ml-2 transition-all duration-300 transform translate-x-[-10px] group-hover:h-5 group-hover:w-5 group-hover:opacity-100 group-hover:translate-x-0" 
-                />
-              </div>
+            ))
+          ) : error ? (
+            // Error state
+            <div className="col-span-full text-center py-10">
+              <p className="text-red-400">Error loading services. Please try again later.</p>
             </div>
-          ))}
+          ) : serviceItems && serviceItems.length > 0 ? (
+            // Render actual services
+            serviceItems.map((service, index) => (
+              <div
+                key={service.id}
+                onClick={() => handleServiceClick(service.slug)}
+                className="group relative overflow-hidden rounded-lg aspect-[4/3] cursor-pointer border border-cyberpunk-magenta/20 hover:border-cyberpunk-magenta transition-all duration-300"
+                style={{
+                  transitionDelay: `${200 + index * 100}ms`,
+                  opacity: isCardsVisible ? 1 : 0,
+                  transform: isCardsVisible ? 'translateY(0)' : 'translateY(20px)',
+                  transition: 'opacity 700ms ease, transform 700ms ease'
+                }}
+              >
+                {/* Full cover image */}
+                <div className="absolute inset-0 w-full h-full">
+                  <img 
+                    src={service.thumbnail_image || service.hero_image || '/placeholder.svg'} 
+                    alt={service.title} 
+                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                    onError={(e) => {
+                      const target = e.target as HTMLImageElement;
+                      target.src = '/placeholder.svg';
+                    }}
+                  />
+                </div>
+                
+                {/* Gradient overlay for readability */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent opacity-90 transition-opacity duration-300 group-hover:opacity-100" />
+                
+                {/* Title with hover effect */}
+                <div className="absolute bottom-0 left-0 right-0 p-6 flex items-center justify-between transition-all duration-300 group-hover:bg-black/50">
+                  <h3 className="text-xl font-bold text-white">{service.title}</h3>
+                  <ArrowRight 
+                    className="text-cyberpunk-magenta h-0 w-0 opacity-0 ml-2 transition-all duration-300 transform translate-x-[-10px] group-hover:h-5 group-hover:w-5 group-hover:opacity-100 group-hover:translate-x-0" 
+                  />
+                </div>
+              </div>
+            ))
+          ) : (
+            // No services found
+            <div className="col-span-full text-center py-10">
+              <p className="text-gray-400">No services available at the moment.</p>
+            </div>
+          )}
         </div>
       </div>
     </section>
