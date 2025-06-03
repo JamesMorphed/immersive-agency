@@ -1,3 +1,4 @@
+
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -116,9 +117,16 @@ const ServiceDetailContent = ({ service }: ServiceDetailContentProps) => {
       {/* Discover More Section */}
       <section className="py-20 px-4 sm:px-6">
         <div className="max-w-7xl mx-auto">
-          <h2 className="text-4xl md:text-5xl font-bold mb-16 italic">
-            <span className="text-white">Discover more...</span>
-          </h2>
+          <div className="flex items-center justify-between mb-16">
+            <h2 className="text-4xl md:text-5xl font-bold italic">
+              <span className="text-white">Discover more...</span>
+            </h2>
+            
+            <div className="flex gap-4">
+              <CarouselPrevious className="relative border-gray-600 bg-black/50 hover:bg-black text-white left-0 top-0 translate-y-0" />
+              <CarouselNext className="relative border-gray-600 bg-black/50 hover:bg-black text-white right-0 top-0 translate-y-0" />
+            </div>
+          </div>
           
           <Carousel
             opts={{
@@ -148,8 +156,6 @@ const ServiceDetailContent = ({ service }: ServiceDetailContentProps) => {
                 </CarouselItem>
               ))}
             </CarouselContent>
-            <CarouselPrevious className="hidden md:flex -left-12 border-gray-600 bg-black/50 hover:bg-black text-white" />
-            <CarouselNext className="hidden md:flex -right-12 border-gray-600 bg-black/50 hover:bg-black text-white" />
           </Carousel>
         </div>
       </section>
