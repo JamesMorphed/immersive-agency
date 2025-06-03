@@ -121,11 +121,6 @@ const ServiceDetailContent = ({ service }: ServiceDetailContentProps) => {
             <h2 className="text-4xl md:text-5xl font-bold italic">
               <span className="text-white">Discover more...</span>
             </h2>
-            
-            <div className="flex gap-4">
-              <CarouselPrevious className="relative border-gray-600 bg-black/50 hover:bg-black text-white left-0 top-0 translate-y-0" />
-              <CarouselNext className="relative border-gray-600 bg-black/50 hover:bg-black text-white right-0 top-0 translate-y-0" />
-            </div>
           </div>
           
           <Carousel
@@ -133,8 +128,14 @@ const ServiceDetailContent = ({ service }: ServiceDetailContentProps) => {
               align: "start",
               loop: true,
             }}
-            className="w-full"
+            className="w-full relative"
           >
+            {/* Position carousel controls in the header area */}
+            <div className="absolute -top-20 right-0 flex gap-4 z-10">
+              <CarouselPrevious className="relative border-gray-600 bg-black/50 hover:bg-black text-white left-0 top-0 translate-y-0" />
+              <CarouselNext className="relative border-gray-600 bg-black/50 hover:bg-black text-white right-0 top-0 translate-y-0" />
+            </div>
+            
             <CarouselContent className="-ml-2 md:-ml-4">
               {discoverItems.map((item, index) => (
                 <CarouselItem key={index} className="pl-2 md:pl-4 md:basis-1/2 lg:basis-1/3">
