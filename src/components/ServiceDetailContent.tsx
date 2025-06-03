@@ -11,31 +11,60 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel";
 import { ArrowRight, Play } from 'lucide-react';
+import { useQuery } from '@tanstack/react-query';
+import { supabase } from '@/integrations/supabase/client';
 import type { ServiceDetail } from '@/types/service';
 
 interface ServiceDetailContentProps {
   service: ServiceDetail;
 }
 
+interface ServiceProject {
+  id: string;
+  title: string;
+  description: string;
+  image_url: string;
+  video_url: string | null;
+  category: string | null;
+  is_featured: boolean;
+  display_order: number;
+  metrics: string | null;
+  tags: string[] | null;
+}
+
 const ServiceDetailContent = ({ service }: ServiceDetailContentProps) => {
   const { isVisible, elementRef } = useScrollAnimation();
 
-  // Mock project data based on the design
-  const projectCategories = [
-    { name: 'AI Digital People', active: true },
-    { name: 'Teams Digital People', active: false },
-    { name: 'Video', active: false },
-    { name: 'Digital Panel', active: false }
-  ];
+  // Fetch projects for this service
+  const { data: projects, isLoading } = useQuery({
+    queryKey: ['service-projects', service.id],
+    queryFn: async () => {
+      console.log('Fetching projects for service:', service.id);
+      
+      const { data, error } = await supabase
+        .from('service_projects')
+        .select('*')
+        .eq('service_id', service.id)
+        .order('display_order');
 
-  const projects = [
-    {
-      title: 'Transform your communications with AI Digital People',
-      description: 'Streamline your workflow and deliver personalized information or simply add a touch of innovation to your project with custom AI Digital People.',
-      image: '/lovable-uploads/61b09af8-feee-4583-aaa1-1b782e76c76e.png',
-      hasVideo: true
-    }
-  ];
+      if (error) {
+        console.error('Error fetching service projects:', error);
+        throw error;
+      }
+      
+      console.log('Projects fetched:', data);
+      return data as ServiceProject[];
+    },
+  });
+
+  // Get unique categories from projects for filtering
+  const projectCategories = projects 
+    ? Array.from(new Set(projects.map(p => p.category).filter(Boolean)))
+        .map(category => ({ name: category, active: category === projects[0]?.category }))
+    : [];
+
+  // Get featured projects
+  const featuredProjects = projects?.filter(p => p.is_featured) || [];
 
   const discoverItems = [
     { title: 'Congress', image: '/lovable-uploads/753996d7-1824-47d4-965a-34455cb82c44.png' },
@@ -45,6 +74,16 @@ const ServiceDetailContent = ({ service }: ServiceDetailContentProps) => {
     { title: '360° Experiences', image: '/lovable-uploads/61b09af8-feee-4583-aaa1-1b782e76c76e.png' },
     { title: 'XR - Mixed Reality', image: '/lovable-uploads/43322700-8af4-44cc-97f2-3d09e6482f5e.png' }
   ];
+
+  if (isLoading) {
+    return (
+      <div className="bg-black text-white py-20">
+        <div className="max-w-7xl mx-auto px-4">
+          <div className="text-center">Loading projects...</div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="bg-black text-white">
@@ -57,59 +96,80 @@ const ServiceDetailContent = ({ service }: ServiceDetailContentProps) => {
             </h2>
             
             {/* Category Pills */}
-            <div className="flex flex-wrap gap-4 mb-12">
-              {projectCategories.map((category, index) => (
-                <Badge 
-                  key={index}
-                  variant={category.active ? "default" : "secondary"}
-                  className={`px-6 py-2 text-sm font-medium rounded-full border ${
-                    category.active 
-                      ? 'bg-cyberpunk-magenta text-white border-cyberpunk-magenta' 
-                      : 'bg-transparent text-gray-300 border-gray-600 hover:border-cyberpunk-magenta/50'
-                  }`}
-                >
-                  {category.name}
-                </Badge>
-              ))}
-            </div>
+            {projectCategories.length > 0 && (
+              <div className="flex flex-wrap gap-4 mb-12">
+                {projectCategories.map((category, index) => (
+                  <Badge 
+                    key={index}
+                    variant={category.active ? "default" : "secondary"}
+                    className={`px-6 py-2 text-sm font-medium rounded-full border ${
+                      category.active 
+                        ? 'bg-cyberpunk-magenta text-white border-cyberpunk-magenta' 
+                        : 'bg-transparent text-gray-300 border-gray-600 hover:border-cyberpunk-magenta/50'
+                    }`}
+                  >
+                    {category.name}
+                  </Badge>
+                ))}
+              </div>
+            )}
 
-            {/* Featured Project */}
-            {projects.map((project, index) => (
-              <div key={index} className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-                <div className="relative">
-                  <div className="aspect-[16/10] rounded-2xl overflow-hidden border border-gray-800">
-                    <img 
-                      src={project.image} 
-                      alt={project.title}
-                      className="w-full h-full object-cover"
-                    />
-                    {project.hasVideo && (
-                      <div className="absolute inset-0 flex items-center justify-center">
-                        <button className="w-16 h-16 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-white/30 transition-all">
-                          <Play className="w-6 h-6 text-white ml-1" />
-                        </button>
+            {/* Featured Projects */}
+            {featuredProjects.length > 0 ? (
+              featuredProjects.map((project, index) => (
+                <div key={project.id} className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center mb-16">
+                  <div className="relative">
+                    <div className="aspect-[16/10] rounded-2xl overflow-hidden border border-gray-800">
+                      <img 
+                        src={project.image_url} 
+                        alt={project.title}
+                        className="w-full h-full object-cover"
+                        onError={(e) => {
+                          const target = e.target as HTMLImageElement;
+                          target.src = '/placeholder.svg';
+                        }}
+                      />
+                      {project.video_url && (
+                        <div className="absolute inset-0 flex items-center justify-center">
+                          <button className="w-16 h-16 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-white/30 transition-all">
+                            <Play className="w-6 h-6 text-white ml-1" />
+                          </button>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                  
+                  <div className="space-y-6">
+                    {project.category && (
+                      <div className="text-sm text-cyberpunk-cyan font-medium uppercase">
+                        {project.category}
                       </div>
+                    )}
+                    <h3 className="text-3xl md:text-4xl font-bold leading-tight">
+                      {project.title}
+                    </h3>
+                    <p className="text-gray-300 leading-relaxed">
+                      {project.description}
+                    </p>
+                    {project.metrics && (
+                      <div className="text-cyberpunk-magenta font-semibold">
+                        {project.metrics}
+                      </div>
+                    )}
+                    {project.video_url && (
+                      <Button variant="ghost" className="text-cyberpunk-cyan hover:text-white p-0 h-auto">
+                        <ArrowRight className="mr-2 h-4 w-4" />
+                        Watch the video
+                      </Button>
                     )}
                   </div>
                 </div>
-                
-                <div className="space-y-6">
-                  <div className="text-sm text-cyberpunk-cyan font-medium">
-                    AI DIGITAL PEOPLE
-                  </div>
-                  <h3 className="text-3xl md:text-4xl font-bold leading-tight">
-                    {project.title}
-                  </h3>
-                  <p className="text-gray-300 leading-relaxed">
-                    {project.description}
-                  </p>
-                  <Button variant="ghost" className="text-cyberpunk-cyan hover:text-white p-0 h-auto">
-                    <ArrowRight className="mr-2 h-4 w-4" />
-                    Watch the video
-                  </Button>
-                </div>
+              ))
+            ) : (
+              <div className="text-center py-12">
+                <p className="text-gray-400">No featured projects available for this service yet.</p>
               </div>
-            ))}
+            )}
           </div>
         </div>
       </section>

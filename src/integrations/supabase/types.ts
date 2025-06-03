@@ -60,6 +60,99 @@ export type Database = {
         }
         Relationships: []
       }
+      featured_products: {
+        Row: {
+          affiliate_link: string | null
+          category: string | null
+          created_at: string
+          currency: string | null
+          description: string | null
+          discount_percentage: number | null
+          featured_order: number | null
+          features: Json | null
+          gallery_images: Json | null
+          id: string
+          image_url: string | null
+          is_active: boolean | null
+          is_featured: boolean | null
+          original_price: number | null
+          price: number | null
+          product_url: string | null
+          rating: number | null
+          review_count: number | null
+          short_description: string | null
+          sku: string | null
+          slug: string
+          specifications: Json | null
+          stock_quantity: number | null
+          stock_status: string | null
+          tags: string[] | null
+          title: string
+          updated_at: string
+          vendor: string | null
+        }
+        Insert: {
+          affiliate_link?: string | null
+          category?: string | null
+          created_at?: string
+          currency?: string | null
+          description?: string | null
+          discount_percentage?: number | null
+          featured_order?: number | null
+          features?: Json | null
+          gallery_images?: Json | null
+          id?: string
+          image_url?: string | null
+          is_active?: boolean | null
+          is_featured?: boolean | null
+          original_price?: number | null
+          price?: number | null
+          product_url?: string | null
+          rating?: number | null
+          review_count?: number | null
+          short_description?: string | null
+          sku?: string | null
+          slug: string
+          specifications?: Json | null
+          stock_quantity?: number | null
+          stock_status?: string | null
+          tags?: string[] | null
+          title: string
+          updated_at?: string
+          vendor?: string | null
+        }
+        Update: {
+          affiliate_link?: string | null
+          category?: string | null
+          created_at?: string
+          currency?: string | null
+          description?: string | null
+          discount_percentage?: number | null
+          featured_order?: number | null
+          features?: Json | null
+          gallery_images?: Json | null
+          id?: string
+          image_url?: string | null
+          is_active?: boolean | null
+          is_featured?: boolean | null
+          original_price?: number | null
+          price?: number | null
+          product_url?: string | null
+          rating?: number | null
+          review_count?: number | null
+          short_description?: string | null
+          sku?: string | null
+          slug?: string
+          specifications?: Json | null
+          stock_quantity?: number | null
+          stock_status?: string | null
+          tags?: string[] | null
+          title?: string
+          updated_at?: string
+          vendor?: string | null
+        }
+        Relationships: []
+      }
       icons: {
         Row: {
           content_type: string | null
