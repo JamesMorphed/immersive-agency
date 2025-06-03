@@ -1,6 +1,5 @@
-
 import { useState, useEffect } from 'react';
-import { Grid3X3 } from 'lucide-react';
+import { Dot } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Link } from 'react-router-dom';
@@ -36,7 +35,23 @@ const Navbar = () => {
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" size="icon" className="text-white hover:text-cyberpunk-magenta">
-                <Grid3X3 className="h-6 w-6" />
+                <div className="flex flex-col gap-px">
+                  <div className="flex gap-px">
+                    <Dot className="h-1 w-1" style={{ fontSize: '8px' }} />
+                    <Dot className="h-1 w-1" style={{ fontSize: '8px' }} />
+                    <Dot className="h-1 w-1" style={{ fontSize: '8px' }} />
+                  </div>
+                  <div className="flex gap-px">
+                    <Dot className="h-1 w-1" style={{ fontSize: '8px' }} />
+                    <Dot className="h-1 w-1" style={{ fontSize: '8px' }} />
+                    <Dot className="h-1 w-1" style={{ fontSize: '8px' }} />
+                  </div>
+                  <div className="flex gap-px">
+                    <Dot className="h-1 w-1" style={{ fontSize: '8px' }} />
+                    <Dot className="h-1 w-1" style={{ fontSize: '8px' }} />
+                    <Dot className="h-1 w-1" style={{ fontSize: '8px' }} />
+                  </div>
+                </div>
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="bg-black/95 backdrop-blur-md border border-cyberpunk-cyan/30 w-40">
