@@ -1,8 +1,14 @@
-
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { 
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";
 import { ArrowRight, Play } from 'lucide-react';
 import type { ServiceDetail } from '@/types/service';
 
@@ -114,25 +120,37 @@ const ServiceDetailContent = ({ service }: ServiceDetailContentProps) => {
             <span className="text-white">Discover more...</span>
           </h2>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {discoverItems.map((item, index) => (
-              <div key={index} className="group cursor-pointer">
-                <div className="aspect-square rounded-2xl overflow-hidden mb-6 border border-gray-800 group-hover:border-cyberpunk-magenta/50 transition-all">
-                  <img 
-                    src={item.image} 
-                    alt={item.title}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                  />
-                </div>
-                <h3 className="text-xl font-bold group-hover:gradient-text transition-all">
-                  {item.title}
-                </h3>
-                <p className="text-gray-400 text-sm mt-2">
-                  {service.description}
-                </p>
-              </div>
-            ))}
-          </div>
+          <Carousel
+            opts={{
+              align: "start",
+              loop: true,
+            }}
+            className="w-full"
+          >
+            <CarouselContent className="-ml-2 md:-ml-4">
+              {discoverItems.map((item, index) => (
+                <CarouselItem key={index} className="pl-2 md:pl-4 md:basis-1/2 lg:basis-1/3">
+                  <div className="group cursor-pointer">
+                    <div className="aspect-square rounded-2xl overflow-hidden mb-6 border border-gray-800 group-hover:border-cyberpunk-magenta/50 transition-all">
+                      <img 
+                        src={item.image} 
+                        alt={item.title}
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                      />
+                    </div>
+                    <h3 className="text-xl font-bold group-hover:gradient-text transition-all">
+                      {item.title}
+                    </h3>
+                    <p className="text-gray-400 text-sm mt-2">
+                      {service.description}
+                    </p>
+                  </div>
+                </CarouselItem>
+              ))}
+            </CarouselContent>
+            <CarouselPrevious className="hidden md:flex -left-12 border-gray-600 bg-black/50 hover:bg-black text-white" />
+            <CarouselNext className="hidden md:flex -right-12 border-gray-600 bg-black/50 hover:bg-black text-white" />
+          </Carousel>
         </div>
       </section>
 
