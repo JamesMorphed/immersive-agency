@@ -43,42 +43,25 @@ const BlogPreview = () => {
     }
   };
 
-  // Function to process content and wrap images in AspectRatio
+  // Safer function to process content without DOM manipulation issues
   const processContent = (content: string) => {
     if (!content) return '';
     
-    // Create a temporary div to parse HTML
-    const tempDiv = document.createElement('div');
-    tempDiv.innerHTML = content;
-    
-    // Find all images
-    const images = tempDiv.querySelectorAll('img');
-    
-    // Replace each image with wrapped version
-    images.forEach(img => {
-      // Create wrapper elements
-      const wrapper = document.createElement('div');
-      wrapper.className = 'aspect-ratio-wrapper my-6';
-      
-      // Create the aspect ratio div with data attributes
-      const aspectRatioDiv = document.createElement('div');
-      aspectRatioDiv.className = 'aspect-w-16 aspect-h-9 rounded-lg overflow-hidden';
-      
-      // Move the image into our structure
-      img.className = 'w-full h-full object-cover';
-      img.parentNode?.removeChild(img);
-      aspectRatioDiv.appendChild(img);
-      wrapper.appendChild(aspectRatioDiv);
-      
-      // Replace the original image with our wrapper
-      if (img.parentNode) {
-        img.parentNode.replaceChild(wrapper, img);
-      } else {
-        tempDiv.appendChild(wrapper);
+    // Use regex to replace img tags with wrapped versions
+    const processedContent = content.replace(
+      /<img([^>]*)>/g, 
+      (match, attributes) => {
+        return `
+          <div class="aspect-ratio-wrapper my-6">
+            <div class="aspect-w-16 aspect-h-9 rounded-lg overflow-hidden">
+              <img${attributes} class="w-full h-full object-cover" />
+            </div>
+          </div>
+        `;
       }
-    });
+    );
     
-    return tempDiv.innerHTML;
+    return processedContent;
   };
 
   return (
