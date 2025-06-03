@@ -11,8 +11,21 @@ const ServiceDetailHero = ({ service }: ServiceDetailHeroProps) => {
 
   return (
     <section className="relative min-h-screen overflow-hidden bg-black">
+      {/* Hero Image Header */}
+      <div className="absolute inset-0 z-10">
+        <div className="w-full h-full">
+          <img 
+            src={service.hero_image} 
+            alt={service.title}
+            className="w-full h-full object-cover"
+          />
+          {/* Gradient overlay for better text contrast */}
+          <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-black/40 to-black/80"></div>
+        </div>
+      </div>
+
       {/* Grid pattern overlay */}
-      <div className="absolute inset-0 opacity-10">
+      <div className="absolute inset-0 opacity-10 z-15">
         <div className="absolute inset-0" style={{
           backgroundImage: `
             linear-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1px),
@@ -25,13 +38,13 @@ const ServiceDetailHero = ({ service }: ServiceDetailHeroProps) => {
       {/* Content Container */}
       <div className="relative z-20 pt-20 px-4 sm:px-6">
         <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center min-h-screen">
+          <div className="flex flex-col justify-center min-h-screen">
             
-            {/* Left Content */}
+            {/* Main Content */}
             <div 
               ref={elementRef}
-              className={`transition-all duration-1000 transform ${
-                isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-10'
+              className={`transition-all duration-1000 transform max-w-4xl ${
+                isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
               }`}
             >
               {/* Service Title */}
@@ -71,23 +84,6 @@ const ServiceDetailHero = ({ service }: ServiceDetailHeroProps) => {
                       </div>
                     ))}
                   </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Right Image */}
-            <div className={`transition-all duration-1000 transform delay-300 ${
-              isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-10'
-            }`}>
-              <div className="relative">
-                <div className="aspect-[16/10] rounded-3xl overflow-hidden">
-                  <img 
-                    src={service.hero_image} 
-                    alt={service.title}
-                    className="w-full h-full object-cover"
-                  />
-                  {/* Gradient overlay for better text contrast */}
-                  <div className="absolute inset-0 bg-gradient-to-br from-cyberpunk-magenta/20 via-transparent to-cyberpunk-cyan/20"></div>
                 </div>
               </div>
             </div>
