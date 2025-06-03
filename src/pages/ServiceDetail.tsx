@@ -17,13 +17,21 @@ const ServiceDetail = () => {
     queryFn: async () => {
       if (!slug) throw new Error('No slug provided');
       
+      console.log('Fetching service with slug:', slug);
+      
       const { data, error } = await supabase
         .from('service_details')
         .select('*')
         .eq('slug', slug)
         .maybeSingle();
 
-      if (error) throw error;
+      if (error) {
+        console.error('Supabase error:', error);
+        throw error;
+      }
+      
+      console.log('Service data received:', data);
+      
       if (!data) return null;
 
       // Transform the database response to match our TypeScript interfaces
@@ -60,6 +68,7 @@ const ServiceDetail = () => {
   }
 
   if (error || !service) {
+    console.log('Service not found or error occurred:', { error, service, slug });
     return <Navigate to="/404" replace />;
   }
 
