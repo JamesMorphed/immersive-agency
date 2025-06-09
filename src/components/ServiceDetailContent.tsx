@@ -1,3 +1,4 @@
+
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -8,6 +9,9 @@ import { ArrowRight, Play, X } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import type { ServiceDetail } from '@/types/service';
+import { VideoConfig } from '@/types/video';
+import { parseVideoConfig } from '@/utils/videoUtils';
+import VideoPlayer from './VideoPlayer';
 import { useState, useRef, useEffect } from 'react';
 import { useIsMobile } from '@/hooks/use-mobile';
 
@@ -21,6 +25,7 @@ interface ServiceProject {
   description: string;
   image_url: string;
   video_url: string | null;
+  video_config: VideoConfig | null;
   category: string | null;
   is_featured: boolean;
   display_order: number;
@@ -36,7 +41,7 @@ const ServiceDetailContent = ({
     elementRef
   } = useScrollAnimation();
   
-  const [videoOverlay, setVideoOverlay] = useState<string | null>(null);
+  const [videoOverlay, setVideoOverlay] = useState<VideoConfig | null>(null);
   const [activeTab, setActiveTab] = useState<string>('');
   const isMobile = useIsMobile();
   const touchStartX = useRef<number>(0);
@@ -71,6 +76,7 @@ const ServiceDetailContent = ({
     description: 'Enhance interactions, deliver highly personalised information or simply add a touch of innovation to your project with custom AI Digital People.',
     image_url: '/lovable-uploads/107de9c5-2e62-4764-93a6-be70a5a2d19f.png',
     video_url: 'https://example.com/video1.mp4',
+    video_config: null,
     category: 'AI Digital People'
   }, {
     id: 'teams-digital-people',
@@ -79,6 +85,7 @@ const ServiceDetailContent = ({
     description: 'Create teams of digital people that work together seamlessly to provide comprehensive customer service and support experiences.',
     image_url: '/lovable-uploads/61b09af8-feee-4583-aaa1-1b782e76c76e.png',
     video_url: 'https://example.com/video2.mp4',
+    video_config: null,
     category: 'Teams Digital People'
   }, {
     id: 'video-integration',
@@ -87,6 +94,7 @@ const ServiceDetailContent = ({
     description: 'Integrate digital people into your existing video platforms for enhanced communication and engagement.',
     image_url: '/lovable-uploads/43322700-8af4-44cc-97f2-3d09e6482f5e.png',
     video_url: 'https://example.com/video3.mp4',
+    video_config: null,
     category: 'Video'
   }, {
     id: 'digital-panel',
@@ -95,6 +103,7 @@ const ServiceDetailContent = ({
     description: 'Host panel discussions with digital people for events, webinars, and educational content.',
     image_url: '/lovable-uploads/753996d7-1824-47d4-965a-34455cb82c44.png',
     video_url: 'https://example.com/video4.mp4',
+    video_config: null,
     category: 'Digital Panel'
   }];
   const displayProjects = projects && projects.length > 0 ? projects : sampleProjects;
@@ -140,6 +149,14 @@ const ServiceDetailContent = ({
     }
   };
 
+  const handleVideoClick = (project: ServiceProject) => {
+    if (project.video_config) {
+      setVideoOverlay(project.video_config);
+    } else if (project.video_url) {
+      setVideoOverlay(parseVideoConfig(project.video_url));
+    }
+  };
+
   const discoverItems = [{
     title: 'Congress',
     image: '/lovable-uploads/753996d7-1824-47d4-965a-34455cb82c44.png'
@@ -175,7 +192,7 @@ const ServiceDetailContent = ({
               <X className="w-8 h-8" />
             </button>
             <div className="aspect-video bg-gray-900 rounded-lg overflow-hidden">
-              <iframe src={videoOverlay} className="w-full h-full" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen />
+              <VideoPlayer config={videoOverlay} />
             </div>
           </div>
         </div>}
@@ -214,8 +231,8 @@ const ServiceDetailContent = ({
                       const target = e.target as HTMLImageElement;
                       target.src = '/placeholder.svg';
                     }} />
-                        {project.video_url && <div className="absolute inset-0 flex items-center justify-center">
-                            <button onClick={() => setVideoOverlay(project.video_url)} className="w-16 h-16 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-white/30 transition-all">
+                        {(project.video_url || project.video_config) && <div className="absolute inset-0 flex items-center justify-center">
+                            <button onClick={() => handleVideoClick(project)} className="w-16 h-16 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-white/30 transition-all">
                               <Play className="w-6 h-6 text-white ml-1" />
                             </button>
                           </div>}
@@ -232,7 +249,7 @@ const ServiceDetailContent = ({
                       <p className="text-gray-300 leading-relaxed">
                         {project.description}
                       </p>
-                      <Button variant="ghost" className="text-cyberpunk-cyan hover:text-white p-0 h-auto" onClick={() => project.video_url && setVideoOverlay(project.video_url)}>
+                      <Button variant="ghost" className="text-cyberpunk-cyan hover:text-white p-0 h-auto" onClick={() => handleVideoClick(project)}>
                         <ArrowRight className="mr-2 h-4 w-4" />
                         Watch the video
                       </Button>
