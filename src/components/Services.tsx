@@ -17,6 +17,7 @@ const Services = () => {
       title: 'Infographics',
       slug: 'infographics',
       description: 'Transform complex data into visually compelling and easy-to-understand infographics',
+      hero_image: 'https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=800&h=600&fit=crop',
       thumbnail_image: 'https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=800&h=600&fit=crop'
     },
     {
@@ -24,6 +25,7 @@ const Services = () => {
       title: '360 Experiences',
       slug: '360-experiences',
       description: 'Create immersive 360-degree experiences that transport users to new worlds',
+      hero_image: 'https://images.unsplash.com/photo-1605810230434-7631ac76ec81?w=800&h=600&fit=crop',
       thumbnail_image: 'https://images.unsplash.com/photo-1605810230434-7631ac76ec81?w=800&h=600&fit=crop'
     },
     {
@@ -31,6 +33,7 @@ const Services = () => {
       title: 'XR - Mixed Reality',
       slug: 'xr-mixed-reality',
       description: 'Blend physical and digital worlds with cutting-edge mixed reality solutions',
+      hero_image: 'https://images.unsplash.com/photo-1518770660439-4636190af475?w=800&h=600&fit=crop',
       thumbnail_image: 'https://images.unsplash.com/photo-1518770660439-4636190af475?w=800&h=600&fit=crop'
     },
     {
@@ -38,6 +41,7 @@ const Services = () => {
       title: 'Video & Animation',
       slug: 'video-animation',
       description: 'Bring stories to life with stunning video production and animation',
+      hero_image: 'https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=800&h=600&fit=crop',
       thumbnail_image: 'https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=800&h=600&fit=crop'
     },
     {
@@ -45,6 +49,7 @@ const Services = () => {
       title: 'Immersive Data',
       slug: 'immersive-data',
       description: 'Visualize complex datasets through immersive and interactive experiences',
+      hero_image: 'https://images.unsplash.com/photo-1518770660439-4636190af475?w=800&h=600&fit=crop',
       thumbnail_image: 'https://images.unsplash.com/photo-1518770660439-4636190af475?w=800&h=600&fit=crop'
     },
     {
@@ -52,6 +57,7 @@ const Services = () => {
       title: 'Books & Comics',
       slug: 'books-comics',
       description: 'Create engaging digital publications and interactive comic experiences',
+      hero_image: 'https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=800&h=600&fit=crop',
       thumbnail_image: 'https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=800&h=600&fit=crop'
     },
     {
@@ -59,6 +65,7 @@ const Services = () => {
       title: 'Games',
       slug: 'games',
       description: 'Develop immersive gaming experiences across multiple platforms',
+      hero_image: 'https://images.unsplash.com/photo-1487058792275-0ad4aaf24ca7?w=800&h=600&fit=crop',
       thumbnail_image: 'https://images.unsplash.com/photo-1487058792275-0ad4aaf24ca7?w=800&h=600&fit=crop'
     }
   ];
