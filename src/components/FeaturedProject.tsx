@@ -1,3 +1,4 @@
+
 import { Button } from '@/components/ui/button';
 import { ArrowRight } from 'lucide-react';
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
@@ -39,7 +40,7 @@ const FeaturedProject = () => {
             </p>
             
             <Button variant="default" className="mt-4 text-white">
-              GET STARTED
+              CHECK OUT THE AD
               <ArrowRight className="ml-2 h-5 w-5" />
             </Button>
           </div>
