@@ -1,9 +1,11 @@
 
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
 import type { ServiceDetail } from '@/types/service';
+
 interface ServiceDetailHeroProps {
   service: ServiceDetail;
 }
+
 const ServiceDetailHero = ({
   service
 }: ServiceDetailHeroProps) => {
@@ -11,6 +13,7 @@ const ServiceDetailHero = ({
     isVisible,
     elementRef
   } = useScrollAnimation();
+
   return <section className="relative min-h-screen overflow-hidden bg-black">
       {/* Hero Image Header */}
       <div className="absolute inset-0 z-10">
@@ -18,6 +21,8 @@ const ServiceDetailHero = ({
           <img src={service.hero_image} alt={service.title} className="w-full h-full object-cover" />
           {/* Gradient overlay for better text contrast */}
           <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-black/40 to-black/80"></div>
+          {/* Additional black gradient at the bottom */}
+          <div className="absolute bottom-0 left-0 right-0 h-1/3 bg-gradient-to-t from-black to-transparent"></div>
         </div>
       </div>
 
@@ -85,4 +90,5 @@ const ServiceDetailHero = ({
       </div>
     </section>;
 };
+
 export default ServiceDetailHero;
