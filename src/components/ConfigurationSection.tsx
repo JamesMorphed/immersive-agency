@@ -38,7 +38,7 @@ module.exports = {
                 <h3 className="text-lg font-semibold text-white">Tailwind Config</h3>
                 <Button
                   onClick={copyToClipboard}
-                  variant="outline"
+                  variant="secondary"
                   size="sm"
                   className="flex items-center gap-2"
                 >
