@@ -21,7 +21,7 @@ const ServiceHeader = () => {
           }`}
         >
           <h1 className="text-5xl sm:text-7xl md:text-8xl font-bold text-white tracking-tighter">
-            Transcend physical<br />boundaries
+            Transcend physical boundaries
           </h1>
         </div>
       </div>
