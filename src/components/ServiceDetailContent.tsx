@@ -192,8 +192,8 @@ const ServiceDetailContent = ({ service }: ServiceDetailContentProps) => {
           >
             {/* Position carousel controls in the header area */}
             <div className="absolute -top-20 right-0 flex gap-4 z-10">
-              <CarouselPrevious className="relative border-gray-600 bg-black/50 hover:bg-black text-white left-0 top-0 translate-y-0" />
-              <CarouselNext className="relative border-gray-600 bg-black/50 hover:bg-black text-white right-0 top-0 translate-y-0" />
+              <CarouselPrevious className="relative rounded-full border-gray-600 bg-black/50 hover:bg-black text-white left-0 top-0 translate-y-0" />
+              <CarouselNext className="relative rounded-full border-gray-600 bg-black/50 hover:bg-black text-white right-0 top-0 translate-y-0" />
             </div>
             
             <CarouselContent className="-ml-2 md:-ml-4">
