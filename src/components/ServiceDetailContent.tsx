@@ -201,7 +201,7 @@ const ServiceDetailContent = ({
             </div>
             
             <CarouselContent className="-ml-2 md:-ml-4">
-              {discoverItems.map((item, index) => <CarouselItem key={index} className="pl-2 md:pl-4 md:basis-1/2 lg:basis-1/3">
+              {discoverItems.map((item, index) => <CarouselItem key={index} className="pl-2 md:pl-4 md:basis-1/2 lg:basis-1/4">
                   <div className="group cursor-pointer">
                     <div className="aspect-square rounded-2xl overflow-hidden mb-6 border border-gray-800 group-hover:border-cyberpunk-magenta/50 transition-all">
                       <img src={item.image} alt={item.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
