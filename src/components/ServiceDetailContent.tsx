@@ -1,4 +1,3 @@
-
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -25,7 +24,7 @@ interface ServiceProject {
   description: string;
   image_url: string;
   video_url: string | null;
-  video_config: VideoConfig | null;
+  video_config?: VideoConfig | null;
   category: string | null;
   is_featured: boolean;
   display_order: number;
@@ -69,43 +68,56 @@ const ServiceDetailContent = ({
   });
 
   // Sample projects data for demonstration
-  const sampleProjects = [{
+  const sampleProjects: ServiceProject[] = [{
     id: 'ai-digital-people',
     title: 'AI Digital People',
-    subtitle: 'Transform your communications with AI Digital People',
     description: 'Enhance interactions, deliver highly personalised information or simply add a touch of innovation to your project with custom AI Digital People.',
     image_url: '/lovable-uploads/107de9c5-2e62-4764-93a6-be70a5a2d19f.png',
     video_url: 'https://example.com/video1.mp4',
     video_config: null,
-    category: 'AI Digital People'
+    category: 'AI Digital People',
+    is_featured: false,
+    display_order: 1,
+    metrics: null,
+    tags: null
   }, {
     id: 'teams-digital-people',
     title: 'Teams Digital People',
-    subtitle: 'Collaborative digital workforce solutions',
     description: 'Create teams of digital people that work together seamlessly to provide comprehensive customer service and support experiences.',
     image_url: '/lovable-uploads/61b09af8-feee-4583-aaa1-1b782e76c76e.png',
     video_url: 'https://example.com/video2.mp4',
     video_config: null,
-    category: 'Teams Digital People'
+    category: 'Teams Digital People',
+    is_featured: false,
+    display_order: 2,
+    metrics: null,
+    tags: null
   }, {
     id: 'video-integration',
     title: 'Video Integration',
-    subtitle: 'Seamless video communication platform',
     description: 'Integrate digital people into your existing video platforms for enhanced communication and engagement.',
     image_url: '/lovable-uploads/43322700-8af4-44cc-97f2-3d09e6482f5e.png',
     video_url: 'https://example.com/video3.mp4',
     video_config: null,
-    category: 'Video'
+    category: 'Video',
+    is_featured: false,
+    display_order: 3,
+    metrics: null,
+    tags: null
   }, {
     id: 'digital-panel',
     title: 'Digital Panel',
-    subtitle: 'Interactive discussion platform',
     description: 'Host panel discussions with digital people for events, webinars, and educational content.',
     image_url: '/lovable-uploads/753996d7-1824-47d4-965a-34455cb82c44.png',
     video_url: 'https://example.com/video4.mp4',
     video_config: null,
-    category: 'Digital Panel'
+    category: 'Digital Panel',
+    is_featured: false,
+    display_order: 4,
+    metrics: null,
+    tags: null
   }];
+
   const displayProjects = projects && projects.length > 0 ? projects : sampleProjects;
 
   // Initialize active tab
