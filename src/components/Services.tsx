@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { ArrowRight } from 'lucide-react';
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
@@ -8,6 +9,59 @@ import { Skeleton } from '@/components/ui/skeleton';
 
 const Services = () => {
   const navigate = useNavigate();
+  
+  // Additional static services to display alongside database services
+  const staticServices = [
+    {
+      id: 'infographics',
+      title: 'Infographics',
+      slug: 'infographics',
+      description: 'Transform complex data into visually compelling and easy-to-understand infographics',
+      thumbnail_image: 'https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=800&h=600&fit=crop'
+    },
+    {
+      id: '360-experiences',
+      title: '360 Experiences',
+      slug: '360-experiences',
+      description: 'Create immersive 360-degree experiences that transport users to new worlds',
+      thumbnail_image: 'https://images.unsplash.com/photo-1605810230434-7631ac76ec81?w=800&h=600&fit=crop'
+    },
+    {
+      id: 'xr-mixed-reality',
+      title: 'XR - Mixed Reality',
+      slug: 'xr-mixed-reality',
+      description: 'Blend physical and digital worlds with cutting-edge mixed reality solutions',
+      thumbnail_image: 'https://images.unsplash.com/photo-1518770660439-4636190af475?w=800&h=600&fit=crop'
+    },
+    {
+      id: 'video-animation',
+      title: 'Video & Animation',
+      slug: 'video-animation',
+      description: 'Bring stories to life with stunning video production and animation',
+      thumbnail_image: 'https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=800&h=600&fit=crop'
+    },
+    {
+      id: 'immersive-data',
+      title: 'Immersive Data',
+      slug: 'immersive-data',
+      description: 'Visualize complex datasets through immersive and interactive experiences',
+      thumbnail_image: 'https://images.unsplash.com/photo-1518770660439-4636190af475?w=800&h=600&fit=crop'
+    },
+    {
+      id: 'books-comics',
+      title: 'Books & Comics',
+      slug: 'books-comics',
+      description: 'Create engaging digital publications and interactive comic experiences',
+      thumbnail_image: 'https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=800&h=600&fit=crop'
+    },
+    {
+      id: 'games',
+      title: 'Games',
+      slug: 'games',
+      description: 'Develop immersive gaming experiences across multiple platforms',
+      thumbnail_image: 'https://images.unsplash.com/photo-1487058792275-0ad4aaf24ca7?w=800&h=600&fit=crop'
+    }
+  ];
   
   // Fetch services from the database
   const { data: serviceItems, isLoading, error } = useQuery({
@@ -29,6 +83,9 @@ const Services = () => {
       return data;
     },
   });
+  
+  // Combine database services with static services
+  const allServices = [...(serviceItems || []), ...staticServices];
   
   const {
     isVisible: isHeaderVisible,
@@ -72,9 +129,9 @@ const Services = () => {
             <div className="col-span-full text-center py-10">
               <p className="text-red-400">Error loading services. Please try again later.</p>
             </div>
-          ) : serviceItems && serviceItems.length > 0 ? (
-            // Render actual services
-            serviceItems.map((service, index) => (
+          ) : allServices && allServices.length > 0 ? (
+            // Render all services (database + static)
+            allServices.map((service, index) => (
               <div
                 key={service.id}
                 onClick={() => handleServiceClick(service.slug)}
