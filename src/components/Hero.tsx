@@ -1,3 +1,4 @@
+
 import { Button } from '@/components/ui/button';
 import { ArrowRight } from 'lucide-react';
 import { useEffect, useState } from 'react';
@@ -86,9 +87,15 @@ const Hero = () => {
         >
           <h2 className="text-xl md:text-2xl font-medium mb-4 text-slate-50">IMMERSIVE EXPERIENCES</h2>
           <h1 className="text-5xl md:text-7xl lg:text-8xl mb-6 tracking-tight min-h-[1.2em]">
-            <span className={`inline-block transition-all duration-100 text-7xl ${
+            <span className={`inline-block transition-all duration-100 text-4xl sm:text-5xl md:text-7xl leading-tight ${
               isComplete ? 'font-bold' : 'font-light'
-            }`}>{displayText}</span><br />
+            }`}>
+              <span className="block sm:hidden">
+                {displayText.split(' ').slice(0, 1).join(' ')}<br />
+                {displayText.split(' ').slice(1).join(' ')}
+              </span>
+              <span className="hidden sm:block">{displayText}</span>
+            </span><br />
           </h1>
           <p className="text-lg md:text-xl max-w-3xl mx-auto text-gray-300 mb-8">
             Supporting pharmaceutical innovations with cutting-edge AI technology 
