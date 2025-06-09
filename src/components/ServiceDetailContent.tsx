@@ -67,7 +67,7 @@ const ServiceDetailContent = ({ service }: ServiceDetailContentProps) => {
       title: 'AI Digital People',
       subtitle: 'Transform your communications with AI Digital People',
       description: 'Enhance interactions, deliver highly personalised information or simply add a touch of innovation to your project with custom AI Digital People.',
-      image_url: '/lovable-uploads/fea9bd6d-520b-4876-8837-51cfff8d38f1.png',
+      image_url: '/lovable-uploads/107de9c5-2e62-4764-93a6-be70a5a2d19f.png',
       video_url: 'https://example.com/video1.mp4',
       category: 'AI Digital People'
     },
