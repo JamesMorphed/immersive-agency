@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { Dot } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -46,24 +45,24 @@ const Navbar = () => {
             <Button 
               variant="ghost" 
               size="icon" 
-              className="text-white hover:text-cyberpunk-magenta"
+              className="text-white hover:text-cyberpunk-magenta scale-75"
               onClick={handleMegaNavToggle}
             >
               <div className="flex flex-col gap-px">
                 <div className="flex gap-px">
-                  <Dot className="h-1 w-1" style={{ fontSize: '8px' }} />
-                  <Dot className="h-1 w-1" style={{ fontSize: '8px' }} />
-                  <Dot className="h-1 w-1" style={{ fontSize: '8px' }} />
+                  <Dot className="h-1 w-1" style={{ fontSize: '6px' }} />
+                  <Dot className="h-1 w-1" style={{ fontSize: '6px' }} />
+                  <Dot className="h-1 w-1" style={{ fontSize: '6px' }} />
                 </div>
                 <div className="flex gap-px">
-                  <Dot className="h-1 w-1" style={{ fontSize: '8px' }} />
-                  <Dot className="h-1 w-1" style={{ fontSize: '8px' }} />
-                  <Dot className="h-1 w-1" style={{ fontSize: '8px' }} />
+                  <Dot className="h-1 w-1" style={{ fontSize: '6px' }} />
+                  <Dot className="h-1 w-1" style={{ fontSize: '6px' }} />
+                  <Dot className="h-1 w-1" style={{ fontSize: '6px' }} />
                 </div>
                 <div className="flex gap-px">
-                  <Dot className="h-1 w-1" style={{ fontSize: '8px' }} />
-                  <Dot className="h-1 w-1" style={{ fontSize: '8px' }} />
-                  <Dot className="h-1 w-1" style={{ fontSize: '8px' }} />
+                  <Dot className="h-1 w-1" style={{ fontSize: '6px' }} />
+                  <Dot className="h-1 w-1" style={{ fontSize: '6px' }} />
+                  <Dot className="h-1 w-1" style={{ fontSize: '6px' }} />
                 </div>
               </div>
             </Button>
