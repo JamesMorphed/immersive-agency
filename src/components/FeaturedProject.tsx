@@ -27,12 +27,10 @@ const FeaturedProject = () => {
         }}>
             <p className="text-lg mb-2 text-cyberpunk-magenta">FEATURED INNOVATION</p>
             
-            <h2 className="text-5xl md:text-7xl font-bold">
+            <h2 className="text-6xl md:text-8xl lg:text-9xl font-bold">
               <span className="text-slate-50">Headline here</span>
               
             </h2>
-            
-            
             
             <p className="text-gray-300">
               Put some body copy in here that goes over a few lines to show that there 
