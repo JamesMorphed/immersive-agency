@@ -6,11 +6,23 @@ import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import ServiceDetailHero from '@/components/ServiceDetailHero';
 import ServiceDetailContent from '@/components/ServiceDetailContent';
+import DigitalPeopleDetail from '@/components/DigitalPeopleDetail';
 import { Skeleton } from '@/components/ui/skeleton';
 import type { ServiceDetail } from '@/types/service';
 
-const ServiceDetail = () => {
+const ServiceDetailPage = () => {
   const { slug } = useParams<{ slug: string }>();
+
+  // If it's the digitalpeople route, render the custom component
+  if (slug === 'digitalpeople') {
+    return (
+      <div className="min-h-screen bg-black text-white overflow-x-hidden">
+        <Navbar />
+        <DigitalPeopleDetail />
+        <Footer />
+      </div>
+    );
+  }
 
   const { data: service, isLoading, error } = useQuery({
     queryKey: ['service-detail', slug],
@@ -82,4 +94,4 @@ const ServiceDetail = () => {
   );
 };
 
-export default ServiceDetail;
+export default ServiceDetailPage;

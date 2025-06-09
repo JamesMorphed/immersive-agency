@@ -13,6 +13,14 @@ const Services = () => {
   // Additional static services to display alongside database services
   const staticServices = [
     {
+      id: 'digital-people',
+      title: 'Digital People',
+      slug: 'digitalpeople',
+      description: 'Create lifelike digital humans with advanced AI capabilities for immersive experiences',
+      hero_image: 'https://images.unsplash.com/photo-1649972904349-6e44c42644a7?w=800&h=600&fit=crop',
+      thumbnail_image: 'https://images.unsplash.com/photo-1649972904349-6e44c42644a7?w=800&h=600&fit=crop'
+    },
+    {
       id: 'infographics',
       title: 'Infographics',
       slug: 'infographics',
