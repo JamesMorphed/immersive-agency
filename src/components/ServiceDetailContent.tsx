@@ -8,10 +8,13 @@ import { ArrowRight, Play, X } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import type { ServiceDetail } from '@/types/service';
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
+import { useIsMobile } from '@/hooks/use-mobile';
+
 interface ServiceDetailContentProps {
   service: ServiceDetail;
 }
+
 interface ServiceProject {
   id: string;
   title: string;
@@ -24,6 +27,7 @@ interface ServiceProject {
   metrics: string | null;
   tags: string[] | null;
 }
+
 const ServiceDetailContent = ({
   service
 }: ServiceDetailContentProps) => {
@@ -31,7 +35,12 @@ const ServiceDetailContent = ({
     isVisible,
     elementRef
   } = useScrollAnimation();
+  
   const [videoOverlay, setVideoOverlay] = useState<string | null>(null);
+  const [activeTab, setActiveTab] = useState<string>('');
+  const isMobile = useIsMobile();
+  const touchStartX = useRef<number>(0);
+  const touchEndX = useRef<number>(0);
 
   // Fetch projects for this service
   const {
@@ -89,6 +98,48 @@ const ServiceDetailContent = ({
     category: 'Digital Panel'
   }];
   const displayProjects = projects && projects.length > 0 ? projects : sampleProjects;
+
+  // Initialize active tab
+  useEffect(() => {
+    if (!activeTab && displayProjects.length > 0) {
+      setActiveTab(displayProjects[0]?.category || displayProjects[0]?.id);
+    }
+  }, [displayProjects, activeTab]);
+
+  // Handle touch events for swiping
+  const handleTouchStart = (e: React.TouchEvent) => {
+    if (!isMobile) return;
+    touchStartX.current = e.targetTouches[0].clientX;
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    if (!isMobile) return;
+    touchEndX.current = e.targetTouches[0].clientX;
+  };
+
+  const handleTouchEnd = () => {
+    if (!isMobile) return;
+    
+    const swipeThreshold = 50;
+    const swipeDistance = touchStartX.current - touchEndX.current;
+    
+    if (Math.abs(swipeDistance) > swipeThreshold) {
+      const currentIndex = displayProjects.findIndex(
+        project => (project.category || project.id) === activeTab
+      );
+      
+      if (swipeDistance > 0 && currentIndex < displayProjects.length - 1) {
+        // Swipe left - next tab
+        const nextProject = displayProjects[currentIndex + 1];
+        setActiveTab(nextProject.category || nextProject.id);
+      } else if (swipeDistance < 0 && currentIndex > 0) {
+        // Swipe right - previous tab
+        const prevProject = displayProjects[currentIndex - 1];
+        setActiveTab(prevProject.category || prevProject.id);
+      }
+    }
+  };
+
   const discoverItems = [{
     title: 'Congress',
     image: '/lovable-uploads/753996d7-1824-47d4-965a-34455cb82c44.png'
@@ -108,6 +159,7 @@ const ServiceDetailContent = ({
     title: 'XR - Mixed Reality',
     image: '/lovable-uploads/43322700-8af4-44cc-97f2-3d09e6482f5e.png'
   }];
+
   if (isLoading) {
     return <div className="bg-black text-white py-20">
         <div className="max-w-7xl mx-auto px-4">
@@ -136,7 +188,7 @@ const ServiceDetailContent = ({
               <span className="text-white">Our previous {service.title} projects</span>
             </h2>
             
-            <Tabs defaultValue={displayProjects[0]?.category || displayProjects[0]?.id} className="w-full">
+            <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
               <TabsList className="bg-transparent p-0 h-auto mb-12 flex justify-start gap-8">
                 {displayProjects.map((project, index) => <TabsTrigger 
                   key={project.id} 
@@ -147,7 +199,14 @@ const ServiceDetailContent = ({
                   </TabsTrigger>)}
               </TabsList>
 
-              {displayProjects.map((project, index) => <TabsContent key={project.id} value={project.category || project.id} className="mt-0">
+              {displayProjects.map((project, index) => <TabsContent 
+                key={project.id} 
+                value={project.category || project.id} 
+                className="mt-0"
+                onTouchStart={handleTouchStart}
+                onTouchMove={handleTouchMove}
+                onTouchEnd={handleTouchEnd}
+              >
                   <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
                     <div className="relative order-2 lg:order-1">
                       <div className="aspect-[16/10] rounded-2xl overflow-hidden border border-gray-800">
@@ -227,4 +286,5 @@ const ServiceDetailContent = ({
       
     </div>;
 };
+
 export default ServiceDetailContent;
