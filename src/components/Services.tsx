@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { ArrowRight } from 'lucide-react';
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
@@ -59,7 +58,7 @@ const Services = () => {
 
         <div 
           ref={cardsRef}
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-7xl mx-auto"
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto"
         >
           {isLoading ? (
             // Loading skeletons
@@ -104,18 +103,12 @@ const Services = () => {
                 <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent group-hover:from-black/95 transition-all duration-500" />
                 
                 {/* Content overlay */}
-                <div className="absolute inset-0 p-6 flex flex-col justify-end">
-                  <div className="flex items-center gap-2 mb-2 opacity-80">
-                    <ArrowRight className="text-cyberpunk-magenta h-4 w-4" />
-                    <span className="text-cyberpunk-magenta text-sm font-medium uppercase tracking-wider">
-                      {service.title}
-                    </span>
-                  </div>
-                  <h3 className="text-2xl font-bold text-white mb-2 leading-tight">
+                <div className="absolute inset-0 p-8 flex flex-col justify-end">
+                  <h3 className="text-3xl font-bold text-white mb-3 leading-tight">
                     {service.title}
                   </h3>
                   {service.description && (
-                    <p className="text-gray-300 text-sm line-clamp-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                    <p className="text-gray-300 text-base line-clamp-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                       {service.description}
                     </p>
                   )}
