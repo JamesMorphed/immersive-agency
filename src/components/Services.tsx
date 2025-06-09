@@ -52,24 +52,20 @@ const Services = () => {
           ref={headerRef} 
           className={`text-center mb-16 transition-all duration-1000 transform ${isHeaderVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}
         >
-          <h2 className="text-4xl md:text-5xl font-bold mb-4">
-            <span className="text-slate-50">Our</span>{' '}
-            <span className="text-cyberpunk-magenta">Solutions</span>
+          <h2 className="text-4xl md:text-5xl font-bold mb-4 text-white">
+            What we do
           </h2>
-          <p className="text-gray-300 max-w-3xl mx-auto">
-            Explore our comprehensive range of digital services designed to elevate your brand and drive meaningful engagement.
-          </p>
         </div>
 
         <div 
           ref={cardsRef}
-          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4"
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-7xl mx-auto"
         >
           {isLoading ? (
             // Loading skeletons
-            Array.from({ length: 8 }).map((_, index) => (
-              <div key={index} className="aspect-[4/3]">
-                <Skeleton className="w-full h-full rounded-lg" />
+            Array.from({ length: 9 }).map((_, index) => (
+              <div key={index} className="aspect-[4/3] rounded-xl">
+                <Skeleton className="w-full h-full rounded-xl" />
               </div>
             ))
           ) : error ? (
@@ -83,7 +79,7 @@ const Services = () => {
               <div
                 key={service.id}
                 onClick={() => handleServiceClick(service.slug)}
-                className="group relative overflow-hidden rounded-lg aspect-[4/3] cursor-pointer border border-cyberpunk-magenta/20 hover:border-cyberpunk-magenta transition-all duration-300"
+                className="group relative overflow-hidden rounded-xl aspect-[4/3] cursor-pointer transition-all duration-500 hover:scale-[1.02] hover:shadow-2xl hover:shadow-cyberpunk-magenta/20"
                 style={{
                   transitionDelay: `${200 + index * 100}ms`,
                   opacity: isCardsVisible ? 1 : 0,
@@ -96,7 +92,7 @@ const Services = () => {
                   <img 
                     src={service.thumbnail_image || service.hero_image || '/placeholder.svg'} 
                     alt={service.title} 
-                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                     onError={(e) => {
                       const target = e.target as HTMLImageElement;
                       target.src = '/placeholder.svg';
@@ -104,16 +100,29 @@ const Services = () => {
                   />
                 </div>
                 
-                {/* Gradient overlay for readability */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent opacity-90 transition-opacity duration-300 group-hover:opacity-100" />
+                {/* Gradient overlay */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent group-hover:from-black/95 transition-all duration-500" />
                 
-                {/* Title with hover effect */}
-                <div className="absolute bottom-0 left-0 right-0 p-6 flex items-center justify-between transition-all duration-300 group-hover:bg-black/50">
-                  <h3 className="text-xl font-bold text-white">{service.title}</h3>
-                  <ArrowRight 
-                    className="text-cyberpunk-magenta h-0 w-0 opacity-0 ml-2 transition-all duration-300 transform translate-x-[-10px] group-hover:h-5 group-hover:w-5 group-hover:opacity-100 group-hover:translate-x-0" 
-                  />
+                {/* Content overlay */}
+                <div className="absolute inset-0 p-6 flex flex-col justify-end">
+                  <div className="flex items-center gap-2 mb-2 opacity-80">
+                    <ArrowRight className="text-cyberpunk-magenta h-4 w-4" />
+                    <span className="text-cyberpunk-magenta text-sm font-medium uppercase tracking-wider">
+                      {service.title}
+                    </span>
+                  </div>
+                  <h3 className="text-2xl font-bold text-white mb-2 leading-tight">
+                    {service.title}
+                  </h3>
+                  {service.description && (
+                    <p className="text-gray-300 text-sm line-clamp-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                      {service.description}
+                    </p>
+                  )}
                 </div>
+                
+                {/* Hover glow effect */}
+                <div className="absolute inset-0 rounded-xl border border-cyberpunk-magenta/0 group-hover:border-cyberpunk-magenta/30 transition-all duration-500" />
               </div>
             ))
           ) : (
