@@ -33,7 +33,7 @@ module.exports = {
             <CardContent className="p-6">
               <div className="flex items-center justify-between mb-4">
                 <h3 className="text-lg font-semibold">Configuration</h3>
-                <Button onClick={copyToClipboard} size="sm" variant="outline">
+                <Button onClick={copyToClipboard} size="sm" variant="secondary">
                   <Copy className="w-4 h-4 mr-2" />
                   Copy
                 </Button>
