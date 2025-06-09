@@ -1,4 +1,3 @@
-
 import { Button } from '@/components/ui/button';
 import { ArrowRight } from 'lucide-react';
 import { useEffect, useState } from 'react';
@@ -106,12 +105,10 @@ const Hero = () => {
             : 'opacity-0 translate-y-10'
         }`}
       >
-        <a href="#services" className="text-gray-400 hover:text-white">
-          <div className="border-2 border-gray-400 rounded-full p-2">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M12 5v14M19 12l-7 7-7-7" />
-            </svg>
-          </div>
+        <a href="#services" className="text-cyberpunk-magenta hover:text-cyberpunk-light-magenta transition-colors duration-300">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M12 5v14M19 12l-7 7-7-7" />
+          </svg>
         </a>
       </div>
     </section>;
