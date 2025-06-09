@@ -9,6 +9,7 @@ const Hero = () => {
   const [currentTitleIndex, setCurrentTitleIndex] = useState(0);
   const [displayText, setDisplayText] = useState("");
   const [isUnscrambling, setIsUnscrambling] = useState(true);
+  const [isComplete, setIsComplete] = useState(false);
   
   const { isVisible: isContentVisible, elementRef: contentRef } = useScrollAnimation();
   const { isVisible: isButtonVisible, elementRef: buttonRef } = useScrollAnimation({
@@ -20,6 +21,7 @@ const Hero = () => {
   useEffect(() => {
     const targetText = titles[currentTitleIndex];
     if (isUnscrambling) {
+      setIsComplete(false);
       // Unscramble effect - gradually replace random characters with correct ones
       let scrambledText = Array.from({
         length: targetText.length
@@ -40,6 +42,7 @@ const Hero = () => {
           // If all characters are correct, stop the unscrambling
           if (scrambledIndices.length === 0) {
             clearInterval(intervalId);
+            setIsComplete(true);
 
             // Schedule the next title change after a delay
             setTimeout(() => {
@@ -83,8 +86,10 @@ const Hero = () => {
           }`}
         >
           <h2 className="text-xl md:text-2xl font-medium mb-4 text-slate-50">IMMERSIVE EXPERIENCES</h2>
-          <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold mb-6 tracking-tight min-h-[1.2em]">
-            <span className="inline-block transition-all duration-100 text-7xl">{displayText}</span><br />
+          <h1 className="text-5xl md:text-7xl lg:text-8xl mb-6 tracking-tight min-h-[1.2em]">
+            <span className={`inline-block transition-all duration-100 text-7xl ${
+              isComplete ? 'font-bold' : 'font-light'
+            }`}>{displayText}</span><br />
           </h1>
           <p className="text-lg md:text-xl max-w-3xl mx-auto text-gray-300 mb-8">
             Supporting pharmaceutical innovations with cutting-edge AI technology 
