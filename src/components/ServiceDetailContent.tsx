@@ -137,8 +137,12 @@ const ServiceDetailContent = ({
             </h2>
             
             <Tabs defaultValue={displayProjects[0]?.category || displayProjects[0]?.id} className="w-full">
-              <TabsList className="bg-transparent p-0 h-auto mb-12 flex flex-wrap gap-4">
-                {displayProjects.map((project, index) => <TabsTrigger key={project.id} value={project.category || project.id} className="px-6 py-3 text-sm font-medium rounded-full border data-[state=active]:bg-cyberpunk-magenta data-[state=active]:text-white data-[state=active]:border-cyberpunk-magenta bg-transparent text-gray-300 border-gray-600 hover:border-cyberpunk-magenta/50">
+              <TabsList className="bg-transparent p-0 h-auto mb-12 flex justify-start gap-8">
+                {displayProjects.map((project, index) => <TabsTrigger 
+                  key={project.id} 
+                  value={project.category || project.id} 
+                  className="px-0 py-3 text-lg font-medium bg-transparent text-gray-300 border-0 rounded-none data-[state=active]:bg-transparent data-[state=active]:text-white data-[state=active]:border-b-2 data-[state=active]:border-cyberpunk-magenta hover:text-white transition-colors"
+                >
                     {project.category || project.title}
                   </TabsTrigger>)}
               </TabsList>
