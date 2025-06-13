@@ -1,3 +1,4 @@
+
 import Navbar from "@/components/Navbar";
 import FeaturedProject from "@/components/FeaturedProject";
 import Services from "@/components/Services";
@@ -73,6 +74,7 @@ const UnicornHero = () => {
       window.UnicornStudio.isInitialized = true;
     }
   }, []);
+  
   return (
     <section id="home" className="relative w-screen h-screen min-h-screen flex flex-col justify-center items-center overflow-hidden p-0 m-0">
       <div
@@ -80,6 +82,10 @@ const UnicornHero = () => {
         data-us-project="lvIYlhQGvzYJSBK1KFx6"
         style={{ position: 'absolute', top: 0, left: 0, right: 0, width: '100vw', height: '100vh', zIndex: 0, margin: 0, padding: 0 }}
       />
+      
+      {/* Black gradient overlay at the bottom */}
+      <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-black via-black/80 to-transparent z-5"></div>
+      
       <div className="absolute inset-0 flex flex-col justify-center items-center z-10 pointer-events-none text-center">
         <h2 className="text-xl md:text-2xl font-medium mb-4 text-slate-50 drop-shadow-lg">IMMERSIVE EXPERIENCES</h2>
         <h1 className="text-5xl md:text-7xl lg:text-8xl mb-6 tracking-tight min-h-[1.2em]">
