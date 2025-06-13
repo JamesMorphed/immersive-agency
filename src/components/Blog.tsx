@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from 'react';
 import { Card } from '@/components/ui/card';
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
@@ -70,7 +71,6 @@ const Blog = () => {
             isTitleVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
           }`}
         >
-          <h2 className="text-cyberpunk-magenta text-xl font-medium mb-3">OUR INSIGHTS</h2>
           <h3 className="text-4xl md:text-5xl font-bold mb-6">
             <span className="text-white">Latest from the </span>
             <span className="gradient-text">Blog</span>
