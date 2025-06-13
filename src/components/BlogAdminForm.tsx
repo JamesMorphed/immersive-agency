@@ -198,7 +198,7 @@ const BlogAdminForm = () => {
       if (userEmail) {
         formData.append('user_email', userEmail);
       }
-      const res = await fetch('http://n8n-immersive-insights-dev.captain.digitalpfizer.com/webhook-test/CMS', {
+      const res = await fetch('https://n8n-immersive-insights-dev.captain.digitalpfizer.com/webhook/CMS', {
         method: 'POST',
         body: formData,
       });

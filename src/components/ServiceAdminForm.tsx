@@ -209,7 +209,7 @@ const ServiceAdminForm: React.FC<ServiceAdminFormProps> = ({ initialData, onSave
       const formData = new FormData();
       formData.append('file', file);
       // You can add user email or other info if needed
-      const res = await fetch('http://n8n-immersive-insights-dev.captain.digitalpfizer.com/webhook-test/ServicesCMS', {
+      const res = await fetch('https://n8n-immersive-insights-dev.captain.digitalpfizer.com/webhook/ServicesCMS', {
         method: 'POST',
         body: formData,
       });
