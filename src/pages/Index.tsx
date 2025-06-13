@@ -1,8 +1,8 @@
-
 import Navbar from "@/components/Navbar";
 import FeaturedProject from "@/components/FeaturedProject";
 import Services from "@/components/Services";
 import Technology from "@/components/Technology";
+import Reviews from "@/components/Reviews";
 import Blog from "@/components/Blog";
 import Footer from "@/components/Footer";
 import { useEffect, useRef, useState } from "react";
@@ -114,6 +114,7 @@ const Index = () => {
       <FeaturedProject />
       <Services />
       <Technology />
+      <Reviews />
       <Blog />
       <Footer />
     </div>
