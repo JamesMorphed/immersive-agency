@@ -1,3 +1,4 @@
+
 import { useParams, Navigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
@@ -50,11 +51,13 @@ const ServiceDetailPage = () => {
         ...data,
         features: Array.isArray(data.features) ? (data.features as unknown) as ServiceDetail['features'] : [],
         technologies: Array.isArray(data.technologies) ? (data.technologies as unknown) as ServiceDetail['technologies'] : [],
-        case_studies: Array.isArray(data.case_studies) ? (data.case_studies as unknown) as ServiceDetail['case_studies'] : [],
+        case_studies: [], // Set default empty array since this field doesn't exist in database
         gallery_images: Array.isArray(data.gallery_images) ? (data.gallery_images as unknown) as string[] : [],
-        pricing_info: typeof data.pricing_info === 'object' && data.pricing_info !== null && !Array.isArray(data.pricing_info)
-          ? (data.pricing_info as unknown) as ServiceDetail['pricing_info']
-          : { starting_price: '', includes: [], duration: '' },
+        pricing_info: { // Set default pricing info since this field doesn't exist in database
+          starting_price: '',
+          includes: [],
+          duration: ''
+        },
         service_icons: Array.isArray(data.service_icons)
           ? data.service_icons
           : (typeof data.service_icons === 'string' && data.service_icons.length > 0

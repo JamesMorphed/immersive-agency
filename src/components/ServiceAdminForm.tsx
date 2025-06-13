@@ -55,7 +55,8 @@ const ServiceAdminForm: React.FC<ServiceAdminFormProps> = ({ initialData, onSave
   const [uploadingPDF, setUploadingPDF] = useState(false);
   const [uploadError, setUploadError] = useState<string | null>(null);
   const pdfInputRef = useRef<HTMLInputElement>(null);
-  const [iconModalOpen, setIconModalOpen] = useState<number | false>(false);
+  const [featureIconModalOpen, setFeatureIconModalOpen] = useState<number | null>(null);
+  const [serviceIconModalOpen, setServiceIconModalOpen] = useState(false);
   const [iconOptions, setIconOptions] = useState<string[]>([]);
   const [loadingIcons, setLoadingIcons] = useState(false);
 
@@ -474,7 +475,7 @@ const ServiceAdminForm: React.FC<ServiceAdminFormProps> = ({ initialData, onSave
                       size="sm"
                       onClick={async () => {
                         await fetchIcons();
-                        setIconModalOpen(idx + 1); // Use idx+1 to distinguish from false
+                        setFeatureIconModalOpen(idx);
                       }}
                     >
                       {feature.icon ? 'Change Icon' : 'Pick Icon'}
@@ -504,7 +505,7 @@ const ServiceAdminForm: React.FC<ServiceAdminFormProps> = ({ initialData, onSave
                     <X className="w-5 h-5" />
                   </Button>
                   {/* Icon picker modal for this feature */}
-                  <Dialog open={iconModalOpen === idx + 1} onOpenChange={open => setIconModalOpen(open ? idx + 1 : false)}>
+                  <Dialog open={featureIconModalOpen === idx} onOpenChange={open => setFeatureIconModalOpen(open ? idx : null)}>
                     <DialogContent className="max-w-2xl">
                       <DialogHeader>
                         <DialogTitle>Choose an Icon for Feature</DialogTitle>
@@ -523,7 +524,7 @@ const ServiceAdminForm: React.FC<ServiceAdminFormProps> = ({ initialData, onSave
                                 const newFeatures = [...features];
                                 newFeatures[idx].icon = url;
                                 setFeatures(newFeatures);
-                                setIconModalOpen(false);
+                                setFeatureIconModalOpen(null);
                               }}
                             />
                           ))
@@ -653,7 +654,7 @@ const ServiceAdminForm: React.FC<ServiceAdminFormProps> = ({ initialData, onSave
                       variant="secondary"
                       onClick={async () => {
                         await fetchIcons();
-                        setIconModalOpen(true);
+                        setServiceIconModalOpen(true);
                       }}
                     >
                       Choose Icon
@@ -677,7 +678,7 @@ const ServiceAdminForm: React.FC<ServiceAdminFormProps> = ({ initialData, onSave
                     )}
                   </div>
                   <FormMessage />
-                  <Dialog open={iconModalOpen} onOpenChange={setIconModalOpen}>
+                  <Dialog open={serviceIconModalOpen} onOpenChange={setServiceIconModalOpen}>
                     <DialogContent className="max-w-2xl">
                       <DialogHeader>
                         <DialogTitle>Choose an Icon</DialogTitle>
@@ -696,7 +697,7 @@ const ServiceAdminForm: React.FC<ServiceAdminFormProps> = ({ initialData, onSave
                                 const icons = iconArr;
                                 icons[0] = url;
                                 form.setValue('service_icons', JSON.stringify(icons));
-                                setIconModalOpen(false);
+                                setServiceIconModalOpen(false);
                               }}
                             />
                           ))
@@ -796,4 +797,4 @@ const ServiceAdminForm: React.FC<ServiceAdminFormProps> = ({ initialData, onSave
   );
 };
 
-export default ServiceAdminForm; 
+export default ServiceAdminForm;
