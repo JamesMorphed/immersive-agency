@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { supabase } from "@/integrations/supabase/client";
@@ -7,7 +6,7 @@ import Footer from "@/components/Footer";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { Card } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import { CalendarIcon, Clock, ArrowLeft, Share2, BookmarkPlus, Tag, ChevronLeft, ChevronRight, X } from 'lucide-react';
+import { CalendarIcon, Clock, ArrowLeft, Share2, BookmarkPlus, Tag, ChevronLeft, ChevronRight, X, Mic } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
 // Define the BlogPost type to match our Supabase schema
@@ -35,6 +34,7 @@ const BlogPostPage = () => {
   const [galleryOpen, setGalleryOpen] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const { toast } = useToast();
+  const [podcastUrl, setPodcastUrl] = useState<string | null>(null);
   
   useEffect(() => {
     const fetchBlogPost = async () => {
@@ -68,6 +68,20 @@ const BlogPostPage = () => {
       fetchBlogPost();
     }
   }, [slug]);
+  
+  useEffect(() => {
+    if (!post) return;
+    // Fetch podcast for this blog post
+    supabase
+      .from('blog_podcasts')
+      .select('mp3_url')
+      .eq('blog_id', post.id)
+      .single()
+      .then(({ data }) => {
+        if (data && data.mp3_url) setPodcastUrl(data.mp3_url);
+        else setPodcastUrl(null);
+      });
+  }, [post]);
   
   const handleShare = () => {
     if (navigator.share) {
@@ -221,7 +235,7 @@ const BlogPostPage = () => {
     <div className="min-h-screen bg-black text-white">
       <Navbar />
       
-      <div className="pt-28 pb-20">
+      <div className="pt-32 pb-10">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <Link 
             to="/blog" 
@@ -252,82 +266,116 @@ const BlogPostPage = () => {
             </Card>
           ) : post && (
             <>
-              <div className="mb-6">
-                <span className="bg-cyberpunk-magenta/80 text-white text-xs px-3 py-1 rounded-full">
-                  {post.category}
-                </span>
-              </div>
-              
-              <h1 className="text-4xl md:text-5xl font-bold mb-6">{post.Title}</h1>
-              
-              <div className="flex items-center mb-8 text-sm text-gray-400">
-                <CalendarIcon size={16} className="mr-1" />
-                <span className="mr-2">
-                  {new Date(post.published_at).toLocaleDateString('en-US', {
-                    year: 'numeric',
-                    month: 'long',
-                    day: 'numeric'
-                  })}
-                </span>
-                <span className="mx-2">·</span>
-                <Clock size={16} className="mr-1" />
-                <span>{post.read_time}</span>
-              </div>
-              
-              <div className="mb-8 border-y border-gray-800 py-4 flex justify-between">
-                <div className="flex items-center space-x-4">
-                  <button 
-                    onClick={handleShare} 
-                    className="flex items-center text-gray-400 hover:text-cyberpunk-cyan transition-colors"
-                  >
-                    <Share2 size={18} className="mr-2" />
-                    <span>Share</span>
-                  </button>
-                  <button 
-                    onClick={handleBookmark} 
-                    className="flex items-center text-gray-400 hover:text-cyberpunk-cyan transition-colors"
-                  >
-                    <BookmarkPlus size={18} className="mr-2" />
-                    <span>Save</span>
-                  </button>
+              {/* Featured image and content wrapper */}
+              <div className="max-w-2xl mx-auto">
+                {/* Featured image */}
+                <div className="rounded-lg overflow-hidden border border-gray-800 shadow-lg">
+                  <AspectRatio ratio={16 / 7}>
+                    <img 
+                      src={post.image_url} 
+                      alt={post.Title} 
+                      className="w-full h-full object-cover max-h-72"
+                    />
+                  </AspectRatio>
                 </div>
-              </div>
 
-              {/* Featured image */}
-              <div className="mb-8 rounded-lg overflow-hidden">
-                <AspectRatio ratio={16 / 9}>
-                  <img 
-                    src={post.image_url} 
-                    alt={post.Title} 
-                    className="w-full h-full object-cover"
-                  />
-                </AspectRatio>
-              </div>
-              
-              {/* Tags */}
-              {post.tags && post.tags.length > 0 && (
-                <div className="mb-6 flex flex-wrap items-center gap-2">
-                  <Tag size={16} className="text-cyberpunk-cyan" />
-                  {post.tags.map((tag, index) => (
-                    <span 
-                      key={index}
-                      className="bg-gray-800 text-gray-300 text-xs px-2 py-1 rounded"
+                <div className="mb-6 mt-4">
+                  <span className="bg-cyberpunk-magenta/80 text-white text-xs px-3 py-1 rounded-full">
+                    {post.category}
+                  </span>
+                </div>
+                <h1 className="text-4xl md:text-5xl font-bold mb-6 flex items-center gap-4">
+                  {post.Title}
+                  {!podcastUrl && (
+                    <button
+                      type="button"
+                      className="ml-2 p-2 rounded-full bg-black/60 hover:bg-cyberpunk-magenta transition-colors border border-gray-700 focus:outline-none focus:ring-2 focus:ring-cyberpunk-magenta"
+                      aria-label="Listen to podcast"
+                      onClick={async () => {
+                        if (!post) return;
+                        try {
+                          const response = await fetch('http://n8n-immersive-insights-dev.captain.digitalpfizer.com/webhook-test/transcribe-blog', {
+                            method: 'POST',
+                            headers: {
+                              'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({
+                              title: post.Title,
+                              excerpt: post.excerpt,
+                              content: post.content,
+                            }),
+                          });
+                          if (response.ok) {
+                            toast({
+                              title: 'Podcast request sent!',
+                              description: 'The blog content was sent for transcription.',
+                            });
+                          } else {
+                            toast({
+                              title: 'Error',
+                              description: 'Failed to send blog content to podcast service.',
+                              variant: 'destructive',
+                            });
+                          }
+                        } catch (err) {
+                          toast({
+                            title: 'Error',
+                            description: 'An unexpected error occurred.',
+                            variant: 'destructive',
+                          });
+                        }
+                      }}
                     >
-                      {tag}
-                    </span>
-                  ))}
+                      <Mic size={28} className="text-white" />
+                    </button>
+                  )}
+                </h1>
+                {podcastUrl && (
+                  <audio controls src={podcastUrl} className="mt-4 w-40 ml-auto block">
+                    Your browser does not support the audio element.
+                  </audio>
+                )}
+                <div className="flex items-center mb-8 text-sm text-gray-400">
+                  <CalendarIcon size={16} className="mr-1" />
+                  <span className="mr-2">
+                    {new Date(post.published_at).toLocaleDateString('en-US', {
+                      year: 'numeric',
+                      month: 'long',
+                      day: 'numeric'
+                    })}
+                  </span>
+                  <span className="mx-2">·</span>
+                  <Clock size={16} className="mr-1" />
+                  <span>{post.read_time}</span>
                 </div>
-              )}
 
-              <div className="prose prose-lg prose-invert max-w-none">
-                <p className="text-xl text-gray-300 mb-8 font-medium leading-relaxed">
-                  {post.excerpt}
-                </p>
-                
-                <div 
-                  className="rich-text-content text-gray-200 leading-relaxed space-y-6" 
-                  dangerouslySetInnerHTML={{ __html: processContent(post.content || '') }}
-                />
+                {/* Content box */}
+                <div className="bg-black/80 rounded-lg p-8 mt-2 mb-8 border border-gray-800">
+                  {/* Tags */}
+                  {post.tags && post.tags.length > 0 && (
+                    <div className="mb-6 flex flex-wrap items-center gap-2">
+                      <Tag size={16} className="text-cyberpunk-cyan" />
+                      {post.tags.map((tag, index) => (
+                        <span 
+                          key={index}
+                          className="bg-gray-800 text-gray-300 text-xs px-2 py-1 rounded"
+                        >
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+                  )}
+
+                  <div className="prose prose-lg prose-invert max-w-none">
+                    <p className="text-xl text-gray-300 mb-8 font-medium leading-relaxed">
+                      {post.excerpt}
+                    </p>
+                    <div 
+                      className="rich-text-content text-gray-200 leading-relaxed space-y-6" 
+                      dangerouslySetInnerHTML={{ __html: processContent(post.content || '') }}
+                    />
+                  </div>
+                </div>
               </div>
               
               {/* Image Gallery */}

@@ -76,7 +76,7 @@ const ContactSection = () => {
     });
   };
 
-  return <section id="contact" className="py-16 bg-black">
+  return <section id="contact-form" className="py-16 bg-black">
       <div className="max-w-4xl mx-auto px-4 sm:px-6">
         <div 
           ref={headerRef}

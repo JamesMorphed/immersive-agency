@@ -1,4 +1,3 @@
-
 import { useParams, Navigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
@@ -55,7 +54,12 @@ const ServiceDetailPage = () => {
         gallery_images: Array.isArray(data.gallery_images) ? (data.gallery_images as unknown) as string[] : [],
         pricing_info: typeof data.pricing_info === 'object' && data.pricing_info !== null && !Array.isArray(data.pricing_info)
           ? (data.pricing_info as unknown) as ServiceDetail['pricing_info']
-          : { starting_price: '', includes: [], duration: '' }
+          : { starting_price: '', includes: [], duration: '' },
+        service_icons: Array.isArray(data.service_icons)
+          ? data.service_icons
+          : (typeof data.service_icons === 'string' && data.service_icons.length > 0
+              ? JSON.parse(data.service_icons)
+              : []),
       };
 
       return transformedData;

@@ -1,10 +1,26 @@
-
+import { useEffect } from 'react';
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import ServicesHighlights from "@/components/ServicesHighlights";
 import TeamSection from "@/components/TeamSection";
 import ContactSection from "@/components/ContactSection";
 const ContactPage = () => {
+  useEffect(() => {
+    const scrollToHash = () => {
+      if (window.location.hash) {
+        const id = window.location.hash.replace('#', '');
+        const el = document.getElementById(id);
+        if (el) {
+          setTimeout(() => {
+            el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }, 100);
+        }
+      }
+    };
+    scrollToHash();
+    window.addEventListener('hashchange', scrollToHash);
+    return () => window.removeEventListener('hashchange', scrollToHash);
+  }, []);
   return <div className="min-h-screen bg-black text-white overflow-x-hidden">
       <Navbar />
       <div className="pt-20">

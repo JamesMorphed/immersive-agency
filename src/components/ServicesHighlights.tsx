@@ -1,9 +1,10 @@
-
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { HoverCard, HoverCardTrigger, HoverCardContent } from '@/components/ui/hover-card';
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
+import { useNavigate } from 'react-router-dom';
 
 const ServicesHighlights = () => {
+  const navigate = useNavigate();
   const services = [{
     title: "Reach out to us directly",
     description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique. Duis cursus, mi quis viverra ornare, eros dolor.",
@@ -63,13 +64,20 @@ const ServicesHighlights = () => {
           {services.map((service, index) => (
             <Card 
               key={index} 
-              className="relative overflow-hidden border-gray-700 group"
+              className="relative overflow-hidden border-gray-700 group cursor-pointer"
               style={{
                 background: 'transparent',
                 transitionDelay: `${200 + (index * 150)}ms`,
                 opacity: isCardsVisible ? 1 : 0,
                 transform: isCardsVisible ? 'translateY(0)' : 'translateY(20px)',
                 transition: 'opacity 700ms ease, transform 700ms ease'
+              }}
+              onClick={() => {
+                if (service.title === 'Reach out to us directly') {
+                  navigate('/contact#team');
+                } else if (service.title === 'Project briefing form') {
+                  navigate('/contact#contact-form');
+                }
               }}
             >
               <div 

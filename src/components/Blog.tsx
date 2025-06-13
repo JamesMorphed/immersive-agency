@@ -1,11 +1,12 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Card } from '@/components/ui/card';
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
 import { ArrowRight, BookOpen } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { supabase } from '@/integrations/supabase/client';
 
 // Simplified blogPosts array with slugs for routing
-const blogPosts = [
+const staticBlogPosts = [
   {
     title: "The Future of Immersive Learning in Healthcare",
     excerpt: "Exploring how VR and AR are transforming medical education and patient care experiences.",
@@ -35,6 +36,30 @@ const blogPosts = [
 const Blog = () => {
   const { isVisible: isTitleVisible, elementRef: titleRef } = useScrollAnimation();
   const { isVisible: isCardsVisible, elementRef: cardsRef } = useScrollAnimation();
+  const [blogPosts, setBlogPosts] = useState(staticBlogPosts);
+
+  useEffect(() => {
+    async function fetchBlogPosts() {
+      const { data, error } = await supabase
+        .from('blog_posts')
+        .select('Title, excerpt, published_at, image_url, category, slug')
+        .order('published_at', { ascending: false })
+        .limit(3);
+      if (data && data.length > 0) {
+        setBlogPosts(
+          data.map(post => ({
+            title: post.Title || '',
+            excerpt: post.excerpt || '',
+            date: post.published_at ? new Date(post.published_at).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }) : '',
+            image: post.image_url || '',
+            category: post.category || '',
+            slug: post.slug || ''
+          }))
+        );
+      }
+    }
+    fetchBlogPosts();
+  }, []);
 
   return (
     <section id="blog" className="py-20 bg-black relative">

@@ -1,5 +1,4 @@
-
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useEditor, EditorContent } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import Link from '@tiptap/extension-link';
@@ -56,6 +55,12 @@ const RichTextEditor = ({ value, onChange, placeholder }: RichTextEditorProps) =
       onChange(editor.getHTML());
     },
   });
+
+  useEffect(() => {
+    if (editor && value !== editor.getHTML()) {
+      editor.commands.setContent(value || '', false);
+    }
+  }, [value, editor]);
 
   if (!editor) {
     return null;
@@ -262,7 +267,7 @@ const RichTextEditor = ({ value, onChange, placeholder }: RichTextEditorProps) =
       <div className="px-3 py-2">
         <EditorContent 
           editor={editor} 
-          className="min-h-[200px] outline-none"
+          className="min-h-[200px] outline-none blog-editor-content"
         />
         {!editor.getText() && placeholder && (
           <div className="absolute top-20 left-4 text-muted-foreground pointer-events-none">

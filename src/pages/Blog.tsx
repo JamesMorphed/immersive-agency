@@ -283,7 +283,7 @@ const BlogPage = () => {
                       <span className="font-medium text-white">{displayFeaturedPost.author}</span>
                       <span className="mx-2">·</span>
                       <Calendar size={16} className="mr-1" />
-                      <span>{new Date(displayFeaturedPost.published_at).toLocaleDateString('en-US', {
+                      <span>{new Date(displayFeaturedPost.created_at).toLocaleDateString('en-US', {
                         month: 'long',
                         day: 'numeric',
                         year: 'numeric'
@@ -348,7 +348,7 @@ const BlogPage = () => {
                   <div className="p-6">
                     <div className="flex items-center mb-3 text-sm text-gray-400">
                       <BookOpen size={16} className="mr-2" />
-                      <span>{new Date(post.published_at).toLocaleDateString('en-US', {
+                      <span>{new Date(post.created_at).toLocaleDateString('en-US', {
                         month: 'long',
                         day: 'numeric',
                         year: 'numeric'

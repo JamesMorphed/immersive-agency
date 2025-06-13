@@ -1,0 +1,124 @@
+---
+description: Creating new area to manage content
+globs: 
+alwaysApply: false
+---
+## When making pages to view, edit or create a resource we always follow these rules
+
+Let me know you are using these rules by starting that area with 🔥
+
+> We never use modals or slideouts 
+
+This is how resource or rows in the database are handled in the UI
+
+## Create 
+resource/create 
+example tasks/create
+
+## Edit
+resource/:uuid/edit
+example tasks/SOME_UUID/edit
+
+## View
+resource/:uuid
+example tasks/SOME_UUID
+
+## We are using nextjs
+Then of course Supabase is NEXTJS_
+
+
+## Page layout
+
+Example below shows a page but then inside of that we do the forms and tables etc.
+
+```js
+import Header from "@/components/Header";
+import ChatProvider from "@/components/ChatProvider";
+import ApplicationsContainer from "@/components/application-wrapper-cards";
+
+export default function ApplicationsPage() {
+  return (
+    <ChatProvider>
+      <div className="min-h-screen bg-black text-white">
+        {/* Navigation */}
+        <Header />
+
+        {/* Content */}
+        <main className="container mx-auto p-4">
+          <ApplicationsContainer />
+        </main>
+      </div>
+    </ChatProvider>
+  )
+}
+
+```
+
+See how the components can then use `use client`
+
+```js
+'use client'
+
+import { useState, useEffect } from 'react';
+import { createClient } from '@/lib/supabase/client';
+import ApplicationCard from './application-card';
+
+export default function ApplicationsContainer() {
+  const [applications, setApplications] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function fetchApplications() {
+      try {
+        const supabase = createClient();
+        const { data, error } = await supabase
+          .from('applications')
+          .select('*')
+          .limit(50);
+        
+        if (error) {
+          console.error('Error fetching applications:', error);
+        } else {
+          console.log('Applications fetched successfully:', data);
+          setApplications(data || []);
+        }
+      } catch (error) {
+        console.error('Error in fetch operation:', error);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchApplications();
+  }, []);
+
+  return (
+    <>
+      <div className="flex justify-between items-center my-8">
+        <h1 className="text-3xl font-bold">Applications</h1>
+        <div className="text-zinc-500">
+          {loading ? 'Loading...' : `${applications.length} applications available`}
+        </div>
+      </div>
+      
+      {/* Applications Grid */}
+      {loading ? (
+        <div className="flex justify-center items-center h-64">
+          <div className="animate-pulse text-amber-400">Loading applications...</div>
+        </div>
+      ) : applications.length > 0 ? (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          {applications.map((app) => (
+            <ApplicationCard key={app.id} app={app} />
+          ))}
+        </div>
+      ) : (
+        <div className="text-center py-10">
+          <p className="text-zinc-400">No applications found</p>
+        </div>
+      )}
+    </>
+  );
+} 
+```
+

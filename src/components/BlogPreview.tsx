@@ -1,9 +1,9 @@
-
 import React, { useState, useEffect } from 'react';
 import { format } from 'date-fns';
 import { Eye } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { AspectRatio } from '@/components/ui/aspect-ratio';
+import { marked } from 'marked';
 
 const BlogPreview = () => {
   const [formData, setFormData] = useState({
@@ -46,22 +46,8 @@ const BlogPreview = () => {
   // Safer function to process content without DOM manipulation issues
   const processContent = (content: string) => {
     if (!content) return '';
-    
-    // Use regex to replace img tags with wrapped versions
-    const processedContent = content.replace(
-      /<img([^>]*)>/g, 
-      (match, attributes) => {
-        return `
-          <div class="aspect-ratio-wrapper my-6">
-            <div class="aspect-w-16 aspect-h-9 rounded-lg overflow-hidden">
-              <img${attributes} class="w-full h-full object-cover" />
-            </div>
-          </div>
-        `;
-      }
-    );
-    
-    return processedContent;
+    // Convert markdown to HTML
+    return marked(content);
   };
 
   return (
@@ -75,69 +61,31 @@ const BlogPreview = () => {
             </CardTitle>
           </div>
         </CardHeader>
-        <CardContent className="overflow-y-auto max-h-[800px]">
+        <CardContent className="h-full flex flex-col justify-center items-center text-white">
           {formData.title || formData.content ? (
-            <div className="space-y-4">
+            <div className="w-full">
               {formData.image_url && (
                 <div className="mb-4">
-                  <AspectRatio ratio={16/9} className="rounded-md overflow-hidden">
-                    <img 
-                      src={formData.image_url} 
-                      alt={formData.title} 
-                      className="w-full h-full object-cover"
-                      onError={(e) => {
-                        const target = e.target as HTMLImageElement;
-                        target.src = "https://via.placeholder.com/800x400?text=Preview+Image";
-                      }}
-                    />
-                  </AspectRatio>
+                  <img
+                    src={formData.image_url}
+                    alt={formData.title}
+                    className="w-full h-64 object-cover rounded-md border border-gray-700"
+                    onError={e => {
+                      (e.target as HTMLImageElement).src = 'https://via.placeholder.com/800x400?text=Preview+Image';
+                    }}
+                  />
                 </div>
               )}
-              
-              <h1 className="text-2xl font-bold">{formData.title || 'Untitled Post'}</h1>
-              
-              <div className="flex flex-wrap items-center text-sm text-gray-400 gap-3">
-                {formData.category && (
-                  <span className="bg-gray-700 px-2 py-1 rounded">
-                    {getCategoryName(formData.category)}
-                  </span>
-                )}
-                
-                {formData.published_at && (
-                  <span>{format(formData.published_at, 'MMMM d, yyyy')}</span>
-                )}
-                
-                {formData.read_time && (
-                  <span>{formData.read_time}</span>
-                )}
-              </div>
-              
-              {formData.tags && formData.tags.length > 0 && (
-                <div className="flex flex-wrap gap-2 my-3">
-                  {formData.tags.map((tag: string, index: number) => (
-                    <span 
-                      key={index} 
-                      className="bg-blue-900/40 text-blue-400 text-xs px-2 py-1 rounded"
-                    >
-                      #{tag}
-                    </span>
-                  ))}
-                </div>
-              )}
-              
-              <div 
-                className="prose prose-invert max-w-none mt-4 blog-content"
-                dangerouslySetInnerHTML={{ 
-                  __html: formData.content ? 
-                    processContent(formData.content) : 
-                    '<p class="text-gray-400">Content will appear here...</p>' 
-                }}
+              <h3 className="text-2xl font-bold mb-4 text-white">{formData.title}</h3>
+              <div
+                className="prose prose-invert max-w-none text-white"
+                dangerouslySetInnerHTML={{ __html: processContent(formData.content) }}
               />
             </div>
           ) : (
-            <div className="text-center py-10 text-gray-400">
-              <Eye className="mx-auto h-12 w-12 mb-4 opacity-20" />
-              <p>Your blog post preview will appear here as you type</p>
+            <div className="flex flex-col items-center justify-center h-full text-white">
+              <Eye className="w-10 h-10 mb-4 opacity-30" />
+              <span className="text-gray-400">Your blog post preview will appear here as you type</span>
             </div>
           )}
         </CardContent>

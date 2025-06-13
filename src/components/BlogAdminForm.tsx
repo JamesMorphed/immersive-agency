@@ -1,5 +1,4 @@
-
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
@@ -7,6 +6,7 @@ import { format } from 'date-fns';
 import { CalendarIcon, Loader2, FileText, Briefcase, Podcast, Cpu, Newspaper, ImageUp } from "lucide-react";
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
+import { marked } from 'marked';
 
 import { Button } from "@/components/ui/button";
 import {
@@ -43,6 +43,7 @@ const blogPostSchema = z.object({
     .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, { 
       message: "Slug must contain only lowercase letters, numbers, and hyphens" 
     }),
+  author: z.string().min(1, { message: "Author is required" }),
   content: z.string().min(10, { message: "Content is required" }),
   excerpt: z.string().min(10, { message: "Excerpt must be at least 10 characters" }),
   category: z.string().min(1, { message: "Category is required" }),
@@ -68,6 +69,10 @@ const BlogAdminForm = () => {
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [uploadingFeaturedImage, setUploadingFeaturedImage] = useState(false);
+  const [uploadingPDF, setUploadingPDF] = useState(false);
+  const [uploadError, setUploadError] = useState<string | null>(null);
+  const pdfInputRef = useRef<HTMLInputElement>(null);
+  const [userEmail, setUserEmail] = useState<string | null>(null);
 
   // Define form
   const form = useForm<BlogPostFormValues>({
@@ -75,6 +80,7 @@ const BlogAdminForm = () => {
     defaultValues: {
       title: "",
       slug: "",
+      author: "",
       content: "",
       excerpt: "",
       category: "",
@@ -94,6 +100,14 @@ const BlogAdminForm = () => {
   useEffect(() => {
     dispatchFormUpdate(watchedValues);
   }, [watchedValues]);
+
+  useEffect(() => {
+    async function fetchUser() {
+      const { data: { user } } = await supabase.auth.getUser();
+      setUserEmail(user?.email || null);
+    }
+    fetchUser();
+  }, []);
 
   // Function to generate slug from title
   const generateSlug = () => {
@@ -155,6 +169,86 @@ const BlogAdminForm = () => {
     }
   };
 
+  const handlePDFDrop = async (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    setUploadError(null);
+    const file = e.dataTransfer.files[0];
+    if (!file || file.type !== 'application/pdf') {
+      setUploadError('Please upload a valid PDF file.');
+      return;
+    }
+    await uploadPDF(file);
+  };
+
+  const handlePDFSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    setUploadError(null);
+    const file = e.target.files?.[0];
+    if (!file || file.type !== 'application/pdf') {
+      setUploadError('Please upload a valid PDF file.');
+      return;
+    }
+    await uploadPDF(file);
+  };
+
+  const uploadPDF = async (file: File) => {
+    setUploadingPDF(true);
+    try {
+      const formData = new FormData();
+      formData.append('file', file);
+      if (userEmail) {
+        formData.append('user_email', userEmail);
+      }
+      const res = await fetch('http://n8n-immersive-insights-dev.captain.digitalpfizer.com/webhook-test/CMS', {
+        method: 'POST',
+        body: formData,
+      });
+      if (!res.ok) throw new Error('Failed to upload PDF');
+      const result = await res.json();
+
+      // Handle both array and object response
+      let outputString = null;
+      if (Array.isArray(result) && result[0]?.output) {
+        outputString = result[0].output;
+      } else if (result.output) {
+        outputString = result.output;
+      }
+
+      // Remove Markdown code block if present
+      if (outputString && outputString.startsWith('```json')) {
+        outputString = outputString.replace(/^```json\n?|```$/g, '').trim();
+        if (outputString.endsWith('```')) {
+          outputString = outputString.slice(0, -3).trim();
+        }
+      }
+
+      if (outputString) {
+        const data = JSON.parse(outputString);
+        console.log('AI extracted data:', data); // For debugging
+        if (data.title) form.setValue('title', data.title);
+        if (data.slug) form.setValue('slug', data.slug);
+        if (data.read_time) form.setValue('read_time', data.read_time);
+        if (data.excerpt) form.setValue('excerpt', data.excerpt);
+        if (data.content) {
+          const htmlContent = marked.parse(data.content) as string;
+          form.setValue('content', htmlContent);
+          form.trigger('content');
+        }
+        if (data.tags) form.setValue('tags', data.tags);
+        if (data.author) form.setValue('author', data.author);
+        if (data.category) form.setValue('category', data.category);
+        toast({ title: 'PDF processed!', description: 'Blog fields were auto-filled from your PDF.', variant: 'default' });
+      } else {
+        throw new Error('Unexpected response format from webhook');
+      }
+    } catch (err) {
+      setUploadError('Failed to upload PDF.');
+      toast({ title: 'Upload failed', description: 'Could not send PDF to n8n.', variant: 'destructive' });
+    } finally {
+      setUploadingPDF(false);
+      if (pdfInputRef.current) pdfInputRef.current.value = '';
+    }
+  };
+
   const onSubmit = async (values: BlogPostFormValues) => {
     setIsSubmitting(true);
     
@@ -163,6 +257,7 @@ const BlogAdminForm = () => {
       const blogPostData = {
         Title: values.title,
         slug: values.slug,
+        author: values.author,
         content: values.content,
         excerpt: values.excerpt,
         category: values.category,
@@ -207,7 +302,7 @@ const BlogAdminForm = () => {
       
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <FormField
               control={form.control}
               name="title"
@@ -240,6 +335,20 @@ const BlogAdminForm = () => {
                   <FormLabel>Slug</FormLabel>
                   <FormControl>
                     <Input placeholder="your-post-slug" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            
+            <FormField
+              control={form.control}
+              name="author"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Author</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Author name" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -341,15 +450,43 @@ const BlogAdminForm = () => {
               <FormItem>
                 <FormLabel>Content</FormLabel>
                 <FormControl>
-                  <RichTextEditor
-                    value={field.value}
-                    onChange={field.onChange}
-                  />
+                  <div className="text-white">
+                    <RichTextEditor
+                      value={field.value}
+                      onChange={field.onChange}
+                    />
+                  </div>
                 </FormControl>
                 <FormMessage />
               </FormItem>
             )}
           />
+          
+          <div className="mb-4">
+            <label className="block text-sm font-medium text-gray-300 mb-1">Blog PDF (optional)</label>
+            <div
+              onDragOver={e => e.preventDefault()}
+              onDrop={handlePDFDrop}
+              className="my-2 p-4 border-2 border-dashed border-cyberpunk-magenta rounded bg-black/40 text-center cursor-pointer transition-all flex flex-col items-center"
+              style={{ minHeight: 60 }}
+              onClick={() => pdfInputRef.current?.click()}
+              tabIndex={0}
+              role="button"
+              aria-label="Upload PDF"
+            >
+              <span className="text-cyberpunk-magenta font-semibold text-sm mb-1">Drag & drop a PDF or <span className="underline">click to upload</span></span>
+              <span className="text-gray-400 text-xs mb-1">We'll extract blog details for you.</span>
+              {uploadingPDF && <span className="text-cyberpunk-magenta text-xs mt-1">Uploading...</span>}
+              {uploadError && <span className="text-red-400 text-xs mt-1">{uploadError}</span>}
+              <input
+                ref={pdfInputRef}
+                type="file"
+                accept="application/pdf"
+                className="hidden"
+                onChange={handlePDFSelect}
+              />
+            </div>
+          </div>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <FormField
@@ -404,6 +541,14 @@ const BlogAdminForm = () => {
                               (e.target as HTMLImageElement).src = "https://via.placeholder.com/400x200?text=Error+Loading+Image";
                             }}
                           />
+                          <button
+                            type="button"
+                            className="absolute top-2 right-2 bg-red-600 text-white rounded-full p-1 hover:bg-red-700 transition-colors z-10"
+                            onClick={() => form.setValue('image_url', '')}
+                            aria-label="Delete featured image"
+                          >
+                            &times;
+                          </button>
                         </div>
                       )}
                       

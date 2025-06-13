@@ -1,0 +1,18 @@
+---
+description: How to remove Supabase Auth
+globs:
+alwaysApply: false
+---
+
+To remove Supabase authentication from this site you must follow these steps. Do not do anything else:
+
+1. delete the /app/auth folder and it's contents.
+2. delete the /app/protected folder and it's contents
+3. delete the /components/forgot-password-form.tsx, /components/login-form.tsx, /components/logout-button.tsx,
+/components/sign-up-form.tsx, /components/update-password-form.tsx files.
+4. delete the /hooks/use-auth-status.ts, /hooks/use-current-user-image.ts, use-current-user-name.ts files
+5. delete the current-user-avatar.tsx file
+6. remove the use of <CurrentUserAvatar /> in the /compontents/header.tsx file
+7. Check all page and component files to ensure no references to deleted files exist.
+8. delete the /lib/supabase folder and sub files
+9. update the /middleware.ts to remove the authentication
