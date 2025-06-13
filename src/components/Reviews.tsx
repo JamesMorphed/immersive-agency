@@ -1,10 +1,8 @@
+
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Card, CardContent } from "@/components/ui/card";
-import { useState } from "react";
 
 const Reviews = () => {
-  const [selectedReviewId, setSelectedReviewId] = useState<number>(1);
-
   const testimonials = [
     {
       id: 1,
@@ -49,9 +47,6 @@ const Reviews = () => {
     "/lovable-uploads/51402e45-82fe-473e-9b47-d98d4c45bd2f.png"
   ];
 
-  const selectedReview = testimonials.find(t => t.id === selectedReviewId);
-  const otherReviews = testimonials.filter(t => t.id !== selectedReviewId);
-
   return (
     <section className="py-20 bg-black text-white">
       <div className="max-w-7xl mx-auto px-4">
@@ -59,73 +54,24 @@ const Reviews = () => {
         <div className="text-center mb-16">
           <h3 className="text-lg font-medium text-gray-400 mb-8">Trusted by:</h3>
           <div className="flex justify-center items-center gap-4 flex-wrap">
-            {trustedByAvatars.map((avatar, index) => {
-              const isTestimonialAvatar = testimonials.some(t => t.avatar === avatar);
-              const testimonialId = testimonials.find(t => t.avatar === avatar)?.id;
-              const isSelected = testimonialId === selectedReviewId;
-              
-              return (
-                <Avatar 
-                  key={index} 
-                  className={`w-12 h-12 ring-2 transition-all cursor-pointer ${
-                    isSelected 
-                      ? 'ring-white scale-110' 
-                      : isTestimonialAvatar 
-                        ? 'ring-gray-600 hover:ring-gray-400' 
-                        : 'ring-gray-800 hover:ring-gray-600'
-                  }`}
-                  onClick={() => {
-                    if (testimonialId) {
-                      setSelectedReviewId(testimonialId);
-                    }
-                  }}
-                >
-                  <AvatarImage src={avatar} alt={`Trusted by ${index + 1}`} />
-                  <AvatarFallback className="bg-gray-800 text-gray-400">
-                    {String.fromCharCode(65 + index)}
-                  </AvatarFallback>
-                </Avatar>
-              );
-            })}
+            {trustedByAvatars.map((avatar, index) => (
+              <Avatar key={index} className="w-12 h-12 ring-2 ring-gray-800 hover:ring-gray-600 transition-all">
+                <AvatarImage src={avatar} alt={`Trusted by ${index + 1}`} />
+                <AvatarFallback className="bg-gray-800 text-gray-400">
+                  {String.fromCharCode(65 + index)}
+                </AvatarFallback>
+              </Avatar>
+            ))}
           </div>
         </div>
 
-        {/* Featured review in the center */}
-        {selectedReview && (
-          <div className="mb-12 flex justify-center">
-            <Card className="bg-gray-900 border-2 border-white max-w-2xl transform scale-105 transition-all duration-300">
-              <CardContent className="p-8">
-                <p className="text-gray-300 text-lg leading-relaxed mb-6 text-center">
-                  "{selectedReview.content}"
-                </p>
-                <div className="flex items-center justify-center gap-4">
-                  <Avatar className="w-16 h-16">
-                    <AvatarImage src={selectedReview.avatar} alt={selectedReview.name} />
-                    <AvatarFallback className="bg-gray-800 text-gray-400">
-                      {selectedReview.name.split(' ').map(n => n[0]).join('')}
-                    </AvatarFallback>
-                  </Avatar>
-                  <div className="text-center">
-                    <p className="text-white font-medium text-lg">{selectedReview.name}</p>
-                    <p className="text-gray-400">{selectedReview.role}</p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-        )}
-
-        {/* Other testimonials grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {otherReviews.map((testimonial) => (
-            <Card 
-              key={testimonial.id} 
-              className="bg-gray-900/50 border border-gray-800 hover:border-gray-700 transition-all duration-300 cursor-pointer opacity-70 hover:opacity-100"
-              onClick={() => setSelectedReviewId(testimonial.id)}
-            >
+        {/* Testimonials grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          {testimonials.map((testimonial) => (
+            <Card key={testimonial.id} className="bg-gray-900/50 border border-gray-800 hover:border-gray-700 transition-all duration-300">
               <CardContent className="p-6">
                 <p className="text-gray-300 text-sm leading-relaxed mb-6">
-                  {testimonial.content.substring(0, 120)}...
+                  {testimonial.content}
                 </p>
                 <div className="flex items-center gap-3">
                   <Avatar className="w-10 h-10">
