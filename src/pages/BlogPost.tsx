@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { supabase } from "@/integrations/supabase/client";
@@ -7,8 +6,7 @@ import Footer from "@/components/Footer";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { Card } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import { CalendarIcon, Clock, ArrowLeft, Share2, BookmarkPlus, Tag, ChevronLeft, ChevronRight, X } from 'lucide-react';
-import { useToast } from '@/hooks/use-toast';
+import { CalendarIcon, Clock, ArrowLeft, Share2, BookmarkPlus, Tag, ChevronLeft, ChevronRight, X, Mic } from 'lucide-react';
 
 // Define the BlogPost type to match our Supabase schema
 type BlogPost = {
@@ -34,7 +32,8 @@ const BlogPostPage = () => {
   const [error, setError] = useState<string | null>(null);
   const [galleryOpen, setGalleryOpen] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
-  const { toast } = useToast();
+  const [podcastUrl, setPodcastUrl] = useState<string | null>(null);
+  const [relatedPosts, setRelatedPosts] = useState<BlogPost[]>([]);
   
   useEffect(() => {
     const fetchBlogPost = async () => {
@@ -69,6 +68,47 @@ const BlogPostPage = () => {
     }
   }, [slug]);
   
+  useEffect(() => {
+    if (!post) return;
+    // Fetch podcast for this blog post
+    supabase
+      .from('blog_podcasts')
+      .select('mp3_url')
+      .eq('blog_id', post.id)
+      .single()
+      .then(({ data }) => {
+        if (data && data.mp3_url) {
+          if (data.mp3_url.startsWith('http')) {
+            setPodcastUrl(data.mp3_url);
+          } else {
+            // Assume it's a Supabase Storage path
+            setPodcastUrl(`https://kyzhqnmizpnuurmimmjc.supabase.co/storage/v1/object/public/${data.mp3_url}`);
+          }
+        } else setPodcastUrl(null);
+      });
+  }, [post]);
+  
+  useEffect(() => {
+    if (!post) return;
+    async function fetchRelated() {
+      let query = supabase
+        .from('blog_posts')
+        .select('*')
+        .neq('id', post.id)
+        .order('created_at', { ascending: false });
+      if (post.tags && post.tags.length > 0) {
+        // Find posts with at least one matching tag or same category
+        query = query.or(`category.eq.${post.category},tags.cs.{${post.tags.map(tag => `"${tag}"`).join(',')}}`);
+      } else {
+        // Only match by category if no tags
+        query = query.eq('category', post.category);
+      }
+      const { data, error } = await query.limit(3);
+      if (!error && data) setRelatedPosts(data);
+    }
+    fetchRelated();
+  }, [post]);
+  
   const handleShare = () => {
     if (navigator.share) {
       navigator.share({
@@ -79,18 +119,11 @@ const BlogPostPage = () => {
       .catch((err) => console.error('Error sharing:', err));
     } else {
       navigator.clipboard.writeText(window.location.href);
-      toast({
-        title: "Link copied!",
-        description: "Blog post link copied to clipboard.",
-      });
     }
   };
   
   const handleBookmark = () => {
-    toast({
-      title: "Post saved!",
-      description: "Blog post saved to your bookmarks.",
-    });
+    // No toast notification for bookmarking
   };
 
   const openGallery = (index: number) => {
@@ -128,13 +161,7 @@ const BlogPostPage = () => {
     const processedContent = content.replace(
       /<img([^>]*)>/g, 
       (match, attributes) => {
-        return `
-          <div class="aspect-ratio-wrapper my-6">
-            <div class="aspect-w-16 aspect-h-9 rounded-lg overflow-hidden">
-              <img${attributes} class="w-full h-full object-cover" />
-            </div>
-          </div>
-        `;
+        return `<div class="my-4"><img${attributes} class="w-full h-auto object-cover rounded-lg" /></div>`;
       }
     );
     
@@ -183,7 +210,9 @@ const BlogPostPage = () => {
       .rich-text-content img {
         max-width: 100%;
         height: auto;
-        margin: 1.5rem 0;
+        margin: 1rem 0;
+        border: none;
+        box-shadow: none;
       }
       .rich-text-content blockquote {
         border-left: 4px solid #38bdf8;
@@ -217,18 +246,22 @@ const BlogPostPage = () => {
     };
   }, []);
   
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+  
   return (
     <div className="min-h-screen bg-black text-white">
       <Navbar />
       
-      <div className="pt-28 pb-20">
+      <div className="pt-32 pb-10">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <Link 
             to="/blog" 
             className="inline-flex items-center text-cyberpunk-cyan mb-8 hover:text-cyberpunk-magenta transition-colors"
           >
             <ArrowLeft size={16} className="mr-2" />
-            Back to all articles
+            Back to all insights
           </Link>
           
           {loading ? (
@@ -252,82 +285,87 @@ const BlogPostPage = () => {
             </Card>
           ) : post && (
             <>
-              <div className="mb-6">
-                <span className="bg-cyberpunk-magenta/80 text-white text-xs px-3 py-1 rounded-full">
-                  {post.category}
-                </span>
-              </div>
-              
-              <h1 className="text-4xl md:text-5xl font-bold mb-6">{post.Title}</h1>
-              
-              <div className="flex items-center mb-8 text-sm text-gray-400">
-                <CalendarIcon size={16} className="mr-1" />
-                <span className="mr-2">
-                  {new Date(post.published_at).toLocaleDateString('en-US', {
-                    year: 'numeric',
-                    month: 'long',
-                    day: 'numeric'
-                  })}
-                </span>
-                <span className="mx-2">·</span>
-                <Clock size={16} className="mr-1" />
-                <span>{post.read_time}</span>
-              </div>
-              
-              <div className="mb-8 border-y border-gray-800 py-4 flex justify-between">
-                <div className="flex items-center space-x-4">
-                  <button 
-                    onClick={handleShare} 
-                    className="flex items-center text-gray-400 hover:text-cyberpunk-cyan transition-colors"
-                  >
-                    <Share2 size={18} className="mr-2" />
-                    <span>Share</span>
-                  </button>
-                  <button 
-                    onClick={handleBookmark} 
-                    className="flex items-center text-gray-400 hover:text-cyberpunk-cyan transition-colors"
-                  >
-                    <BookmarkPlus size={18} className="mr-2" />
-                    <span>Save</span>
-                  </button>
+              {/* Featured image and content wrapper */}
+              <div className="max-w-2xl mx-auto">
+                {/* Featured image */}
+                <div className="rounded-lg overflow-hidden border border-gray-800 shadow-lg">
+                  <AspectRatio ratio={16 / 7}>
+                    <img 
+                      src={post.image_url} 
+                      alt={post.Title} 
+                      className="w-full h-full object-cover"
+                      style={{ minHeight: 0, minWidth: 0 }}
+                    />
+                  </AspectRatio>
                 </div>
-              </div>
 
-              {/* Featured image */}
-              <div className="mb-8 rounded-lg overflow-hidden">
-                <AspectRatio ratio={16 / 9}>
-                  <img 
-                    src={post.image_url} 
-                    alt={post.Title} 
-                    className="w-full h-full object-cover"
-                  />
-                </AspectRatio>
-              </div>
-              
-              {/* Tags */}
-              {post.tags && post.tags.length > 0 && (
-                <div className="mb-6 flex flex-wrap items-center gap-2">
-                  <Tag size={16} className="text-cyberpunk-cyan" />
-                  {post.tags.map((tag, index) => (
-                    <span 
-                      key={index}
-                      className="bg-gray-800 text-gray-300 text-xs px-2 py-1 rounded"
-                    >
-                      {tag}
+                <div className="mb-6 mt-4">
+                  <span className="bg-cyberpunk-magenta/80 text-white text-xs px-3 py-1 rounded-full">
+                    {post.category}
+                  </span>
+                </div>
+                <h1 className="text-4xl md:text-5xl font-bold mb-6 flex items-center gap-4">
+                  {post.Title}
+                  {podcastUrl ? (
+                    <span className="flex items-center gap-2 ml-2">
+                      <Mic size={28} className="text-white" />
+                      <audio controls src={podcastUrl} className="w-40">
+                        Your browser does not support the audio element.
+                      </audio>
                     </span>
-                  ))}
+                  ) : (
+                    <button
+                      type="button"
+                      className="ml-2 p-2 rounded-full bg-black/60 hover:bg-cyberpunk-magenta transition-colors border border-gray-700 focus:outline-none focus:ring-2 focus:ring-cyberpunk-magenta"
+                      aria-label="Listen to podcast"
+                    >
+                      <Mic size={28} className="text-white" />
+                    </button>
+                  )}
+                </h1>
+                <div className="flex items-center mb-8 text-sm text-gray-400">
+                  <CalendarIcon size={16} className="mr-1" />
+                  <span className="mr-2">
+                    {post.created_at && !isNaN(new Date(post.created_at).getTime())
+                      ? new Date(post.created_at).toLocaleDateString('en-US', {
+                          year: 'numeric',
+                          month: 'long',
+                          day: 'numeric'
+                        })
+                      : 'Unknown date'}
+                  </span>
+                  <span className="mx-2">·</span>
+                  <Clock size={16} className="mr-1" />
+                  <span>{post.read_time}</span>
                 </div>
-              )}
 
-              <div className="prose prose-lg prose-invert max-w-none">
-                <p className="text-xl text-gray-300 mb-8 font-medium leading-relaxed">
-                  {post.excerpt}
-                </p>
-                
-                <div 
-                  className="rich-text-content text-gray-200 leading-relaxed space-y-6" 
-                  dangerouslySetInnerHTML={{ __html: processContent(post.content || '') }}
-                />
+                {/* Content box */}
+                <div className="bg-black/80 rounded-lg p-8 mt-2 mb-8 border border-gray-800">
+                  {/* Tags */}
+                  {post.tags && post.tags.length > 0 && (
+                    <div className="mb-6 flex flex-wrap items-center gap-2">
+                      <Tag size={16} className="text-cyberpunk-cyan" />
+                      {post.tags.map((tag, index) => (
+                        <span 
+                          key={index}
+                          className="bg-gray-800 text-gray-300 text-xs px-2 py-1 rounded"
+                        >
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+                  )}
+
+                  <div className="prose prose-lg prose-invert max-w-none">
+                    <p className="text-xl text-gray-300 mb-8 font-medium leading-relaxed">
+                      {post.excerpt}
+                    </p>
+                    <div 
+                      className="rich-text-content text-gray-200 leading-relaxed space-y-6" 
+                      dangerouslySetInnerHTML={{ __html: processContent(post.content || '') }}
+                    />
+                  </div>
+                </div>
               </div>
               
               {/* Image Gallery */}
@@ -377,7 +415,31 @@ const BlogPostPage = () => {
               
               <div className="mt-12 pt-8 border-t border-gray-800">
                 <h3 className="text-2xl font-bold mb-6">Related Articles</h3>
-                <p className="text-cyberpunk-cyan">Future enhancement: Display related articles here</p>
+                {relatedPosts.length === 0 ? (
+                  <p className="text-cyberpunk-cyan">No related articles found.</p>
+                ) : (
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    {relatedPosts.map(rp => (
+                      <Card key={rp.id} className="bg-black/60 border border-gray-800 hover:border-cyberpunk-cyan overflow-hidden group">
+                        <Link to={`/blog/${rp.slug}`}> 
+                          <div className="relative h-40 overflow-hidden">
+                            <img src={rp.image_url} alt={rp.Title} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
+                            <div className="absolute top-4 left-4 bg-cyberpunk-magenta/80 text-white text-xs px-3 py-1 rounded-full">{rp.category}</div>
+                          </div>
+                          <div className="p-4">
+                            <div className="flex items-center mb-2 text-xs text-gray-400">
+                              <CalendarIcon size={14} className="mr-1" />
+                              <span>{new Date(rp.created_at).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}</span>
+                            </div>
+                            <h4 className="text-lg font-bold mb-2 text-white group-hover:text-cyberpunk-cyan transition-colors duration-300">{rp.Title}</h4>
+                            <p className="text-gray-400 mb-2 line-clamp-3">{rp.excerpt}</p>
+                            <span className="text-cyberpunk-cyan text-xs font-medium">Read More</span>
+                          </div>
+                        </Link>
+                      </Card>
+                    ))}
+                  </div>
+                )}
               </div>
             </>
           )}

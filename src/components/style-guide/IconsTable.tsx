@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import {
@@ -13,7 +12,6 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { RefreshCw } from "lucide-react";
-import { toast } from "@/hooks/use-toast";
 
 interface IconData {
   id: string;
@@ -40,6 +38,8 @@ const IconsTable = () => {
   const [icons, setIcons] = useState<IconInfo[]>([]);
   const [loading, setLoading] = useState(true);
   const [syncing, setSyncing] = useState(false);
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
+  const [successMsg, setSuccessMsg] = useState<string | null>(null);
 
   useEffect(() => {
     fetchIconsFromDatabase();
@@ -47,6 +47,7 @@ const IconsTable = () => {
 
   const fetchIconsFromDatabase = async () => {
     setLoading(true);
+    setErrorMsg(null);
     try {
       const { data, error } = await supabase
         .from('icons')
@@ -55,11 +56,7 @@ const IconsTable = () => {
 
       if (error) {
         console.error('Error fetching icons from database:', error);
-        toast({
-          variant: 'destructive',
-          title: 'Error fetching icons',
-          description: error.message,
-        });
+        setErrorMsg('Error fetching icons: ' + error.message);
         return;
       }
 
@@ -84,11 +81,7 @@ const IconsTable = () => {
       setIcons(Array.from(iconMap.values()));
     } catch (error) {
       console.error('Error fetching icons:', error);
-      toast({
-        variant: 'destructive',
-        title: 'Error',
-        description: 'Failed to fetch icons from database',
-      });
+      setErrorMsg('Failed to fetch icons from database');
     } finally {
       setLoading(false);
     }
@@ -96,6 +89,8 @@ const IconsTable = () => {
 
   const syncWithStorage = async () => {
     setSyncing(true);
+    setErrorMsg(null);
+    setSuccessMsg(null);
     try {
       const folders = ["white", "gradient", "black"];
       
@@ -152,20 +147,15 @@ const IconsTable = () => {
         }
       }
 
-      toast({
-        title: 'Sync completed',
-        description: 'Icons have been synced with storage bucket',
-      });
+      setSuccessMsg('Icons have been synced with storage bucket.');
+      setTimeout(() => setSuccessMsg(null), 2500);
 
       // Refresh the table
       fetchIconsFromDatabase();
     } catch (error) {
       console.error('Error syncing with storage:', error);
-      toast({
-        variant: 'destructive',
-        title: 'Sync failed',
-        description: 'Failed to sync icons with storage bucket',
-      });
+      setErrorMsg('Failed to sync icons with storage bucket');
+      setTimeout(() => setErrorMsg(null), 2500);
     } finally {
       setSyncing(false);
     }
@@ -185,6 +175,9 @@ const IconsTable = () => {
 
   return (
     <Card className="bg-black/50 border border-gray-800">
+      {(errorMsg || successMsg) && (
+        <div className={`text-center py-2 rounded mb-2 ${successMsg ? 'bg-green-600 text-white' : 'bg-red-600 text-white'}`}>{successMsg || errorMsg}</div>
+      )}
       <CardHeader className="flex flex-row items-center justify-between">
         <CardTitle>Icons Database ({icons.length} icons)</CardTitle>
         <Button

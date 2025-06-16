@@ -1,5 +1,4 @@
-
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -95,6 +94,10 @@ const Dashboard = () => {
     { name: 'Marketing Campaign', progress: 100, status: 'Completed', deadline: 'Done' },
     { name: 'API Integration', progress: 30, status: 'Planning', deadline: '2 weeks' },
   ];
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   return (
     <div className="min-h-screen bg-black text-white">

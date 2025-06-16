@@ -1,10 +1,8 @@
-
 import { useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { toast } from '@/hooks/use-toast';
 import { Upload, Loader2 } from 'lucide-react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
@@ -17,39 +15,26 @@ const IconUploader = ({ onSuccess }: IconUploaderProps) => {
   const [iconFile, setIconFile] = useState<File | null>(null);
   const [folder, setFolder] = useState<string>('');
   const [uploading, setUploading] = useState(false);
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
+  const [successMsg, setSuccessMsg] = useState<string | null>(null);
 
   const handleUpload = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+    setErrorMsg(null);
+    setSuccessMsg(null);
     if (!iconName) {
-      toast({
-        variant: 'destructive',
-        title: 'Icon name required',
-        description: 'Please enter a name for the icon',
-      });
+      setErrorMsg('Please enter a name for the icon.');
       return;
     }
-
     if (!iconFile) {
-      toast({
-        variant: 'destructive',
-        title: 'Icon file required',
-        description: 'Please upload an SVG file',
-      });
+      setErrorMsg('Please upload an SVG file.');
       return;
     }
-
     if (!folder) {
-      toast({
-        variant: 'destructive',
-        title: 'Folder required',
-        description: 'Please select a folder for the icon',
-      });
+      setErrorMsg('Please select a folder for the icon.');
       return;
     }
-
     setUploading(true);
-
     try {
       // Upload to storage
       const filePath = `${folder}/${iconName}.svg`;
@@ -59,16 +44,13 @@ const IconUploader = ({ onSuccess }: IconUploaderProps) => {
           cacheControl: '3600',
           upsert: true,
         });
-
       if (uploadError) {
         throw uploadError;
       }
-
       // Get public URL
       const publicUrl = supabase.storage
         .from('icons')
         .getPublicUrl(filePath).data.publicUrl;
-
       // Insert into database
       const { error: dbError } = await supabase
         .from('icons')
@@ -82,32 +64,23 @@ const IconUploader = ({ onSuccess }: IconUploaderProps) => {
           tags: [],
           description: null
         });
-
       if (dbError) {
         throw dbError;
       }
-
-      toast({
-        title: 'Icon uploaded successfully',
-        description: `${iconName} icon has been uploaded to ${folder} folder`,
-      });
-
+      setSuccessMsg(`${iconName} icon has been uploaded to ${folder} folder.`);
+      setTimeout(() => setSuccessMsg(null), 2500);
       // Reset form
       setIconName('');
       setIconFile(null);
       setFolder('');
-
       // Call success callback if provided
       if (onSuccess) {
         onSuccess();
       }
     } catch (error: any) {
       console.error('Error uploading icon:', error);
-      toast({
-        variant: 'destructive',
-        title: 'Upload failed',
-        description: error.message || 'There was an error uploading the icon',
-      });
+      setErrorMsg(error.message || 'There was an error uploading the icon.');
+      setTimeout(() => setErrorMsg(null), 2500);
     } finally {
       setUploading(false);
     }
@@ -115,6 +88,9 @@ const IconUploader = ({ onSuccess }: IconUploaderProps) => {
 
   return (
     <form onSubmit={handleUpload} className="space-y-4">
+      {(errorMsg || successMsg) && (
+        <div className={`text-center py-2 rounded mb-2 ${successMsg ? 'bg-green-600 text-white' : 'bg-red-600 text-white'}`}>{successMsg || errorMsg}</div>
+      )}
       <div className="space-y-2">
         <Label htmlFor="icon-name">Icon Name</Label>
         <Input

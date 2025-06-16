@@ -1,9 +1,11 @@
-
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { HoverCard, HoverCardTrigger, HoverCardContent } from '@/components/ui/hover-card';
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 const ServicesHighlights = () => {
+  const navigate = useNavigate();
+  const location = useLocation();
   const services = [{
     title: "Reach out to us directly",
     description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique. Duis cursus, mi quis viverra ornare, eros dolor.",
@@ -18,6 +20,20 @@ const ServicesHighlights = () => {
   const { isVisible: isCardsVisible, elementRef: cardsRef } = useScrollAnimation({
     threshold: 0.2
   });
+
+  const handleCardClick = (hash) => {
+    if (location.pathname === '/contact') {
+      window.location.hash = hash;
+      setTimeout(() => {
+        const el = document.getElementById(hash.replace('#', ''));
+        if (el) {
+          el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      }, 100);
+    } else {
+      navigate(`/contact${hash}`);
+    }
+  };
 
   return (
     <section className="py-16 bg-black relative overflow-hidden">
@@ -63,13 +79,20 @@ const ServicesHighlights = () => {
           {services.map((service, index) => (
             <Card 
               key={index} 
-              className="relative overflow-hidden border-gray-700 group"
+              className="relative overflow-hidden border-gray-700 group cursor-pointer"
               style={{
                 background: 'transparent',
                 transitionDelay: `${200 + (index * 150)}ms`,
                 opacity: isCardsVisible ? 1 : 0,
                 transform: isCardsVisible ? 'translateY(0)' : 'translateY(20px)',
                 transition: 'opacity 700ms ease, transform 700ms ease'
+              }}
+              onClick={() => {
+                if (service.title === 'Reach out to us directly') {
+                  handleCardClick('#team');
+                } else if (service.title === 'Project briefing form') {
+                  handleCardClick('#contact-form');
+                }
               }}
             >
               <div 

@@ -1,0 +1,80 @@
+---
+description:
+globs:
+alwaysApply: true
+---
+# daisyUI 5 Styling Guide for OSS Template Web
+
+## CODEBASE
+
+This website uses NextJS and Tailwind CSS with the daisyUI v5 plugin. It also integrates Supabase for authentication functionality.
+
+## THEMING SYSTEM
+
+The project uses daisyUI's theme system with light and dark themes defined in `app/globals.css`:
+
+- **Light theme (default)**: Uses custom Pfizer brand colors
+- **Dark theme**: Adapts the brand colors to dark mode with appropriate contrast
+
+Key color variables:
+- `--captain-blue:       #3366ff` - Primary brand color
+- `--captain-light-blue: #e6edff` - Secondary brand color
+- `--captain-light-gray: #f5f5f5` - Accent color
+
+## COLOR USAGE
+
+1. Always use semantic daisyUI color names rather than hardcoded values:
+- `primary` - Captain blue color
+- `secondary` - Captain light blue color
+- `accent` - Light gray in light mode, white in dark mode
+- `base-100`, `base-200`, `base-300` - Background colors (automatically change in dark theme)
+- `text-foreground` - For standard text that adapts to themes
+
+2. Never use `dark:` prefix for theming - daisyUI handles this automatically through its theme system.
+
+3. For hover states in dark mode, use the appropriate daisyUI class (e.g., `hover:text-primary`) rather than theme-specific overrides.
+
+## TYPOGRAPHY
+
+- Use `font-[family-name:var(--font-pfizer-diatype)]` for all regular text
+- Headings (h1-h6) automatically use the Pfizer Tomorrow font
+- Example: `<p className="font-[family-name:var(--font-pfizer-diatype)]">Text content</p>`
+
+## COMPONENT USAGE
+
+1. Use daisyUI components for all UI elements:
+- Buttons: `btn btn-primary`, `btn btn-accent`, etc.
+- Dropdowns: `dropdown`, `dropdown-content`, etc.
+- Cards: `card`, `card-body`, etc.
+
+2. Component examples from the codebase:
+```jsx
+{/* Button example */}
+<button className="btn btn-primary">Button text</button>
+
+{/* Dropdown example */}
+<div className="dropdown dropdown-end">
+<button tabIndex={0} className="btn btn-accent">
+<span className="font-[family-name:var(--font-pfizer-diatype)]">Menu</span>
+</button>
+<ul className="dropdown-content menu p-2 shadow bg-background border rounded-md w-52 mt-2 bg-base-200">
+<li><a className="text-foreground hover:bg-secondary hover:text-primary">Item</a></li>
+</ul>
+</div>
+```
+
+3. Background colors:
+- Use `bg-background` or `bg-base-100/200/300` for sections
+- For contrasting sections, use `bg-base-200` (automatically adapts to dark mode)
+
+## RESPONSIVENESS
+
+- Use daisyUI responsive modifiers when needed (e.g., `lg:flex-row`)
+- Follow mobile-first approach with appropriate breakpoints
+
+## DO NOT
+
+- Do not use hardcoded color values - always use daisyUI semantic color names
+- Do not use the `dark:` prefix for dark mode styling
+- Do not use custom fonts other than the Pfizer fonts already defined
+- Do not override daisyUI's theme variables directly except in the theme definitions

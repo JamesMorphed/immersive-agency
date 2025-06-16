@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { ArrowRight } from 'lucide-react';
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
@@ -9,74 +8,6 @@ import { Skeleton } from '@/components/ui/skeleton';
 
 const Services = () => {
   const navigate = useNavigate();
-  
-  // Additional static services to display alongside database services
-  const staticServices = [
-    {
-      id: 'digital-people',
-      title: 'Digital People',
-      slug: 'digitalpeople',
-      description: 'Create lifelike digital humans with advanced AI capabilities for immersive experiences',
-      hero_image: 'https://images.unsplash.com/photo-1649972904349-6e44c42644a7?w=800&h=600&fit=crop',
-      thumbnail_image: 'https://images.unsplash.com/photo-1649972904349-6e44c42644a7?w=800&h=600&fit=crop'
-    },
-    {
-      id: 'infographics',
-      title: 'Infographics',
-      slug: 'infographics',
-      description: 'Transform complex data into visually compelling and easy-to-understand infographics',
-      hero_image: 'https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=800&h=600&fit=crop',
-      thumbnail_image: 'https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=800&h=600&fit=crop'
-    },
-    {
-      id: '360-experiences',
-      title: '360 Experiences',
-      slug: '360-experiences',
-      description: 'Create immersive 360-degree experiences that transport users to new worlds',
-      hero_image: 'https://images.unsplash.com/photo-1605810230434-7631ac76ec81?w=800&h=600&fit=crop',
-      thumbnail_image: 'https://images.unsplash.com/photo-1605810230434-7631ac76ec81?w=800&h=600&fit=crop'
-    },
-    {
-      id: 'xr-mixed-reality',
-      title: 'XR - Mixed Reality',
-      slug: 'xr-mixed-reality',
-      description: 'Blend physical and digital worlds with cutting-edge mixed reality solutions',
-      hero_image: 'https://images.unsplash.com/photo-1518770660439-4636190af475?w=800&h=600&fit=crop',
-      thumbnail_image: 'https://images.unsplash.com/photo-1518770660439-4636190af475?w=800&h=600&fit=crop'
-    },
-    {
-      id: 'video-animation',
-      title: 'Video & Animation',
-      slug: 'video-animation',
-      description: 'Bring stories to life with stunning video production and animation',
-      hero_image: 'https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=800&h=600&fit=crop',
-      thumbnail_image: 'https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=800&h=600&fit=crop'
-    },
-    {
-      id: 'immersive-data',
-      title: 'Immersive Data',
-      slug: 'immersive-data',
-      description: 'Visualize complex datasets through immersive and interactive experiences',
-      hero_image: 'https://images.unsplash.com/photo-1518770660439-4636190af475?w=800&h=600&fit=crop',
-      thumbnail_image: 'https://images.unsplash.com/photo-1518770660439-4636190af475?w=800&h=600&fit=crop'
-    },
-    {
-      id: 'books-comics',
-      title: 'Books & Comics',
-      slug: 'books-comics',
-      description: 'Create engaging digital publications and interactive comic experiences',
-      hero_image: 'https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=800&h=600&fit=crop',
-      thumbnail_image: 'https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=800&h=600&fit=crop'
-    },
-    {
-      id: 'games',
-      title: 'Games',
-      slug: 'games',
-      description: 'Develop immersive gaming experiences across multiple platforms',
-      hero_image: 'https://images.unsplash.com/photo-1487058792275-0ad4aaf24ca7?w=800&h=600&fit=crop',
-      thumbnail_image: 'https://images.unsplash.com/photo-1487058792275-0ad4aaf24ca7?w=800&h=600&fit=crop'
-    }
-  ];
   
   // Fetch services from the database
   const { data: serviceItems, isLoading, error } = useQuery({
@@ -99,8 +30,8 @@ const Services = () => {
     },
   });
   
-  // Combine database services with static services
-  const allServices = [...(serviceItems || []), ...staticServices];
+  // Use only Supabase services
+  const allServices = serviceItems || [];
   
   const {
     isVisible: isHeaderVisible,
@@ -117,11 +48,13 @@ const Services = () => {
   };
   
   return (
-    <section className="py-20 bg-black">
-      <div className="container mx-auto px-4">
+    <section className="relative pt-0 pb-16 bg-black">
+      {/* Top gradient overlay for smooth fade-in */}
+      <div className="absolute top-0 left-0 w-full h-12 pointer-events-none z-10" style={{background: 'linear-gradient(to bottom, rgba(0,0,0,0) 0%, #000 100%)'}} />
+      <div className="container mx-auto px-4 relative z-20">
         <div 
           ref={headerRef} 
-          className={`text-center mb-16 transition-all duration-1000 transform ${isHeaderVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}
+          className={`text-center mb-0 transition-all duration-1000 transform ${isHeaderVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}
         >
           <h2 className="text-4xl md:text-5xl font-bold mb-4 text-white">
             What we do
@@ -145,7 +78,7 @@ const Services = () => {
               <p className="text-red-400">Error loading services. Please try again later.</p>
             </div>
           ) : allServices && allServices.length > 0 ? (
-            // Render all services (database + static)
+            // Render only Supabase services
             allServices.map((service, index) => (
               <div
                 key={service.id}

@@ -1,4 +1,3 @@
-
 import { Button } from '@/components/ui/button';
 import { ArrowRight } from 'lucide-react';
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
@@ -29,18 +28,19 @@ const FeaturedProject = () => {
             <p className="text-lg mb-2 text-cyberpunk-magenta">FEATURED INNOVATION</p>
             
             <h2 className="text-6xl md:text-8xl lg:text-9xl font-bold">
-              <span className="text-slate-50">Headline here</span>
-              
+              <span className="text-slate-50">Reimagined</span>
             </h2>
             
             <p className="text-gray-300">
-              Put some body copy in here that goes over a few lines to show that there 
-              is loads of copy in it. Our innovative solutions blend cutting-edge technology 
-              with immersive design to create unforgettable experiences.
+              <span className="font-bold">
+                We push your content beyond the ordinary with cutting-edge immersive technology and innovative solutions.
+              </span>
+              <br /><br />
+              Our mission is to revolutionize content, creating extraordinary experiences for healthcare professionals, patients and caregivers.
             </p>
             
             <Button variant="default" className="mt-4 text-white">
-              CHECK OUT THE AD
+              checkoutfeature
               <ArrowRight className="ml-2 h-5 w-5" />
             </Button>
           </div>
@@ -48,7 +48,7 @@ const FeaturedProject = () => {
       </div>
       
       {/* Gradient overlay for seamless transition to next section */}
-      <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-black to-transparent"></div>
+      <div className="absolute bottom-0 left-0 right-0 pointer-events-none" style={{height: '80px', background: 'linear-gradient(to top, #000 80%, rgba(0,0,0,0) 100%)', zIndex: 20}} />
     </section>;
 };
 export default FeaturedProject;

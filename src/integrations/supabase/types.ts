@@ -9,6 +9,32 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      blog_podcasts: {
+        Row: {
+          blog_id: number
+          created_at: string | null
+          mp3_url: string
+        }
+        Insert: {
+          blog_id: number
+          created_at?: string | null
+          mp3_url: string
+        }
+        Update: {
+          blog_id?: number
+          created_at?: string | null
+          mp3_url?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "blog_podcasts_blog_id_fkey"
+            columns: ["blog_id"]
+            isOneToOne: true
+            referencedRelation: "blog_posts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       blog_posts: {
         Row: {
           author: string | null
@@ -198,7 +224,6 @@ export type Database = {
       service_details: {
         Row: {
           background_image: string | null
-          case_studies: Json | null
           created_at: string
           description: string | null
           featured_images: Json | null
@@ -207,7 +232,6 @@ export type Database = {
           hero_image: string | null
           id: string
           overview: string | null
-          pricing_info: Json | null
           service_icons: Json | null
           slug: string
           technologies: Json | null
@@ -217,7 +241,6 @@ export type Database = {
         }
         Insert: {
           background_image?: string | null
-          case_studies?: Json | null
           created_at?: string
           description?: string | null
           featured_images?: Json | null
@@ -226,7 +249,6 @@ export type Database = {
           hero_image?: string | null
           id?: string
           overview?: string | null
-          pricing_info?: Json | null
           service_icons?: Json | null
           slug: string
           technologies?: Json | null
@@ -236,7 +258,6 @@ export type Database = {
         }
         Update: {
           background_image?: string | null
-          case_studies?: Json | null
           created_at?: string
           description?: string | null
           featured_images?: Json | null
@@ -245,7 +266,6 @@ export type Database = {
           hero_image?: string | null
           id?: string
           overview?: string | null
-          pricing_info?: Json | null
           service_icons?: Json | null
           slug?: string
           technologies?: Json | null
@@ -313,6 +333,30 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      user_profiles: {
+        Row: {
+          email: string
+          first_name: string
+          id: number
+          last_name: string
+          role: string
+        }
+        Insert: {
+          email: string
+          first_name: string
+          id: number
+          last_name: string
+          role: string
+        }
+        Update: {
+          email?: string
+          first_name?: string
+          id?: number
+          last_name?: string
+          role?: string
+        }
+        Relationships: []
       }
     }
     Views: {

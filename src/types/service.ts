@@ -1,7 +1,7 @@
-
 export interface ServiceFeature {
   title: string;
   description: string;
+  icon?: string;
 }
 
 export interface ServiceTechnology {
@@ -35,4 +35,5 @@ export interface ServiceDetail {
   pricing_info: ServicePricingInfo;
   created_at: string;
   updated_at: string;
+  service_icons?: string[];
 }

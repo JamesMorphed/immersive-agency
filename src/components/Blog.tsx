@@ -1,11 +1,12 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Card } from '@/components/ui/card';
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
-import { ArrowRight, BookOpen } from 'lucide-react';
+import { ArrowRight, BookOpen, ChevronDown } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { supabase } from '@/integrations/supabase/client';
 
 // Simplified blogPosts array with slugs for routing
-const blogPosts = [
+const staticBlogPosts = [
   {
     title: "The Future of Immersive Learning in Healthcare",
     excerpt: "Exploring how VR and AR are transforming medical education and patient care experiences.",
@@ -32,9 +33,41 @@ const blogPosts = [
   }
 ];
 
+const CATEGORIES = [
+  { value: 'news-insights', label: 'News & Insights' },
+  { value: 'case-studies', label: 'Case Studies' },
+  { value: 'podcasts', label: 'Podcasts' },
+  { value: 'tech-trends', label: 'Tech & Trends' },
+  { value: 'our-work', label: 'Our Work' },
+];
+
 const Blog = () => {
   const { isVisible: isTitleVisible, elementRef: titleRef } = useScrollAnimation();
   const { isVisible: isCardsVisible, elementRef: cardsRef } = useScrollAnimation();
+  const [blogPosts, setBlogPosts] = useState(staticBlogPosts);
+
+  useEffect(() => {
+    async function fetchBlogPosts() {
+      const { data, error } = await supabase
+        .from('blog_posts')
+        .select('Title, excerpt, published_at, image_url, category, slug')
+        .order('published_at', { ascending: false })
+        .limit(3);
+      if (data && data.length > 0) {
+        setBlogPosts(
+          data.map(post => ({
+            title: post.Title || '',
+            excerpt: post.excerpt || '',
+            date: post.published_at ? new Date(post.published_at).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }) : '',
+            image: post.image_url || '',
+            category: post.category || '',
+            slug: post.slug || ''
+          }))
+        );
+      }
+    }
+    fetchBlogPosts();
+  }, []);
 
   return (
     <section id="blog" className="py-20 bg-black relative">
@@ -45,10 +78,9 @@ const Blog = () => {
             isTitleVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
           }`}
         >
-          <h2 className="text-cyberpunk-magenta text-xl font-medium mb-3">OUR INSIGHTS</h2>
           <h3 className="text-4xl md:text-5xl font-bold mb-6">
-            <span className="text-white">Latest from the </span>
-            <span className="gradient-text">Blog</span>
+            <span className="text-white">Latest </span>
+            <span className="gradient-text">Insights</span>
           </h3>
           <p className="text-gray-400 max-w-2xl mx-auto">
             Discover our thoughts on emerging technologies and innovations in the pharmaceutical education space.
@@ -97,7 +129,7 @@ const Blog = () => {
                   to={`/blog/${post.slug}`} 
                   className="flex items-center text-cyberpunk-cyan font-medium group-hover:text-cyberpunk-magenta transition-colors duration-300"
                 >
-                  <span>Read Article</span>
+                  <span>Read Insight</span>
                   <ArrowRight size={16} className="ml-2 transition-transform group-hover:translate-x-1" />
                 </Link>
               </div>
@@ -110,7 +142,7 @@ const Blog = () => {
             to="/blog" 
             className="inline-flex items-center px-6 py-3 border border-cyberpunk-cyan text-cyberpunk-cyan hover:bg-cyberpunk-cyan hover:text-black transition-colors duration-300 rounded-md font-medium"
           >
-            View All Articles
+            View All Insights
             <ArrowRight size={16} className="ml-2" />
           </Link>
         </div>

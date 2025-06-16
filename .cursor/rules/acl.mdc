@@ -1,0 +1,151 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# Access Control in the Application
+
+## Middleware Files
+
+The application has two middleware files that handle authentication:
+
+### 1. src/middleware.ts (Active)
+
+This is the **active middleware** that Next.js uses automatically. It's properly located in the root of the `src` directory where Next.js looks for middleware by default.
+
+Key features:
+- Uses an explicit check for workflow routes using `startsWith()`
+- Has logging to aid in debugging route issues
+- Uses the correct function name `middleware()` which Next.js requires
+- Properly configured with matcher patterns
+
+```typescript
+// Public route checking - explicit pattern matching
+const isPublicRoute = 
+  publicRoutes.includes(request.nextUrl.pathname) || 
+  request.nextUrl.pathname === '/workflows' ||
+  request.nextUrl.pathname.startsWith('/workflows/');
+```
+
+### 2. src/lib/supabase/middleware.ts (Legacy/Inactive)
+
+This is a **legacy file** that is no longer being used. It was incorrectly named `updateSession()` instead of the required `middleware()` function name.
+
+Key issues:
+- Incorrectly tries to use a wildcard pattern `'/workflows/*'` in an array, which doesn't work with `includes()`
+- No proper route matching for dynamic routes
+- Incorrect function name prevents Next.js from using it automatically
+- Missing matcher configuration
+
+```typescript
+// Public routes - this approach doesn't work for dynamic routes
+const publicRoutes = ['/', '/docs', '/workflows', '/workflows/*', '/builds', '/applications']
+```
+
+## How to Add Public Routes
+
+To add new public routes, modify the `src/middleware.ts` file:
+
+1. For simple routes, add them to the `publicRoutes` array:
+   ```typescript
+   const publicRoutes = ['/', '/docs', '/builds', '/applications', '/your-new-route']
+   ```
+
+2. For dynamic routes with parameters, add a specific check to the `isPublicRoute` logic:
+   ```typescript
+   const isPublicRoute = 
+     publicRoutes.includes(request.nextUrl.pathname) || 
+     request.nextUrl.pathname === '/workflows' ||
+     request.nextUrl.pathname.startsWith('/workflows/') ||
+     request.nextUrl.pathname.startsWith('/your-dynamic-route/');
+   ```
+
+## Protected Routes
+
+Any route not explicitly made public will require authentication. When a user tries to access a protected route without being logged in, they will be redirected to `/auth/login`.
+
+## Access Control Best Practices
+
+### 1. Multiple Layers of Protection
+
+Our app uses a multi-layered approach to security:
+
+- **Next.js Middleware**: Controls page access at the routing level
+- **Supabase RLS Policies**: Controls data access at the database level
+- **UI Conditional Rendering**: Hides UI elements based on authentication status
+
+Always implement security at all layers – never rely on just hiding UI elements.
+
+### 2. Route Structure Patterns
+
+Follow these patterns for route protection:
+
+| Pattern | Access | Example |
+|---------|--------|---------|
+| Base resource lists | Public | `/workflows`, `/applications` |
+| Resource details | Public | `/workflows/123`, `/applications/456` |
+| Resource creation | Protected | `/workflows/create`, `/applications/create` |
+| Resource editing | Protected | `/workflows/123/edit`, `/applications/456/edit` |
+| User-specific data | Protected | `/settings`, `/dashboard` |
+
+### 3. Debugging Access Issues
+
+If users experience unexpected redirects or access problems:
+
+1. Check the server logs for the console output from middleware
+2. Verify the path is correctly included in either the `publicRoutes` array or `isPublicRoute` condition
+3. Test in an incognito browser window to ensure you're not using cached credentials
+
+### 4. Adding New Resource Types
+
+When adding a new resource type that follows the same pattern as workflows:
+
+1. Add the base route to `publicRoutes` if the list should be public:
+   ```typescript
+   const publicRoutes = ['/', '/docs', '/builds', '/applications', '/workflows', '/new-resource']
+   ```
+
+2. Add the dynamic routes pattern for individual resource viewing:
+   ```typescript
+   const isPublicRoute = 
+     publicRoutes.includes(request.nextUrl.pathname) || 
+     request.nextUrl.pathname.startsWith('/workflows/') ||
+     request.nextUrl.pathname.startsWith('/new-resource/');
+   ```
+
+3. Create RLS policies in Supabase that match these access patterns
+
+### 5. Special URL Patterns
+
+For special URL patterns that don't fit the standard resource pattern:
+
+```typescript
+// Example for allowing public access to specific subpaths but not others
+const isPublicRoute = 
+  publicRoutes.includes(request.nextUrl.pathname) || 
+  (request.nextUrl.pathname.startsWith('/reports/') && 
+   !request.nextUrl.pathname.includes('/admin/')) ||
+  (request.nextUrl.pathname.startsWith('/api/public/'));
+```
+
+## Supabase RLS Policies
+
+Remember that middleware only controls page access. For complete security, always add corresponding Row Level Security (RLS) policies in Supabase:
+
+```sql
+-- Example: Allow anyone to view workflows
+create policy "Enable read access for all users"
+on "public"."workflows"
+as permissive
+for select
+to public
+using (true);
+
+-- Example: Allow only authenticated users to create workflows
+create policy "Enable insert for authenticated users only"
+on "public"."workflows"
+as permissive
+for insert
+to authenticated
+with check (true);
+```

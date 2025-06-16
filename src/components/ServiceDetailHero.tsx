@@ -1,4 +1,3 @@
-
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
 import type { ServiceDetail } from '@/types/service';
 
@@ -71,15 +70,23 @@ const ServiceDetailHero = ({
                   <div>
                     <h3 className="text-lg font-medium text-white mb-6">{service.title} are great for...</h3>
                     <div className="space-y-4">
-                      {service.features.slice(0, 3).map((feature, index) => <div key={index} className="flex items-start">
-                          <div className="w-8 h-8 rounded-full border border-gray-600 flex items-center justify-center mr-4 mt-1 flex-shrink-0">
-                            <div className="w-3 h-3 bg-cyberpunk-cyan rounded-full"></div>
-                          </div>
+                      {service.features.slice(0, 3).map((feature, index) => (
+                        <div key={index} className="flex items-start">
+                          {feature.icon ? (
+                            <img
+                              src={feature.icon}
+                              alt="Feature Icon"
+                              className="w-6 h-6 object-contain mr-4 mt-1 flex-shrink-0"
+                            />
+                          ) : (
+                            <div className="w-3 h-3 bg-cyberpunk-cyan rounded-full mr-4 mt-3 flex-shrink-0"></div>
+                          )}
                           <div>
                             <p className="text-gray-300 text-sm font-medium mb-1">{feature.title}</p>
                             <p className="text-gray-400 text-xs">{feature.description}</p>
                           </div>
-                        </div>)}
+                        </div>
+                      ))}
                     </div>
                   </div>
                 </div>

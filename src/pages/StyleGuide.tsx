@@ -1,5 +1,4 @@
-
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -15,6 +14,10 @@ import IMSIconsSection from "@/components/style-guide/IMSIconsSection";
 
 const StyleGuidePage = () => {
   const { isVisible, elementRef } = useScrollAnimation();
+  
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
   
   return (
     <div className="min-h-screen bg-black text-white">

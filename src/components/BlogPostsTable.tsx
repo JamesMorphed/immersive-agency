@@ -1,6 +1,4 @@
-
 import React, { useState, useEffect } from 'react';
-import { useToast } from '@/hooks/use-toast';
 import { format } from 'date-fns';
 import { supabase } from '@/integrations/supabase/client';
 import { Calendar, FileText, Pencil, Trash, Tag, Video, Image } from 'lucide-react';
@@ -23,9 +21,12 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
+  DialogClose,
 } from '@/components/ui/dialog';
 import { Badge } from '@/components/ui/badge';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import BlogAdminForm from './BlogAdminForm';
+import type { BlogPostFormValues } from './BlogAdminForm';
 
 type BlogPost = {
   id: number;
@@ -44,7 +45,10 @@ const BlogPostsTable = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [postToDelete, setPostToDelete] = useState<number | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const { toast } = useToast();
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
+  const [successMsg, setSuccessMsg] = useState<string | null>(null);
+  const [editingPost, setEditingPost] = useState<(Partial<BlogPostFormValues> & { id?: number }) | null>(null);
+  const [isEditOpen, setIsEditOpen] = useState(false);
 
   useEffect(() => {
     fetchBlogPosts();
@@ -52,6 +56,7 @@ const BlogPostsTable = () => {
 
   const fetchBlogPosts = async () => {
     setIsLoading(true);
+    setErrorMsg(null);
     try {
       const { data, error } = await supabase
         .from('blog_posts')
@@ -65,11 +70,7 @@ const BlogPostsTable = () => {
       setBlogPosts(data || []);
     } catch (error) {
       console.error('Error fetching blog posts:', error);
-      toast({
-        title: 'Error',
-        description: 'Failed to load blog posts. Please try again later.',
-        variant: 'destructive',
-      });
+      setErrorMsg('Failed to load blog posts. Please try again later.');
     } finally {
       setIsLoading(false);
     }
@@ -94,17 +95,12 @@ const BlogPostsTable = () => {
       }
 
       setBlogPosts(blogPosts.filter(post => post.id !== postToDelete));
-      toast({
-        title: 'Post deleted',
-        description: 'The blog post has been successfully deleted.',
-      });
+      setSuccessMsg('The blog post has been successfully deleted.');
+      setTimeout(() => setSuccessMsg(null), 2500);
     } catch (error) {
       console.error('Error deleting post:', error);
-      toast({
-        title: 'Error',
-        description: 'Failed to delete blog post. Please try again.',
-        variant: 'destructive',
-      });
+      setErrorMsg('Failed to delete blog post. Please try again.');
+      setTimeout(() => setErrorMsg(null), 2500);
     } finally {
       setPostToDelete(null);
       setIsDialogOpen(false);
@@ -115,14 +111,49 @@ const BlogPostsTable = () => {
     window.open(`/blog/${slug}`, '_blank');
   };
 
+  const handleEditClick = async (post: BlogPost) => {
+    // Fetch the latest full blog post data from Supabase
+    const { data, error } = await supabase
+      .from('blog_posts')
+      .select('*')
+      .eq('id', post.id)
+      .single();
+    if (error) {
+      alert('Failed to fetch blog post details.');
+      return;
+    }
+    // Map Supabase fields to BlogAdminForm initialValues
+    const initialValues = {
+      id: data.id,
+      title: data.Title || '',
+      slug: data.slug || '',
+      author: data.author || '',
+      content: data.content || '',
+      excerpt: data.excerpt || '',
+      category: data.category || '',
+      image_url: data.image_url || '',
+      video_url: data.video_url || '',
+      tags: data.tags || [],
+      read_time: data.read_time || '',
+      publish: !!data.published_at,
+      published_at: data.published_at ? new Date(data.published_at) : undefined,
+    };
+    setEditingPost(initialValues);
+    setIsEditOpen(true);
+  };
+
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
-        <h2 className="text-2xl font-bold">Manage Blog Posts</h2>
+        <h2 className="text-2xl font-bold">Manage Insights</h2>
         <Button onClick={fetchBlogPosts} variant="secondary">
           Refresh
         </Button>
       </div>
+
+      {(errorMsg || successMsg) && (
+        <div className={`text-center py-2 rounded mb-2 ${successMsg ? 'bg-green-600 text-white' : 'bg-red-600 text-white'}`}>{successMsg || errorMsg}</div>
+      )}
 
       {isLoading ? (
         <div className="flex justify-center py-10">
@@ -131,7 +162,7 @@ const BlogPostsTable = () => {
       ) : (
         <div className="border rounded-lg overflow-hidden">
           <Table>
-            <TableCaption>A list of all your blog posts</TableCaption>
+            <TableCaption>A list of all your insights</TableCaption>
             <TableHeader>
               <TableRow>
                 <TableHead className="w-[250px]">Title</TableHead>
@@ -230,7 +261,7 @@ const BlogPostsTable = () => {
                           variant="secondary" 
                           size="sm" 
                           className="text-blue-600"
-                          onClick={() => alert("Edit functionality to be implemented")}
+                          onClick={() => handleEditClick(post)}
                           title="Edit post"
                         >
                           <Pencil className="h-4 w-4" />
@@ -272,6 +303,24 @@ const BlogPostsTable = () => {
               Delete
             </Button>
           </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={isEditOpen} onOpenChange={setIsEditOpen}>
+        <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>Edit Blog Post</DialogTitle>
+          </DialogHeader>
+          {editingPost && (
+            <BlogAdminForm
+              initialValues={editingPost}
+              mode="edit"
+              onSubmitSuccess={() => setIsEditOpen(false)}
+            />
+          )}
+          <DialogClose asChild>
+            <Button variant="secondary">Cancel</Button>
+          </DialogClose>
         </DialogContent>
       </Dialog>
     </div>

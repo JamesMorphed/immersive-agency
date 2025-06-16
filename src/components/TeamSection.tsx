@@ -1,4 +1,3 @@
-
 import { Avatar, AvatarImage } from '@/components/ui/avatar';
 import { Linkedin, User } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
@@ -103,7 +102,7 @@ const TeamSection = () => {
   }, []);
 
   return (
-    <section className="py-16 bg-black">
+    <section id="team" className="py-16 bg-black">
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
         <div 
           ref={headerRef} 
