@@ -2,7 +2,7 @@
 import * as React from "react"
 import { Slot } from "@radix-ui/react-slot"
 import { cva, type VariantProps } from "class-variance-authority"
-
+import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog"
 import { cn } from "@/lib/utils"
 
 const buttonVariants = cva(
@@ -36,10 +36,11 @@ export interface ButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement>,
     VariantProps<typeof buttonVariants> {
   asChild?: boolean
+  videoUrl?: string
 }
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, variant, size, asChild = false, ...props }, ref) => {
+  ({ className, variant, size, asChild = false, videoUrl, ...props }, ref) => {
     const Comp = asChild ? Slot : "button"
     
     // Create the neon glow overlay for default variant
@@ -59,6 +60,42 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         <span className="absolute -inset-0.5 rounded-full bg-gradient-to-r from-white to-gray-200 opacity-0 blur-md group-hover:opacity-30 transition-opacity duration-500 group-hover:animate-pulse"></span>
       </>
     )
+    
+    // Convert YouTube URL to embed format
+    const getEmbedUrl = (url: string) => {
+      const videoId = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&\n?#]+)/)?.[1]
+      return videoId ? `https://www.youtube.com/embed/${videoId}` : url
+    }
+    
+    if (videoUrl) {
+      return (
+        <Dialog>
+          <DialogTrigger asChild>
+            <Comp
+              className={cn(buttonVariants({ variant, size, className }))}
+              ref={ref}
+              {...props}
+            >
+              {variant === 'default' && neonGradientOverlay}
+              {variant === 'secondary' && secondaryGradientOverlay}
+              <span className="relative z-10 flex items-center gap-2">{props.children}</span>
+            </Comp>
+          </DialogTrigger>
+          <DialogContent className="max-w-4xl w-full bg-black border-cyberpunk-magenta/20">
+            <div className="aspect-video w-full">
+              <iframe
+                src={getEmbedUrl(videoUrl)}
+                title="YouTube video player"
+                frameBorder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                allowFullScreen
+                className="w-full h-full rounded-lg"
+              ></iframe>
+            </div>
+          </DialogContent>
+        </Dialog>
+      )
+    }
     
     return (
       <Comp
