@@ -1,6 +1,7 @@
 import { Button } from '@/components/ui/button';
 import { ArrowRight } from 'lucide-react';
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
+
 const FeaturedProject = () => {
   const {
     isVisible: isImageVisible,
@@ -10,7 +11,9 @@ const FeaturedProject = () => {
     isVisible: isContentVisible,
     elementRef: contentRef
   } = useScrollAnimation();
-  return <section className="relative bg-black py-20">
+  
+  return (
+    <section className="relative bg-black py-20">
       <div className="container mx-auto px-4">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
           {/* Left side - Image */}
@@ -23,12 +26,12 @@ const FeaturedProject = () => {
           
           {/* Right side - Content */}
           <div ref={contentRef} className={`space-y-6 transition-all duration-1000 transform ${isContentVisible ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-10'}`} style={{
-          transitionDelay: '200ms'
-        }}>
+            transitionDelay: '200ms'
+          }}>
             <p className="text-lg mb-2 text-cyberpunk-magenta">FEATURED INNOVATION</p>
             
             <h2 className="text-6xl md:text-8xl lg:text-9xl font-bold">
-              <span className="text-slate-50">Reimagined</span>
+              <span className="text-slate-50">Headline here</span>
             </h2>
             
             <p className="text-gray-300">
@@ -39,8 +42,12 @@ const FeaturedProject = () => {
               Our mission is to revolutionize content, creating extraordinary experiences for healthcare professionals, patients and caregivers.
             </p>
             
-            <Button variant="default" className="mt-4 text-white">
-              checkoutfeature
+            <Button 
+              variant="default" 
+              className="mt-4 text-white"
+              videoUrl="https://www.youtube.com/watch?v=ectfeezh4p4"
+            >
+              CHECK OUT THE AD
               <ArrowRight className="ml-2 h-5 w-5" />
             </Button>
           </div>
@@ -48,7 +55,9 @@ const FeaturedProject = () => {
       </div>
       
       {/* Gradient overlay for seamless transition to next section */}
-      <div className="absolute bottom-0 left-0 right-0 pointer-events-none" style={{height: '80px', background: 'linear-gradient(to top, #000 80%, rgba(0,0,0,0) 100%)', zIndex: 20}} />
-    </section>;
+      <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-black to-transparent"></div>
+    </section>
+  );
 };
+
 export default FeaturedProject;

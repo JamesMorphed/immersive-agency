@@ -85,7 +85,7 @@ const BlogPreview = () => {
           ) : (
             <div className="flex flex-col items-center justify-center h-full text-white">
               <Eye className="w-10 h-10 mb-4 opacity-30" />
-              <span className="text-gray-400">Your insight post will appear here as you type</span>
+              <span className="text-gray-400">Your blog post preview will appear here as you type</span>
             </div>
           )}
         </CardContent>

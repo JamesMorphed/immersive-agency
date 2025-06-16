@@ -8,6 +8,7 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Loader2, ImageUp, X, Plus } from 'lucide-react';
+import { toast } from '@/components/ui/use-toast';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 
 const serviceSchema = z.object({
@@ -49,6 +50,7 @@ const ServiceAdminForm: React.FC<ServiceAdminFormProps> = ({ initialData, onSave
   const [features, setFeatures] = useState<{ title: string; description: string; icon?: string }[]>([]);
   const [technologies, setTechnologies] = useState<{ name: string; icon: string }[]>(DEFAULT_TECHNOLOGIES);
   const [galleryImages, setGalleryImages] = useState<string[]>([]);
+  const [serviceIcons, setServiceIcons] = useState<string[]>([]);
   const [featuredImages, setFeaturedImages] = useState<string[]>([]);
   const [uploadingPDF, setUploadingPDF] = useState(false);
   const [uploadError, setUploadError] = useState<string | null>(null);
@@ -57,7 +59,6 @@ const ServiceAdminForm: React.FC<ServiceAdminFormProps> = ({ initialData, onSave
   const [serviceIconModalOpen, setServiceIconModalOpen] = useState(false);
   const [iconOptions, setIconOptions] = useState<string[]>([]);
   const [loadingIcons, setLoadingIcons] = useState(false);
-  const [customToast, setCustomToast] = useState<{ type: 'success' | 'error'; message: string } | null>(null);
 
   const form = useForm<ServiceFormValues>({
     resolver: zodResolver(serviceSchema),
@@ -70,6 +71,7 @@ const ServiceAdminForm: React.FC<ServiceAdminFormProps> = ({ initialData, onSave
       features: JSON.stringify(initialData.features || []),
       technologies: JSON.stringify(initialData.technologies || []),
       gallery_images: JSON.stringify(initialData.gallery_images || []),
+      service_icons: JSON.stringify(initialData.service_icons || []),
       featured_images: JSON.stringify(initialData.featured_images || []),
       thumbnail_image: initialData.thumbnail_image || '',
       background_image: initialData.background_image || '',
@@ -82,6 +84,7 @@ const ServiceAdminForm: React.FC<ServiceAdminFormProps> = ({ initialData, onSave
       features: '[]',
       technologies: '[]',
       gallery_images: '[]',
+      service_icons: '[]',
       featured_images: '[]',
       thumbnail_image: '',
       background_image: '',
@@ -93,27 +96,25 @@ const ServiceAdminForm: React.FC<ServiceAdminFormProps> = ({ initialData, onSave
     form.setValue('features', JSON.stringify(features));
     form.setValue('technologies', JSON.stringify(technologies));
     form.setValue('gallery_images', JSON.stringify(galleryImages));
-  }, [features, technologies, galleryImages]);
+    form.setValue('service_icons', JSON.stringify(serviceIcons));
+    form.setValue('featured_images', JSON.stringify(featuredImages));
+  }, [features, technologies, galleryImages, serviceIcons, featuredImages]);
 
   React.useEffect(() => {
     if (initialData) {
       if (Array.isArray(initialData.features)) setFeatures(initialData.features);
       if (Array.isArray(initialData.technologies)) setTechnologies(initialData.technologies);
       if (Array.isArray(initialData.gallery_images)) setGalleryImages(initialData.gallery_images);
+      if (Array.isArray(initialData.service_icons)) setServiceIcons(initialData.service_icons);
       if (Array.isArray(initialData.featured_images)) setFeaturedImages(initialData.featured_images);
     } else {
       setFeatures([]);
       setTechnologies(DEFAULT_TECHNOLOGIES);
       setGalleryImages([]);
+      setServiceIcons([]);
       setFeaturedImages([]);
     }
   }, [initialData]);
-
-  // Helper to show a toast
-  const showToast = (type: 'success' | 'error', message: string) => {
-    setCustomToast({ type, message });
-    setTimeout(() => setCustomToast(null), 2500);
-  };
 
   const onSubmit = async (values: ServiceFormValues) => {
     setIsSubmitting(true);
@@ -128,6 +129,7 @@ const ServiceAdminForm: React.FC<ServiceAdminFormProps> = ({ initialData, onSave
         features: JSON.parse(values.features || '[]'),
         technologies: JSON.parse(values.technologies || '[]'),
         gallery_images: JSON.parse(values.gallery_images || '[]'),
+        service_icons: JSON.parse(values.service_icons || '[]'),
         featured_images: JSON.parse(values.featured_images || '[]'),
         thumbnail_image: values.thumbnail_image || null,
         background_image: values.background_image || null,
@@ -145,10 +147,8 @@ const ServiceAdminForm: React.FC<ServiceAdminFormProps> = ({ initialData, onSave
       setSuccess(true);
       form.reset();
       if (onSave) onSave();
-      showToast('success', 'Your solution has been successfully created.');
     } catch (error) {
       alert('Error saving service: ' + (error instanceof Error ? error.message : 'Unknown error'));
-      showToast('error', error instanceof Error ? error.message : 'An unknown error occurred');
     } finally {
       setIsSubmitting(false);
     }
@@ -178,10 +178,8 @@ const ServiceAdminForm: React.FC<ServiceAdminFormProps> = ({ initialData, onSave
         .from('services-bucket')
         .getPublicUrl(filePath);
       form.setValue('hero_image', publicUrlData.publicUrl);
-      showToast('success', 'Hero image uploaded successfully.');
     } catch (error) {
       alert('Error uploading hero image: ' + (error instanceof Error ? error.message : 'Unknown error'));
-      showToast('error', error instanceof Error ? error.message : 'Failed to upload hero image');
     } finally {
       setUploadingHeroImage(false);
     }
@@ -254,13 +252,12 @@ const ServiceAdminForm: React.FC<ServiceAdminFormProps> = ({ initialData, onSave
         }
         if (data.technologies) form.setValue('technologies', JSON.stringify(data.technologies));
         // Add more mappings as needed
-        showToast('success', 'Service fields were auto-filled from your file.');
+        toast({ title: 'PDF processed!', description: 'Service fields were auto-filled from your PDF.', variant: 'default' });
       } else {
         throw new Error('Unexpected response format from webhook');
       }
     } catch (err) {
       setUploadError('Failed to upload PDF.');
-      showToast('error', 'Could not send file to n8n.');
     } finally {
       setUploadingPDF(false);
       if (pdfInputRef.current) pdfInputRef.current.value = '';
@@ -283,45 +280,40 @@ const ServiceAdminForm: React.FC<ServiceAdminFormProps> = ({ initialData, onSave
 
   return (
     <div className="bg-gray-800 rounded-lg shadow-md p-6">
-      {customToast && (
-        <div className={`fixed top-6 left-1/2 z-50 -translate-x-1/2 px-6 py-3 rounded-md shadow-lg text-white font-semibold transition-all duration-300 ${customToast.type === 'success' ? 'bg-green-600' : 'bg-red-600'}`}
-          role="alert">
-          {customToast.message}
+      <h2 className="text-2xl font-bold mb-6">Create New Service</h2>
+      {/* PDF Upload Area for n8n */}
+      <div className="mb-6">
+        <label className="block text-sm font-medium text-gray-300 mb-1">Service File (PDF, DOC, PPT, etc. - optional)</label>
+        <div
+          onDragOver={e => e.preventDefault()}
+          onDrop={handlePDFDrop}
+          className="my-2 p-4 border-2 border-dashed border-cyberpunk-magenta rounded bg-black/40 text-center cursor-pointer transition-all flex flex-col items-center"
+          style={{ minHeight: 60 }}
+          onClick={() => pdfInputRef.current?.click()}
+          tabIndex={0}
+          role="button"
+          aria-label="Upload File"
+        >
+          <span className="text-cyberpunk-magenta font-semibold text-sm mb-1">Drag & drop a PDF, DOC, DOCX, PPT, or PPTX or <span className="underline">click to upload</span></span>
+          <span className="text-gray-400 text-xs mb-1">We'll extract service details for you.</span>
+          {uploadingPDF && (
+            <span className="text-cyberpunk-magenta text-xs mt-1 flex items-center gap-2">
+              <Loader2 className="h-4 w-4 mr-1 animate-spin" />
+              Uploading
+            </span>
+          )}
+          {uploadError && <span className="text-red-400 text-xs mt-1">{uploadError}</span>}
+          <input
+            ref={pdfInputRef}
+            type="file"
+            accept="application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/vnd.ms-powerpoint,application/vnd.openxmlformats-officedocument.presentationml.presentation"
+            className="hidden"
+            onChange={handlePDFSelect}
+          />
         </div>
-      )}
-      <h2 className="text-2xl font-bold mb-6">Create New Solution</h2>
+      </div>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-          <div className="mb-6">
-            <label className="block text-sm font-medium text-gray-300 mb-1">Service File (PDF, DOC, PPT, etc. - optional)</label>
-            <div
-              onDragOver={e => e.preventDefault()}
-              onDrop={handlePDFDrop}
-              className="my-2 p-4 border-2 border-dashed border-cyberpunk-magenta rounded bg-black/40 text-center cursor-pointer transition-all flex flex-col items-center"
-              style={{ minHeight: 60 }}
-              onClick={() => pdfInputRef.current?.click()}
-              tabIndex={0}
-              role="button"
-              aria-label="Upload File"
-            >
-              <span className="text-cyberpunk-magenta font-semibold text-sm mb-1">Drag & drop a PDF, DOC, DOCX, PPT, or PPTX or <span className="underline">click to upload</span></span>
-              <span className="text-gray-400 text-xs mb-1">We'll extract service details for you.</span>
-              {uploadingPDF && (
-                <span className="text-cyberpunk-magenta text-xs mt-1 flex items-center gap-2">
-                  <Loader2 className="h-4 w-4 mr-1 animate-spin" />
-                  Uploading
-                </span>
-              )}
-              {uploadError && <span className="text-red-400 text-xs mt-1">{uploadError}</span>}
-              <input
-                ref={pdfInputRef}
-                type="file"
-                accept="application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/vnd.ms-powerpoint,application/vnd.openxmlformats-officedocument.presentationml.presentation"
-                className="hidden"
-                onChange={handlePDFSelect}
-              />
-            </div>
-          </div>
           <FormField
             control={form.control}
             name="title"
@@ -386,7 +378,7 @@ const ServiceAdminForm: React.FC<ServiceAdminFormProps> = ({ initialData, onSave
             name="hero_image"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Hero Image URL</FormLabel>
+                <FormLabel>Hero Image</FormLabel>
                 <div className="space-y-4">
                   <div
                     onDragOver={e => e.preventDefault()}
@@ -638,6 +630,90 @@ const ServiceAdminForm: React.FC<ServiceAdminFormProps> = ({ initialData, onSave
           </div>
           <FormField
             control={form.control}
+            name="service_icons"
+            render={({ field }) => {
+              // Parse the value as an array
+              let iconArr: string[] = [];
+              try {
+                iconArr = field.value ? JSON.parse(field.value) : [];
+              } catch {
+                iconArr = [];
+              }
+              return (
+                <FormItem>
+                  <FormLabel>Service Icon</FormLabel>
+                  <div className="flex items-center gap-2">
+                    <Input
+                      placeholder="Icon URL"
+                      value={iconArr[0] || ''}
+                      onChange={e => {
+                        const icons = iconArr;
+                        icons[0] = e.target.value;
+                        form.setValue('service_icons', JSON.stringify(icons));
+                      }}
+                    />
+                    <Button
+                      type="button"
+                      variant="secondary"
+                      onClick={async () => {
+                        await fetchIcons();
+                        setServiceIconModalOpen(true);
+                      }}
+                    >
+                      Choose Icon
+                    </Button>
+                    {iconArr[0] && (
+                      <div className="relative ml-2">
+                        <img src={iconArr[0]} alt="Selected Icon" className="w-8 h-8 border rounded" />
+                        <button
+                          type="button"
+                          className="absolute -top-2 -right-2 bg-red-600 text-white rounded-full p-1 w-5 h-5 flex items-center justify-center text-xs hover:bg-red-700"
+                          onClick={() => {
+                            const icons = [...iconArr];
+                            icons.splice(0, 1);
+                            form.setValue('service_icons', JSON.stringify(icons));
+                          }}
+                          aria-label="Delete selected icon"
+                        >
+                          &times;
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                  <FormMessage />
+                  <Dialog open={serviceIconModalOpen} onOpenChange={setServiceIconModalOpen}>
+                    <DialogContent className="max-w-2xl">
+                      <DialogHeader>
+                        <DialogTitle>Choose an Icon</DialogTitle>
+                      </DialogHeader>
+                      <div className="grid grid-cols-6 gap-4 max-h-96 overflow-y-auto">
+                        {loadingIcons ? (
+                          <span>Loading...</span>
+                        ) : (
+                          iconOptions.map(url => (
+                            <img
+                              key={url}
+                              src={url}
+                              alt="icon"
+                              className="w-12 h-12 cursor-pointer border rounded hover:border-cyberpunk-magenta"
+                              onClick={() => {
+                                const icons = iconArr;
+                                icons[0] = url;
+                                form.setValue('service_icons', JSON.stringify(icons));
+                                setServiceIconModalOpen(false);
+                              }}
+                            />
+                          ))
+                        )}
+                      </div>
+                    </DialogContent>
+                  </Dialog>
+                </FormItem>
+              );
+            }}
+          />
+          <FormField
+            control={form.control}
             name="featured_images"
             render={({ field }) => {
               return (
@@ -710,7 +786,7 @@ const ServiceAdminForm: React.FC<ServiceAdminFormProps> = ({ initialData, onSave
             )}
           />
           <Button type="submit" className="w-full md:w-auto" disabled={isSubmitting}>
-            {isSubmitting ? (initialData ? 'Saving...' : 'Submitting...') : (initialData ? 'Confirm Edit' : 'Create Solution')}
+            {isSubmitting ? (initialData ? 'Saving...' : 'Submitting...') : (initialData ? 'Confirm Edit' : 'Create Service')}
           </Button>
           {success && <div className="text-green-400 mt-2">Service created successfully!</div>}
           {initialData && initialData.id && (

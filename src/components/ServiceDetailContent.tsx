@@ -156,6 +156,26 @@ const ServiceDetailContent = ({
     }
   };
 
+  const discoverItems = [{
+    title: 'Congress',
+    image: '/lovable-uploads/753996d7-1824-47d4-965a-34455cb82c44.png'
+  }, {
+    title: 'Digital People',
+    image: '/lovable-uploads/61b09af8-feee-4583-aaa1-1b782e76c76e.png'
+  }, {
+    title: 'Infographics',
+    image: '/lovable-uploads/43322700-8af4-44cc-97f2-3d09e6482f5e.png'
+  }, {
+    title: '3D Models',
+    image: '/lovable-uploads/753996d7-1824-47d4-965a-34455cb82c44.png'
+  }, {
+    title: '360° Experiences',
+    image: '/lovable-uploads/61b09af8-feee-4583-aaa1-1b782e76c76e.png'
+  }, {
+    title: 'XR - Mixed Reality',
+    image: '/lovable-uploads/43322700-8af4-44cc-97f2-3d09e6482f5e.png'
+  }];
+
   if (isLoading) {
     return <div className="bg-black text-white py-20">
         <div className="max-w-7xl mx-auto px-4">

@@ -73,25 +73,15 @@ const ManageServicesTable = () => {
     setIsDialogOpen(false);
   };
 
-  const handleEditClick = async (service: Service) => {
-    // Fetch the latest full service details from Supabase
-    const { data, error } = await supabase
-      .from('service_details')
-      .select('*')
-      .eq('id', service.id)
-      .single();
-    if (error) {
-      alert('Failed to fetch service details.');
-      return;
-    }
-    setEditingService(data);
+  const handleEditClick = (service: Service) => {
+    setEditingService(service);
     setIsEditDialogOpen(true);
   };
 
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
-        <h2 className="text-2xl font-bold">Manage Solutions</h2>
+        <h2 className="text-2xl font-bold">Manage Services</h2>
         <Button onClick={fetchServices} variant="secondary">
           Refresh
         </Button>
@@ -103,7 +93,7 @@ const ManageServicesTable = () => {
       ) : (
         <div className="border rounded-lg overflow-hidden">
           <Table>
-            <TableCaption>A list of all your solutions</TableCaption>
+            <TableCaption>A list of all your services</TableCaption>
             <TableHeader>
               <TableRow>
                 <TableHead className="w-[250px]">Title</TableHead>

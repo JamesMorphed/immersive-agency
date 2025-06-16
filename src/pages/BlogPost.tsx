@@ -7,6 +7,7 @@ import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { Card } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { CalendarIcon, Clock, ArrowLeft, Share2, BookmarkPlus, Tag, ChevronLeft, ChevronRight, X, Mic } from 'lucide-react';
+import { useToast } from '@/hooks/use-toast';
 
 // Define the BlogPost type to match our Supabase schema
 type BlogPost = {
@@ -32,6 +33,7 @@ const BlogPostPage = () => {
   const [error, setError] = useState<string | null>(null);
   const [galleryOpen, setGalleryOpen] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const { toast } = useToast();
   const [podcastUrl, setPodcastUrl] = useState<string | null>(null);
   const [relatedPosts, setRelatedPosts] = useState<BlogPost[]>([]);
   
@@ -77,14 +79,8 @@ const BlogPostPage = () => {
       .eq('blog_id', post.id)
       .single()
       .then(({ data }) => {
-        if (data && data.mp3_url) {
-          if (data.mp3_url.startsWith('http')) {
-            setPodcastUrl(data.mp3_url);
-          } else {
-            // Assume it's a Supabase Storage path
-            setPodcastUrl(`https://kyzhqnmizpnuurmimmjc.supabase.co/storage/v1/object/public/${data.mp3_url}`);
-          }
-        } else setPodcastUrl(null);
+        if (data && data.mp3_url) setPodcastUrl(data.mp3_url);
+        else setPodcastUrl(null);
       });
   }, [post]);
   
@@ -306,18 +302,45 @@ const BlogPostPage = () => {
                 </div>
                 <h1 className="text-4xl md:text-5xl font-bold mb-6 flex items-center gap-4">
                   {post.Title}
-                  {podcastUrl ? (
-                    <span className="flex items-center gap-2 ml-2">
-                      <Mic size={28} className="text-white" />
-                      <audio controls src={podcastUrl} className="w-40">
-                        Your browser does not support the audio element.
-                      </audio>
-                    </span>
-                  ) : (
+                  {!podcastUrl && (
                     <button
                       type="button"
                       className="ml-2 p-2 rounded-full bg-black/60 hover:bg-cyberpunk-magenta transition-colors border border-gray-700 focus:outline-none focus:ring-2 focus:ring-cyberpunk-magenta"
                       aria-label="Listen to podcast"
+                      onClick={async () => {
+                        if (!post) return;
+                        try {
+                          const response = await fetch('http://n8n-immersive-insights-dev.captain.digitalpfizer.com/webhook-test/transcribe-blog', {
+                            method: 'POST',
+                            headers: {
+                              'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({
+                              title: post.Title,
+                              excerpt: post.excerpt,
+                              content: post.content,
+                            }),
+                          });
+                          if (response.ok) {
+                            toast({
+                              title: 'Podcast request sent!',
+                              description: 'The blog content was sent for transcription.',
+                            });
+                          } else {
+                            toast({
+                              title: 'Error',
+                              description: 'Failed to send blog content to podcast service.',
+                              variant: 'destructive',
+                            });
+                          }
+                        } catch (err) {
+                          toast({
+                            title: 'Error',
+                            description: 'An unexpected error occurred.',
+                            variant: 'destructive',
+                          });
+                        }
+                      }}
                     >
                       <Mic size={28} className="text-white" />
                     </button>
@@ -326,13 +349,11 @@ const BlogPostPage = () => {
                 <div className="flex items-center mb-8 text-sm text-gray-400">
                   <CalendarIcon size={16} className="mr-1" />
                   <span className="mr-2">
-                    {post.created_at && !isNaN(new Date(post.created_at).getTime())
-                      ? new Date(post.created_at).toLocaleDateString('en-US', {
-                          year: 'numeric',
-                          month: 'long',
-                          day: 'numeric'
-                        })
-                      : 'Unknown date'}
+                    {new Date(post.published_at).toLocaleDateString('en-US', {
+                      year: 'numeric',
+                      month: 'long',
+                      day: 'numeric'
+                    })}
                   </span>
                   <span className="mx-2">·</span>
                   <Clock size={16} className="mr-1" />

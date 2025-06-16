@@ -6,22 +6,20 @@ import TeamSection from "@/components/TeamSection";
 import ContactSection from "@/components/ContactSection";
 const ContactPage = () => {
   useEffect(() => {
-    let attempts = 0;
-    function tryScrollToHash() {
+    const scrollToHash = () => {
       if (window.location.hash) {
         const id = window.location.hash.replace('#', '');
         const el = document.getElementById(id);
         if (el) {
-          el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        } else if (attempts < 10) {
-          attempts++;
-          setTimeout(tryScrollToHash, 100);
+          setTimeout(() => {
+            el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }, 100);
         }
       }
-    }
-    tryScrollToHash();
-    window.addEventListener('hashchange', tryScrollToHash);
-    return () => window.removeEventListener('hashchange', tryScrollToHash);
+    };
+    scrollToHash();
+    window.addEventListener('hashchange', scrollToHash);
+    return () => window.removeEventListener('hashchange', scrollToHash);
   }, []);
   useEffect(() => {
     window.scrollTo(0, 0);

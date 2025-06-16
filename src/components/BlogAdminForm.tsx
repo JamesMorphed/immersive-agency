@@ -5,6 +5,7 @@ import * as z from 'zod';
 import { format } from 'date-fns';
 import { CalendarIcon, Loader2, FileText, Briefcase, Podcast, Cpu, Newspaper, ImageUp } from "lucide-react";
 import { supabase } from '@/integrations/supabase/client';
+import { useToast } from '@/hooks/use-toast';
 import { marked } from 'marked';
 
 import { Button } from "@/components/ui/button";
@@ -84,28 +85,15 @@ const BlogAdminForm: React.FC<BlogAdminFormProps> = ({ initialValues, mode = 'cr
   // Define form
   const form = useForm<BlogPostFormValues>({
     resolver: zodResolver(blogPostSchema),
-    defaultValues: initialValues ? {
-      title: initialValues.title || '',
-      slug: initialValues.slug || '',
-      author: initialValues.author || '',
-      content: initialValues.content || '',
-      excerpt: initialValues.excerpt || '',
-      category: initialValues.category || '',
-      image_url: initialValues.image_url || '',
-      video_url: initialValues.video_url || '',
-      tags: initialValues.tags || [],
-      read_time: initialValues.read_time || '',
-      publish: initialValues.publish || false,
-      published_at: initialValues.published_at ? new Date(initialValues.published_at) : new Date(),
-    } : {
-      title: '',
-      slug: '',
-      author: '',
-      content: '',
-      excerpt: '',
-      category: '',
-      image_url: '',
-      video_url: '',
+    defaultValues: {
+      title: "",
+      slug: "",
+      author: "",
+      content: "",
+      excerpt: "",
+      category: "",
+      image_url: "",
+      video_url: "",
       tags: [],
       read_time: '',
       publish: false,

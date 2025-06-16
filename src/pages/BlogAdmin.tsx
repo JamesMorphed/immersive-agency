@@ -17,20 +17,6 @@ const BlogAdminPage = () => {
     document.title = "Blog Admin | Manage Blog Posts";
   }, []);
 
-  useEffect(() => {
-    async function checkAuth() {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) {
-        navigate('/login');
-      }
-    }
-    checkAuth();
-  }, [navigate]);
-
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
-
   const handleLogout = async () => {
     await supabase.auth.signOut();
     navigate('/');
@@ -43,9 +29,9 @@ const BlogAdminPage = () => {
         <Tabs defaultValue="create-post" className="w-full">
           <div className="flex justify-center">
             <TabsList className="mb-6">
-              <TabsTrigger value="create-post">Create Insights</TabsTrigger>
-              <TabsTrigger value="create-service">Create Solutions</TabsTrigger>
-              <TabsTrigger value="manage">Manage Content</TabsTrigger>
+              <TabsTrigger value="create-post">Create Post</TabsTrigger>
+              <TabsTrigger value="create-service">Create Service</TabsTrigger>
+              <TabsTrigger value="manage">Manage</TabsTrigger>
             </TabsList>
           </div>
           <TabsContent value="create-post" className="space-y-4">
@@ -65,14 +51,14 @@ const BlogAdminPage = () => {
                   onClick={() => setManageTab('posts')}
                   type="button"
                 >
-                  Insights
+                  Blog Posts
                 </button>
                 <button
                   className={`px-6 py-2 font-semibold rounded-r-md focus:outline-none transition-colors ${manageTab === 'services' ? 'bg-cyberpunk-magenta text-white' : 'bg-transparent text-gray-300 hover:bg-gray-800'}`}
                   onClick={() => setManageTab('services')}
                   type="button"
                 >
-                  Solutions
+                  Services
                 </button>
               </div>
             </div>

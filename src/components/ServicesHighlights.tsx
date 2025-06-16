@@ -1,11 +1,10 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { HoverCard, HoverCardTrigger, HoverCardContent } from '@/components/ui/hover-card';
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 const ServicesHighlights = () => {
   const navigate = useNavigate();
-  const location = useLocation();
   const services = [{
     title: "Reach out to us directly",
     description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique. Duis cursus, mi quis viverra ornare, eros dolor.",
@@ -89,9 +88,9 @@ const ServicesHighlights = () => {
               }}
               onClick={() => {
                 if (service.title === 'Reach out to us directly') {
-                  handleCardClick('#team');
+                  navigate('/contact#team');
                 } else if (service.title === 'Project briefing form') {
-                  handleCardClick('#contact-form');
+                  navigate('/contact#contact-form');
                 }
               }}
             >
