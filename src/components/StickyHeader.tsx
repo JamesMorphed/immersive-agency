@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Dot } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -24,7 +23,7 @@ const StickyHeader = () => {
       <div className="fixed top-[5px] left-0 right-0 z-40">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 flex justify-end">
           {/* CXI+AI Badge */}
-          <div className="bg-black text-white px-6 py-3 flex items-center gap-4 rounded-b-lg shadow-lg">
+          <div className="bg-black text-white px-6 py-3 flex items-center gap-4 shadow-lg">
             <span className="text-xl font-bold tracking-wider">CXI+AI</span>
             
             {/* Menu Button */}
