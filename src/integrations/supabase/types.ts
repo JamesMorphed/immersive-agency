@@ -334,6 +334,39 @@ export type Database = {
           },
         ]
       }
+      team_members: {
+        Row: {
+          bio: string
+          created_at: string | null
+          id: string
+          image_url: string | null
+          linkedin_url: string | null
+          name: string
+          teams_url: string | null
+          title: string
+        }
+        Insert: {
+          bio: string
+          created_at?: string | null
+          id?: string
+          image_url?: string | null
+          linkedin_url?: string | null
+          name: string
+          teams_url?: string | null
+          title: string
+        }
+        Update: {
+          bio?: string
+          created_at?: string | null
+          id?: string
+          image_url?: string | null
+          linkedin_url?: string | null
+          name?: string
+          teams_url?: string | null
+          title?: string
+        }
+        Relationships: []
+      }
       user_profiles: {
         Row: {
           email: string

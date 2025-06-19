@@ -1,3 +1,4 @@
+
 import { X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Link, useNavigate } from 'react-router-dom';
@@ -28,8 +29,6 @@ const MegaNavigation = ({ isOpen, onClose }: MegaNavigationProps) => {
   const menuItems = [
     { to: '/', label: 'Home' },
     { to: '/services', label: 'Solutions' },
-    // { to: '/projects', label: 'Projects' },
-    // { to: '/technology', label: 'Technology' },
     { to: '/blog', label: 'Insights' },
     ...(user ? [{ to: '/admin/blog', label: 'Content Management' }] : []),
     { to: '/contact', label: 'Contact' },
@@ -42,7 +41,7 @@ const MegaNavigation = ({ isOpen, onClose }: MegaNavigationProps) => {
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/95 backdrop-blur-md">
+    <div className="fixed inset-0 z-50 bg-black/95 backdrop-blur-md" style={{ top: '0px' }}>
       <div className="flex h-full">
         {/* Left side - Navigation Items */}
         <div className="flex-1 flex flex-col justify-center px-8 md:px-16 lg:px-24">
@@ -65,7 +64,7 @@ const MegaNavigation = ({ isOpen, onClose }: MegaNavigationProps) => {
           </nav>
         </div>
 
-        {/* Right side - Close button and branding */}
+        {/* Right side - Close button */}
         <div className="w-24 md:w-32 flex flex-col justify-between p-8">
           <Button
             onClick={onClose}
