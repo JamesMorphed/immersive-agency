@@ -52,8 +52,8 @@ const FeaturedProjects = () => {
             </div>
             <Button 
               onClick={() => navigate('/projects')}
-              variant="outline" 
-              className="hidden md:flex items-center text-white border-cyberpunk-magenta hover:bg-cyberpunk-magenta hover:text-black"
+              variant="ghost" 
+              className="hidden md:flex items-center text-white border border-cyberpunk-magenta hover:bg-cyberpunk-magenta hover:text-black"
             >
               See All Projects
               <ArrowRight className="ml-2 h-5 w-5" />
@@ -107,8 +107,8 @@ const FeaturedProjects = () => {
           <div className="flex justify-center mt-12 md:hidden">
             <Button 
               onClick={() => navigate('/projects')}
-              variant="outline" 
-              className="text-white border-cyberpunk-magenta hover:bg-cyberpunk-magenta hover:text-black"
+              variant="ghost" 
+              className="text-white border border-cyberpunk-magenta hover:bg-cyberpunk-magenta hover:text-black"
             >
               See All Projects
               <ArrowRight className="ml-2 h-5 w-5" />

@@ -80,8 +80,8 @@ const InsightsBlog = () => {
             </div>
             <Button 
               onClick={() => navigate('/blog')}
-              variant="outline" 
-              className="hidden md:flex items-center text-white border-cyberpunk-magenta hover:bg-cyberpunk-magenta hover:text-black"
+              variant="ghost" 
+              className="hidden md:flex items-center text-white border border-cyberpunk-magenta hover:bg-cyberpunk-magenta hover:text-black"
             >
               View All Insights
               <ArrowRight className="ml-2 h-5 w-5" />
@@ -136,8 +136,8 @@ const InsightsBlog = () => {
           <div className="flex justify-center mt-12 md:hidden">
             <Button 
               onClick={() => navigate('/blog')}
-              variant="outline" 
-              className="text-white border-cyberpunk-magenta hover:bg-cyberpunk-magenta hover:text-black"
+              variant="ghost" 
+              className="text-white border border-cyberpunk-magenta hover:bg-cyberpunk-magenta hover:text-black"
             >
               View All Insights
               <ArrowRight className="ml-2 h-5 w-5" />
